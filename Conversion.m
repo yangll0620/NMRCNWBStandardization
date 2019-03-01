@@ -15,6 +15,7 @@ end
 projectpath = fullfile(dropboxpath, 'Dropbox', 'NMRC', 'Projects', ...
     'DataStorageAnalysisArchitecture', 'NWBtest');
 matnwbpath = fullfile(projectpath, 'matnwb');
+datasetpath = fullfile(projectpath, 'dataset');
 
 %% Script start here
 addpath(matnwbpath)
@@ -25,7 +26,7 @@ task = 'Habittrail';
 block = 1;
 
 identifier = [animal '_' dateOfExp '_' task '_Block' num2str(block)];
-rawdata_loc = fullfile(projectpath, 'dateset', animal, 'Recording', 'Raw');
+rawdata_loc = fullfile(datasetpath, animal, 'Recording', 'Raw');
 outloc = fullfile(projectpath,'out');
 if 7 ~= exist(outloc, 'dir')
     mkdir(outloc)
