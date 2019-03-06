@@ -2,64 +2,167 @@
 %       1. should we combine all the blocks for the same task on one day
 %       2. will the video files be attached? Generally, they are very large
 %       (~ 300M)
-
+%       3.  TDT2mat -- run tdt2mat: 137s, tdt saving: (43s,877M), tdt loading: 12s
+%       4. randomly generate the x, y, z coordinates for each electrode
+%       5. framework:   1)  combine Streamer\*.sev and Local\*tbk to sevtbkpath
+%                       2)  TDT2mat
+%                       3)  nwb initiation: 
+%                               nwbfile('identifier','***', 'file_create_date', now, 'session_description', '***')
+%                       4)  input general information:
+%                               nwb.general_source_scrip,
+%                               nwb.general_source_script_file_name, 
+%                               nwb.general_surgery, et.al
+%                       5) input electrode or device information
+%                       6) store the raw TDT neural data 
+%                     
 
 clear
-%% matnwb path
-if ispc % PC (Windows) in LRB 411
-    dropboxpath = 'E:'; 
-end
-if ismac % mac notebook
-    dropboxpath = '/Users/linglingyang';
-end
-projectpath = fullfile(dropboxpath, 'Dropbox', 'NMRC', 'Projects', ...
+%% addpath
+addpath('..\util')
+dbpath = dropboxpath();
+
+% matnwb path
+addpath(fullfile(dbpath,'toolbox', 'matnwb'))
+% TDT Matlab SDK path
+addpath(genpath(fullfile(dbpath,'toolbox', 'TDTMatlabSDK')))
+
+%% TDT2mat
+% combine *.sev files in Streamer and *.tbk files in Local
+projectpath = fullfile(dbpath, 'NMRC', 'Projects', ...
     'DataStorageAnalysisArchitecture', 'NWBtest');
-matnwbpath = fullfile(projectpath, 'matnwb');
 datasetpath = fullfile(projectpath, 'dataset');
 
-%% Script start here
-addpath(matnwbpath)
-%% script configuration
 animal = 'Bug';
-dateOfExp = '20181130';
+dateofExp = datenum('20181130','yyyymmdd');
 task = 'Habittrail';
 block = 1;
-
-identifier = [animal '_' dateOfExp '_' task '_Block' num2str(block)];
-rawdata_loc = fullfile(datasetpath, animal, 'Recording', 'Raw');
-outloc = fullfile(projectpath,'out');
-if 7 ~= exist(outloc, 'dir')
-    mkdir(outloc)
+TDTpath = fullfile(datasetpath, animal, 'Recording', 'Raw', 'HabitTrail', 'TDT');
+sevpath = fullfile(TDTpath, 'Streamer', [animal task '-' datestr(dateofExp, 'yymmdd')], ['Block-' num2str(block)]);
+tbkpath = fullfile(TDTpath, 'Local', [animal task '-' datestr(dateofExp, 'yymmdd')], ['Block-' num2str(block)]);
+% sevtbkpath: combined path
+sevtbkpath = fullfile(TDTpath, 'sevttbk_combine',[animal task '-' datestr(dateofExp, 'yymmdd')], ['Block-' num2str(block)]);
+if 7~= exist(sevtbkpath, 'dir')
+    mkdir(sevtbkpath)
 end
-source_file = [fullfile(pwd, mfilename()) '.m'];
-[~, source_script, ~] = fileparts(source_file);
-%%
-nwb = nwbfile();
-%% general information
-nwb.identifier = identifier;
-nwb.general_surgery = ['DBS in STN using ** DBS lead, 3 * 96 chns in PMd, DLPFC,''' ... 
-    'and one Gray Matter in SMA ... et.al'];  % depict what information can be put here, the content is not correct
-nwb.general_source_script = source_script; % Script file used to create this NWB file.
-nwb.general_source_script_file_name = source_file; % Script file used to create this NWB file.
-nwb.session_description = sprintf('NHP %s performed %s on %s', animal, task, dateOfExp);
-nwb.general_experiment_description = 'Habit trail experiment'; % General description of the experiment
-nwb.file_create_date = date(); 
-nwb.session_start_time = datetime(dateOfExp, 'InputFormat','yyyyMMdd');% required, Date and time of the experiment/session start. COMMENT: - The date is stored in UTC with local timezone offset as ISO 8601 extended formatted string: 2018-09-28T14:43:54.123+02:00 - Dates stored in UTC end in "Z" with no timezone offset. - Date accuracy is up to milliseconds.
 
+if isempty(dir(fullfile(sevtbkpath, '*.sev')))
+    copyfile(fullfile(sevpath, '*'), fullfile(sevtbkpath));
+end
+if isempty(dir(fullfile(sevtbkpath, '*.tbk')))
+    copyfile(fullfile(tbkpath, '*'), fullfile(sevtbkpath));
+end
 
-%% device information
-ADCName = 'TDT (132 channels)';
-nwb.general_devices.set( ADCName, types.core.Device());
-arrayName = 'Gray Matter';
-nwb.general_devices.set( arrayName, types.core.Device());
+% TDT2mat, tdt2mat: 137s, tdt saving: (43s,877M), tdt loading: 12s
+inter_tdtdata = 'test_TDT2mat.mat';
+if ~exist(inter_tdtdata,'file')
+    tic;
+    tdt = TDTbin2mat(sevtbkpath);
+    disp(['tdt2mat running: ' num2str(toc)])
+    tic
+    save(inter_tdtdata, 'tdt')
+    disp(['tdt2mat save time: ' num2str(toc)])
+else
+    tic
+    load(inter_tdtdata, 'tdt')
+    toc;
+    disp(['tdt2mat loading time: ' num2str(toc)])
+end
+streams_name = fieldnames(tdt.streams);
+stream = tdt.streams.(streams_name{1});
 
-egroup = types.core.ElectrodeGroup(...
-    ''
-    );
-
-%% raw data
-
+%% nwb file initiation
+if 1
+    identifier = [animal '_' datestr(dateofExp,'yyyymmdd') '_' task '_Block' num2str(block)];
+    session_description = ['NWB file test on ' animal ' performing ' task ' on ' datestr(dateofExp,'yyyymmdd')];
+    nwb = nwbfile(...
+        'identifier', identifier, ...
+        'session_description', session_description, ...
+        'file_create_date', datestr(now, 'yyyy-mm-dd HH:MM:SS'));
     
-%% export
-outdest = fullfile(outloc, [identifier '.nwb']);
-nwbExport(nwb, outdest);
+    %% general information
+    source_file = [fullfile(pwd, mfilename()) '.m'];
+    [~, source_script, ~] = fileparts(source_file);
+    nwb.general_source_script = source_script; % Script file used to create this NWB file.
+    nwb.general_source_script_file_name = source_file; % Script file used to create this NWB file.
+    
+    %% electrode information
+    etrodes = stream.channels;
+    n_etrodes = length(etrodes);
+    etrode_labels = cell(1, n_etrodes);
+    etrode_labels(1, 1:96) = {'Utah'};
+    etrode_labels(1, 97:end) = {'Gray Matter'};
+    devices_name = unique(etrode_labels, 'stable');
+    colNames = {'id','array_label','x', 'y', 'z', 'label'};
+    etrodeMat = rand([n_etrodes,3]); % randomly generate the x, y, z coordinates for each electrode
+    for i_device = 1: length(devices_name)
+        device_name = devices_name{i_device};
+        nwb.general_devices.set( device_name, types.core.Device());
+        nwb.general_extracellular_ephys.set(device_name, ...
+            types.core.ElectrodeGroup( ...
+            'description', 'a test ElectrodeGroup', ...
+            'location', 'unknown', ...
+            'device', types.untyped.SoftLink(['/general/devices/' device_name])));
+        
+        device_object_view = types.untyped.ObjectView( ...
+            ['/general/extracellular_ephys/' device_name]);
+        
+        elec_nums = find(strcmp(etrode_labels, device_name));
+        for i_elec = 1:length(elec_nums)
+            elec_num = elec_nums(i_elec);
+            coord_x = etrodeMat(elec_num,1); coord_y = etrodeMat(elec_num,2); coord_z = etrodeMat(elec_num,3);
+            if i_device == 1 && i_elec == 1
+                tbl = table(elec_num, device_object_view, ...
+                    coord_x, coord_y, coord_z, {'electrode'}, ...
+                    'VariableNames', colNames);
+            else
+                tbl = [tbl; {elec_num, device_object_view, ...
+                    coord_x, coord_y, coord_z, 'electrode_label'}];
+            end
+        end
+        
+    end
+    electrode_table = util.table2nwb(tbl, 'all electrodes');
+    nwb.general_extracellular_ephys_electrodes = electrode_table;
+    
+    %% raw data to NWB.acquisition
+    date = datevec([tdt.info.date tdt.info.utcStartTime], 'yyyy-mmm-ddHH:MM:SS');
+    nwb.session_start_time = datestr(date, 'yyyy-mm-dd HH:MM:SS');
+    nrows = length(nwb.general_extracellular_ephys_electrodes.id.data);
+    tablereg = types.core.DynamicTableRegion(...
+        'description','Relevent Electrodes for this Electrical Series',...
+        'table',types.untyped.ObjectView('/general/extracellular_ephys/electrodes'),...
+        'data',(1:nrows) - 1);
+    es = types.core.ElectricalSeries(...
+        'starting_time', stream.startTime, ...
+        'starting_time_rate',stream.fs,...
+        'data',stream.data,...
+        'electrodes', tablereg);  % electrode is required, otherwise error when exporting
+    rawname = 'rawTDT';
+    nwb.acquisition.set(rawname, es);
+    
+    %% export
+    outloc = fullfile(datasetpath, 'nwbout', animal);
+    if 7 ~= exist(outloc, 'dir')
+        mkdir(outloc);
+    end
+    outdest = fullfile(outloc, [identifier datestr(now,'mmddHHMM') '.nwb']);
+    nwbExport(nwb, outdest);
+else
+    nwb = nwbRead(outdest);
+end
+% can successful export using above codes
+
+%% not run
+if 0
+ 
+end
+
+
+
+
+
+
+
+
+
+
