@@ -1,6 +1,7 @@
 # DataStorageAnalysisArchitecture
 
 datainf = nwb.acquisition.get('rawTDT');
+
 datainf = 
 ElectricalSeries with properties:
              electrodes: [1×1 types.core.DynamicTableRegion]
