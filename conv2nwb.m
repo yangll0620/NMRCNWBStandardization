@@ -39,42 +39,52 @@ if nargin < 3
     dateofExp = datenum('20181130','yyyymmdd');
 end
 if nargin < 2
-    task = 'ChairTask';
+    task = 'GaitTask';
 end
 if nargin < 1
     block = 1;
 end
 rawdatapath = fullfile(datasetpath, animal, 'Data', 'ExpData', 'Raw');
 
-if 0
     %% TDT2mat
-    TDTpath = fullfile(datasetpath, animal, 'Recording', 'Raw', 'HabitTrail', 'TDT');
-    sevpath = fullfile(TDTpath, 'Streamer', [animal task '-' datestr(dateofExp, 'yymmdd')], ['Block-' num2str(block)]);
-    tbkpath = fullfile(TDTpath, 'Local', [animal task '-' datestr(dateofExp, 'yymmdd')], ['Block-' num2str(block)]);
-    % sevtbkpath: combined path
-    sevtbkpath = fullfile(TDTpath, 'sevttbk_combine',[animal task '-' datestr(dateofExp, 'yymmdd')], ['Block-' num2str(block)]);
-    if 7~= exist(sevtbkpath, 'dir')
-        mkdir(sevtbkpath)
+    rawTDTpath = fullfile(rawdatapath, [animal '-' datestr(dateofExp, 'yymmdd')], task, 'rawTDT', ['Block-' num2str(block)]);
+    streamerpath = fullfile(rawTDTpath, 'Streamer'); % store .Tbk, .Tdx, .tev et.al files,.avi files and StoresListing.txt
+    localpath = fullfile(rawTDTpath, 'Local'); % store the ch*.sev files
+    % combinedTDTfilespath: combined path
+    combinedTDTfilespath = fullfile(rawTDTpath, 'TDTfiles_combine');
+    if 7~= exist(combinedTDTfilespath, 'dir')
+        mkdir(combinedTDTfilespath)
     end
-    
-    if isempty(dir(fullfile(sevtbkpath, '*.sev')))
-        copyfile(fullfile(sevpath, '*'), fullfile(sevtbkpath));
+    % copy files in streamerpath and localpath to combinedTDTfilespath
+    filesinstreamer = extractfield(dir(streamerpath), 'name');
+    filesinlocal = extractfield(dir(localpath), 'name');
+    filesincombined = extractfield(dir(combinedTDTfilespath), 'name');
+    filesin_streamer_not_combined = setdiff(filesinstreamer, filesincombined);
+    filesin_local_not_combined = setdiff(filesinlocal, filesincombined);
+    if ~isempty(filesin_streamer_not_combined) % copy files in streamer to combined
+        filesinstreamer_copy = fullfile(streamerpath, filesin_streamer_not_combined);
+        for i_file = 1: length(filesinstreamer_copy)
+            copyfile(filesinstreamer_copy{i_file}, combinedTDTfilespath);
+        end
     end
-    if isempty(dir(fullfile(sevtbkpath, '*.tbk')))
-        copyfile(fullfile(tbkpath, '*'), fullfile(sevtbkpath));
+    if ~isempty(filesin_local_not_combined)
+        filesinlocal_copy = fullfile(localpath, filesin_local_not_combined);
+        for i_file = 1: length(filesinlocal_copy)
+            copyfile(filesinlocal_copy{i_file}, combinedTDTfilespath);
+        end
     end
-    
+
     % function TDTbin2mat: 137s, tdt saving: (43s,877M), tdt loading: 12s
     inter_tdtdata = 'test_TDT2mat.mat';
     if ~exist(inter_tdtdata,'file')
-        tdt = TDTbin2mat(sevtbkpath);
+        tdt = TDTbin2mat(combinedTDTfilespath);
         save(inter_tdtdata, 'tdt')
     else
         load(inter_tdtdata, 'tdt')
     end
     streams_name = fieldnames(tdt.streams);
     stream = tdt.streams.(streams_name{1});
-    
+if 0    
     %% nwb file initiation
     identifier = [animal '_' datestr(dateofExp,'yyyymmdd') '_' task '_Block' num2str(block)];
     % create nwb file
@@ -152,7 +162,8 @@ if 0
     end
     outdest = fullfile(outloc, [identifier '.nwb']);
     nwbExport(nwb, outdest);
-else % read nwb file directly
+end
+if 0 % read nwb file directly
     identifier = [animal '_' datestr(dateofExp,'yyyymmdd') '_' task '_Block' num2str(block)];
     nwbloc = fullfile(datasetpath, 'nwbout', animal);
     nwbdest = fullfile(nwbloc, [identifier '.nwb']);
