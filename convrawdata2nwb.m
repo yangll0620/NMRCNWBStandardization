@@ -15,6 +15,7 @@ function convrawdata2nwb(block, task, animal, dateofExp)
 %                               nwb.general_surgery, et.al
 %                       5) input electrode or device information
 %                       6) store the raw TDT neural data
+%                       7) store the links of Gaitmat Videos (.mp4) and Pressure files (.fsx)
 %
 
 if nargin < 4
@@ -24,7 +25,7 @@ if nargin < 3
     dateofExp = datenum('20181130','yyyymmdd');
 end
 if nargin < 2
-    task = 'GaitTask';
+    task = 'ChairTask';
 end
 if nargin < 1
     block = 1;
@@ -33,13 +34,29 @@ datasetpath = getdatasetpath();
 rawdatapath = fullfile(datasetpath, animal, 'Data', 'ExpData', 'Raw');
 preprocedatapath = fullfile(datasetpath, animal, 'Data', 'ExpData', 'Preprocessed');
 
-%% combine files from streamer and local folders
+tagcombine = 0; % tag for requiring combine files in Local and Streamer folders
+tagtekvideo = 0; % tag for the use of side video equipment in tekscan system (generally used in gait task)
+tagtekpressure = 0; % tag for the use of pressure equipment in tekscan system (generally used in gait task)
+tagmavideo = 0; % tag for the use of video equipment in motion analysis system (generally used in chair task)
+tagmamove = 0; % tag for the use of movement measure equipment in motion analysis system (generally used in chair task)
+if strcmp(task, 'GaitTask')
+    tagcombine = 1;
+    tagtekvideo = 1;
+    tagtekpressure  = 1;
+end
+if strcmp(task, 'ChairTask')
+    tagmavideo = 1;
+    tagmamove = 1;
+end
+%%
 rawTDTpath = fullfile(rawdatapath, [animal '-' datestr(dateofExp, 'yymmdd')], task, 'rawTDT', ['Block-' num2str(block)]);
-streamerpath = fullfile(rawTDTpath, 'Streamer'); % streamerpath: store the ch*.sev files
-localpath = fullfile(rawTDTpath, 'Local'); % localpath: store .Tbk, .Tdx, .tev et.al files,.avi files and StoresListing.txt
-combinedTDTfilespath = fullfile(rawTDTpath, 'TDTfiles_combine');
-copy2combinedpath(streamerpath, localpath, combinedTDTfilespath);
-
+% combine files from streamer and local folders
+if tagcombine
+    streamerpath = fullfile(rawTDTpath, 'Streamer'); % streamerpath: store the ch*.sev files
+    localpath = fullfile(rawTDTpath, 'Local'); % localpath: store .Tbk, .Tdx, .tev et.al files,.avi files and StoresListing.txt
+    combinedTDTfilespath = fullfile(rawTDTpath, 'TDTfiles_combine');
+    copy2combinedpath(streamerpath, localpath, combinedTDTfilespath);
+end
 %% TDT2mat function TDTbin2mat: 137s, tdt saving: (43s,877M), tdt loading: 12s
 inter_tdtdata = 'test_TDT2mat.mat';
 if ~exist(inter_tdtdata,'file')
@@ -122,24 +139,42 @@ rawname = 'rawTDT';
 nwb.acquisition.set(rawname, es);
 
 %% Gaitmat System raw pressure data and video data to NWB.acquistion
-% the mp4 data
-gaitvideopath = fullfile(rawdatapath, [animal '-' datestr(dateofExp,'yymmdd')], task, 'SideVideo');
-gaitvideo = fullfile(gaitvideopath, 'CPB09_113018.mp4');
-videoname = 'sidevideo';
-imgsvideo = types.core.ImageSeries(...
-    'data_unit','mp4', ...
-    'data', gaitvideo);
-nwb.acquisition.set(videoname, imgsvideo);
+if tagtekvideo
+    % the side .mp4 video data (for gait estimation)
+    tekvideopath = fullfile(rawdatapath, [animal '-' datestr(dateofExp,'yymmdd')], task, 'SideVideo');
+    videotek = fullfile(tekvideopath, 'CPB09_113018.mp4');
+    videoname = 'gaitvideolink';
+    imgsvideo = types.core.ImageSeries(...
+        'data_unit','mp4', ...
+        'data', videotek);
+    nwb.acquisition.set(videoname, imgsvideo);
+end   
+if tagtekpressure
+    % the pressure *.fsx file
+    pressfilepath = fullfile(rawdatapath, [animal '-' datestr(dateofExp,'yymmdd')], task, 'Gaitmat');
+    pressfile = fullfile(pressfilepath, 'CPB09.fsx');
+    pressname = 'pressurelink';
+    imgspress = types.core.ImageSeries(...
+        'data_unit','Tekscan', ...
+        'data', pressfile);
+    nwb.acquisition.set(pressname, imgspress);
+end
 
-%%   stop here
-% the pressure *.fsx file
-pressfilepath = fullfile(rawdatapath, [animal '-' datestr(dateofExp,'yymmdd')], task, 'Gaitmat');
-pressfile = fullfile(pressfilepath, 'CPB09.fsx');
-pressname = 'pressure';
-imgspress = types.core.ImageSeries(...
-    'data_unit','Tekscan', ...
-    'data', pressfile);
-nwb.acquisition.set(pressname, imgspress);
+%% MA system
+mapath = fullfile(rawdatapath, [animal '-' datestr(dateofExp,'yymmdd')], task, 'MA');
+if tagmavideo
+    % the front .avi video data (for facial expression or mental state, eye open or close)
+    videomaname = [animal '-' datestr(dateofExp, 'yyyymmdd') '_' num2str(block) '-HD Webcam C615.avi'];
+    videoma = fullfile(mapath, videomaname);
+    videoname = 'facialvideolink';
+    imgsvideo = types.core.ImageSeries(...
+        'data_unit','.avi', ...
+        'data', videoma);
+    nwb.acquisition.set(videoname, imgsvideo);
+end
+if tagmamove
+    %% stop here  should investigate the way to store MA data
+end
 %% export
 outloc = fullfile(preprocedatapath, animal,[animal '-' datestr(dateofExp, 'yymmdd')] ,task);
 if 7 ~= exist(outloc, 'dir')

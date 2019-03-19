@@ -36,11 +36,11 @@ data = datainf.data.load; % the actual stream data (n_temporal * n_chns)
 etrodes = datainf.electrodes.data.load;
 
 %% load Gaitmat video data (a link)
-dataname = 'sidevideo';
+dataname = 'gaitvideo';
 vids = nwb.acquisition.get(dataname);
-gaitvideo = convertCharsToStrings(char(vids.data.load));
+gaitvideolink = convertCharsToStrings(char(vids.data.load));
 
 %% load Gaitmat pressure data (a link)
 dataname = 'pressure';
 pressid = nwb.acquisition.get(dataname);
-gaitvideo = convertCharsToStrings(char(pressid.data.load));
+pressurelink = convertCharsToStrings(char(pressid.data.load));
