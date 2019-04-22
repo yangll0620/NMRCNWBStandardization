@@ -2,11 +2,11 @@ function nwb = convraw_tdt2nwb(rawtdtpath, nwb, exportnwbtag)
 % % CONVRAWTDT2NWB convert raw TDT data to NWB.acquisition
 % 
 % tdt.streams
-%     EYEa: [1×1 struct]
-%     Para: [1×1 struct]
-%     Stpd: [1×1 struct]
-%     EYEt: [1×1 struct]
-%     BUGG: [1×1 struct]
+%     EYEa: [1×1 struct]: x, y position of eye movements (2 * n_temporal)
+%     EYEt: [1×1 struct]: sync time from eye tracking system (1 * n_temporal)
+%     Para: [1×1 struct]: 
+%     Stpd: [1×1 struct]: sync data from touch pad (1 * n_temporal)    
+%     BUGG: [1×1 struct]: Neural data (n_chns * n_temporal)
 % 
 % inputs:
 %       rawtdtpath: the folder containing all the tdt files
