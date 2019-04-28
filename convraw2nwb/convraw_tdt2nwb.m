@@ -1,12 +1,16 @@
 function nwb = convraw_tdt2nwb(rawtdtpath, nwb, exportnwbtag)
 % % CONVRAWTDT2NWB convert raw TDT data to NWB.acquisition
 % 
+% Example usage:
+%           rawtdtpath = fullfile(dropboxpath(), 'NMRC', 'Projects', 'dataset','raw','bug','expdata','bug-190111', 'setupchair', 'tdt','block1-rest');
+%           nwb = convraw_tdt2nwb(rawtdtpath);
+% 
 % tdt.streams
-%     EYEa: [1×1 struct]: x, y position of eye movements (2 * n_temporal)
-%     EYEt: [1×1 struct]: sync time from eye tracking system (1 * n_temporal)
-%     Para: [1×1 struct]: 
-%     Stpd: [1×1 struct]: sync data from touch pad (1 * n_temporal)    
-%     BUGG: [1×1 struct]: Neural data (n_chns * n_temporal)
+%     EYEa: [1*1 struct]: x, y position of eye movements (2 * n_temporal)
+%     EYEt: [1*1 struct]: sync time from eye tracking system (1 * n_temporal)
+%     Para: [1*1 struct]: 
+%     Stpd: [1*1 struct]: sync data from touch pad (1 * n_temporal)    
+%     BUGG: [1*1 struct]: Neural data (n_chns * n_temporal)
 % 
 % inputs:
 %       rawtdtpath: the folder containing all the tdt files
@@ -19,9 +23,6 @@ function nwb = convraw_tdt2nwb(rawtdtpath, nwb, exportnwbtag)
 %       nwb: nwb structure containing tdt information (i.e. neural data, electrodes, etc)
 % 
 % 
-% Example usage:
-%           rawtdtpath = fullfile(dropboxpath(), 'NMRC', 'Projects', 'dataset','raw','bug','expdata','bug-190111', 'setupchair', 'tdt','block1-rest');
-%           nwb = convraw_tdt2nwb(rawtdtpath);
 
 
 if nargin < 3
