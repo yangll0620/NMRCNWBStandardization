@@ -1,8 +1,8 @@
 function nwb = convraw_tdt2nwb(rawtdtpath, nwb, exportnwbtag)
-% % CONVRAWTDT2NWB convert raw TDT data to NWB.acquisition
+% % CONVRAW_TDT2NWB convert raw TDT data in rawtdtpath to NWB.acquisition
 % 
 % Example usage:
-%           rawtdtpath = fullfile(dropboxpath(), 'NMRC', 'Projects', 'dataset','raw','bug','expdata','bug-190111', 'setupchair', 'tdt','block1-rest');
+%           rawtdtpath = fullfile('H:','My Drive','NMRC_umn', 'Projects', 'DataStorageAnalysis','workingfolders','home','data_shared','raw','bug','expdata', 'setupchair','bug-190111', 'tdt','block-1');
 %           nwb = convraw_tdt2nwb(rawtdtpath);
 % 
 % tdt.streams
@@ -14,55 +14,47 @@ function nwb = convraw_tdt2nwb(rawtdtpath, nwb, exportnwbtag)
 % 
 % inputs:
 %       rawtdtpath: the folder containing all the tdt files
-%       nwb: nwb structure
-% 
-%       newnwbtag = 0; % tag for creating new nwb or not
-%       intertdtexist = 0;  % for test, have inter .mat tdt file
-%       exportnwbtag = 0; % for test, export nwb file
+%       nwb: exist nwb structure (if missing, will create a new nwb structure)
+%       newnwbtag: tag for creating new nwb (default, 1) or not (0)
+%       exportnwbtag: tag for exporting nwb file (1) or not (default 0)
+%
 % outputs:
 %       nwb: nwb structure containing tdt information (i.e. neural data, electrodes, etc)
 % 
-% 
+% Author: yll
 
 
 if nargin < 3
     exportnwbtag = 1;
 end
 if nargin < 2
-    newnwbtag = 1;
+    newnwbtag = 0;
 end
 
 addpath(genpath(fullfile(fileparts(pwd), 'toolbox', 'matnwb'))) % add matnwb path ../toolbox/matnwb
 addpath(genpath(fullfile(fileparts(pwd), 'util'))) % add util path ../util
 
-% load tdt file to matlab
-if isunix % unix-like platform
+% %load tdt file to matlab
+if isunix || ispc % unix-like platform
     addpath(genpath(fullfile(fileparts(pwd), 'toolbox', 'TDTMatlabSDK'))) % add tdt sdk path ../toolbox/TDTMatlabSDK
     tdt = TDTbin2mat(rawtdtpath);
 end
-if ispc % windows platform
-    addpath(genpath(fullfile(fileparts(pwd), 'util'))) % add util path ../util for tdt2matlab_activeX
-    tdt = tdt2matlab_activeX(rawtdtpath);
-end
+% if ispc % windows platform : not use now
+%     addpath(genpath(fullfile(fileparts(pwd), 'util'))) % add util path ../util for tdt2matlab_activeX
+%     tdt = tdt2matlab_activeX(rawtdtpath);
+% end
 
 
 animal = rawtdtpath(strfind(rawtdtpath, 'raw')+4: strfind(rawtdtpath, 'expdata')-2);
 dateofexp = datenum(tdt.info.date); % tdt.info.date = '2019-Jan-11'
-setup = rawtdtpath(strfind(rawtdtpath, 'setup'): strfind(rawtdtpath, 'tdt')-2);
-blockname = char(regexp(rawtdtpath, 'block[0-9]+-[a-z]*', 'match')); % blockname = 'block1-rest'
-task = blockname(strfind(blockname, '-')+1 : end);
+setup = char(regexp(rawtdtpath, 'setup[a-z]*', 'match'));
+blockname = char(regexp(rawtdtpath, 'block-[0-9]*', 'match')); % blockname = 'block1-rest'
 blocknum = str2num(blockname(6:strfind(blockname, '-')-1)); % blocknum = 1
 
-chairtasks = {'rest', 'cot', 'passive', 'newkluver'}; % tasks performed in chair
-gaittasks = {'gait'}; % tasks performed in gait set up
-if ~(strcmp(setup, 'setupchair')&& ismember(task, chairtasks) || (strcmp(setup, 'setupgait')&& ismember(task, gaittasks)))
-    disp(['set up ''' setup ''' doesn''t match task ''' task ''''])
-    return
-end
 if newnwbtag == 1
     % create new nwb structure
-    identifier = [animal '_' datestr(dateofexp,'yymmdd') '_' setup '_block' num2str(blocknum) '_' task];
-    session_description = ['NWB file test on ' animal ' performing ' task 'in' setup ' on ' datestr(dateofexp,'yymmdd')];
+    identifier = [animal '_' datestr(dateofexp,'yymmdd') '_' setup '_block' num2str(blocknum)];
+    session_description = ['NWB file test on ' animal ' performing ' setup ' on day ' datestr(dateofexp,'yymmdd')];
     nwb = nwbfile(...
         'identifier', identifier, ...
         'session_description', session_description, ...
@@ -78,14 +70,16 @@ streams_keys = fieldnames(tdt.streams);
 neural_key = 'BUGG';
 if ~isempty(find(ismember(streams_keys, neural_key)))
     stream_neur = tdt.streams.(neural_key);
-    nwb = parsetdtneuro(nwb, stream_neur);
+    tdtneur = parse_tdtneuro(stream_neur);
+    nwb.acquisition.set('tdtneur', tdtneur);
 end
 
 %  parse the tdt.streams.Stpd structure
 stpd_key = 'Stpd';
 if ~isempty(find(ismember(streams_keys, stpd_key)))
     stream_stpd = tdt.streams.(stpd_key);
-    nwb = parsetdtstpd(nwb, stream_stpd);
+    tdtstpd = parse_tdtstpd(nwb, stream_stpd);
+    nwb.acquisition.set('tdtstpd', tdtstpd);
 end
 
 
@@ -96,20 +90,22 @@ if exportnwbtag == 1
 end
 
 
-function nwb = parsetdtneuro(nwb, stream)
-% nwb = parsetdtneur()
+function tdtneur = parse_tdtneuro(stream)
 %       parse the tdt.streams.Neur structure of neural data and store the tdt
 %       neural data and the corresponding electrode information into nwb
 %       structure
 %
-% Example:
+% Example usage:
+%       stream_neur = tdt.streams.Neur;
+%       tdtneur = parsetdtneur(stream_neur);
+%       nwb.acquisition.set('tdtneur', tdtneur);
 %
 % inputs:
-%       nwb
 %       stream: tdt.stream.Neur structure
 %
 % output:
-%       nwb
+%       tdtneur:    types.core.ElectricalSeries structure containing the tdt
+%                   neural data and the corresponding electrode information
 
 % deal with the electrode information
 etrodes = stream.channels;
@@ -182,23 +178,25 @@ tdtneur = types.core.ElectricalSeries(...
     'starting_time_rate',stream.fs,...
     'data',stream.data,...
     'electrodes', tablereg);  % electrode is required, otherwise error when exporting
-rawname = 'tdtneur';
-nwb.acquisition.set(rawname, tdtneur);
 
 
-function nwb = parsetdtstpd(nwb, stream)
-% nwb = parsetdtneur()
-%       parse the tdt.streams.Stpd structure of sync data from padding board and the corresponding electrode information into nwb
-%       structure
+
+function tdtstpd = parse_tdtstpd(stream)
+% parsetdtneur() parses the tdt.streams.Stpd structure of sync data 
+%                from padding board and the corresponding electrode 
+%                information into types.core.TimeSeries structure
 %
-% Example:
-%
+% Example usage:
+%       stream_stpd = tdt.streams.(stpd_key)
+% %       stream_neur = tdt.streams.Neur;
+%       tdtneur = parsetdtneur(stream_neur);
+%       nwb.acquisition.set('tdtneur', tdtneur);
 % inputs:
-%       nwb: existed nwb structure
-%       stream: tdt.stream.Stpd structure
+%       stream: stream structure (tdt.stream.Stpd)
 %
 % output:
-%       nwb: nwb structure with tdt.stream.Stpd stored, including sync data 
+%       tdtstpd: types.core.TimeSeries storing the sync data from padding
+%                board and the corresponding electrode information
 
 
 tdtstpd = types.core.TimeSeries(...
@@ -206,6 +204,3 @@ tdtstpd = types.core.TimeSeries(...
     'starting_time_rate',stream.fs, ...
     'data', stream.data,...
     'data_unit', 'Volt');
-
-rawname = 'tdtstpd';
-nwb.acquisition.set(rawname, tdtstpd);
