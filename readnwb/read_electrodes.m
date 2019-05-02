@@ -1,14 +1,16 @@
 function elec_tbl = read_electrodes(nwb)
 %  read_electrodes() read the electrode information in nwb structure
 % 
-%
+% 
 %  Example:
 %           nwbfile = fullfile(fileparts(pwd), 'test.nwb');
 %           addpath(genpath(fullfile(fileparts(pwd), 'toolbox', 'matnwb')))
 %           nwb = nwbRead(nwbfile);
 %           relec_tbl = read_electrodes(nwb);
+%
 %  Input:
 %           nwb         ----  NWB structure
+%
 %  Output:
 %           elec_tbl    ----- electrode information table
 %
