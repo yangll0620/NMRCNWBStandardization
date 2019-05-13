@@ -1,5 +1,7 @@
 function elec_tbl = read_electrodes(nwb)
-%  read_electrodes() read the electrode information in nwb structure
+%  read_electrodes read the electrode information .
+%    elec_tbl = read_electrodes(nwb) return electrode information table.
+%
 % 
 % 
 %  Example:
