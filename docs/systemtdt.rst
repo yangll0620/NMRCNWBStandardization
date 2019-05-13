@@ -13,7 +13,7 @@ Structure of TDT System
 +           +-----------+-------+------+ | Cam1/2:  onset and offset time   +-----------+
 |   .epocs  |   .Cam2   |   no  |  yes | | of each frame                    | n/a       |
 +           +-----------+-------+------+------------------------------------+-----------+
-|           |   .Spd_   |   no  |  yes | | Spd.: onset  and  offset  time   | Spdg      |
+|           |   .Spd_   |   no  |  yes | | Spd_: onset  and  offset  time   | Spdg      |
 |           |           |       |      | | of gait mat                      |           |
 +-----------+-----------+-------+------+------------------------------------+-----------+
 |           |           |       |      | BUGG: store the neural data        |           |
