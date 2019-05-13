@@ -10,11 +10,11 @@ Structure of TDT System
 | tdt filed | sub-field | chair | gait |             description            | user def. |
 +===========+===========+=======+======+====================================+===========+
 |           |   .Cam1   |  yes  |  yes |                                    | n/a       |
-+           +-----------+-------+------+ Cam1/2:  onset and offset time     +-----------+
-|   .epocs  |   .Cam2   |   no  |  yes | of each frame                      | n/a       |
++           +-----------+-------+------+ | Cam1/2:  onset and offset time   +-----------+
+|   .epocs  |   .Cam2   |   no  |  yes | | of each frame                    | n/a       |
 +           +-----------+-------+------+------------------------------------+-----------+
-|           |   .Spd_   |   no  |  yes | Spd.: onset  and  offset  time     | Spdg      |
-|           |           |       |      | of gait mat                        |           |
+|           |   .Spd_   |   no  |  yes | | Spd.: onset  and  offset  time   | Spdg      |
+|           |           |       |      | | of gait mat                      |           |
 +-----------+-----------+-------+------+------------------------------------+-----------+
 |           |           |       |      | BUGG: store the neural data        |           |
 |           |           |       |      |                                    |           |
@@ -34,8 +34,8 @@ Structure of TDT System
 |           |           |       |      |                                    |           |
 |           |           |       |      | start_time = 9.5367e-07            |           |
 +           +-----------+-------+------+------------------------------------+-----------+
-|           |           |       |      | Stpd: synchronization signal       |           |
-|           |           |       |      | from the touch pad.                |           |
+|           |           |       |      | | Stpd: synchronization signal     |           |
+|           |           |       |      | | from the touch pad.              |           |
 |           |   .Stpd   |  yes  |  no  |                                    | Stpd      |
 |           |           |       |      | [1, n_temporal]                    |           |
 |           |           |       |      |                                    |           |
