@@ -8,7 +8,7 @@ function elec_tbl = read_electrodes(nwb)
 %           nwbfile = fullfile(fileparts(pwd), 'test.nwb');
 %           addpath(genpath(fullfile(fileparts(pwd), 'toolbox', 'matnwb')))
 %           nwb = nwbRead(nwbfile);
-%           relec_tbl = read_electrodes(nwb);
+%           elec_tbl = read_electrodes(nwb);
 %
 %  Input:
 %           nwb         ----  NWB structure

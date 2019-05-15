@@ -1,5 +1,7 @@
 function nwb = convraw_ma2nwb(rawmapath, blocknum, nwb, exportnwbtag)
-% % CONVRAW_MA2NWB convert raw ma data in rawmapath to NWB.acquisition
+%  CONVRAW_MA2NWB convert raw ma data in rawmapath to NWB.acquisition
+%    nwb = convraw_ma2nwb(rawmapath, blocknum, nwb, exportnwbtag) return nwb 
+%    structure containing ma .anc and .trc information
 % 
 % 
 % Example usage:
@@ -16,8 +18,8 @@ function nwb = convraw_ma2nwb(rawmapath, blocknum, nwb, exportnwbtag)
 %       exportnwbtag: tag for exporting nwb file (1) or not (default 0)
 %
 % Outputs:
-%       nwb: nwb structure containing ma .anc and trc information 
-%%
+%       nwb: nwb structure containing ma .anc and .trc information 
+
 if nargin < 4
     exportnwbtag = 1;
 end
