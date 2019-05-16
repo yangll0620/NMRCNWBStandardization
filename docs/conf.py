@@ -176,7 +176,7 @@ html_static_path = ['_static']
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'ReadtheDocsTemplatedoc'
+htmlhelp_basename = 'NMRCNWBStandardizedStructuredoc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -196,7 +196,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  ('index', 'NWBStandardized.tex', u'NMRC NWB Standardized Structure',
+  ('index', 'NWBStandardizedStructure.tex', u'NMRC NWB Standardized Structure',
    u'Lingling Yang', 'manual'),
 ]
 
