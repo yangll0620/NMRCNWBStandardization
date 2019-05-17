@@ -5,3 +5,5 @@
 *.asv
 toolbox/matnwb
 toolbox/TDTMatlabSDK
+
+docs/_build
