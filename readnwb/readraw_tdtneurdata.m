@@ -1,5 +1,6 @@
 function neurdata = readraw_tdtneurdata(nwb, chn_read, idx_read)
 %  readraw_tdtneurdata read raw neural data. 
+%
 %    neurdata = readraw_tdtneurdata(nwb, chn_read, idx_read) return the 
 %    readed neural data (matrix: nchns * ntemporal) 
 % 

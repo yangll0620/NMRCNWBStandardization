@@ -1,24 +1,31 @@
  function nwb = convraw_tdt2nwb(rawtdtpath, nwb, exportnwbtag)
 % convraw_tdt2nwb converts raw TDT data.
+%
 %   nwb = convraw_tdt2nwb(rawmapath, nwb, exportnwbtag) return nwb 
 %   structure containing containing tdt information (i.e. neural data, 
 %   electrodes, touchpad sync data,etc)
 % 
 % Example usage:
-%           rawtdtpath = fullfile('H:','My Drive','NMRC_umn', 'Projects',... 
+%           rawtdtpath = fullfile('H:','My Drive','NMRC_umn', 'Projects',...
+%
 %                        'DataStorageAnalysis','workingfolders','home','data_shared',...
+%
 %                        'raw','bug','expdata', 'setupchair','bug-190111', 'tdt','block-1');
+%
 %           nwb = convraw_tdt2nwb(rawtdtpath);
 % 
 % 
-% inputs:
-%       rawtdtpath: the folder containing all the tdt files
-%       nwb: exist nwb structure (if missing, will create a new nwb structure)
-%       newnwbtag: tag for creating new nwb (default, 1) or not (0)
-%       exportnwbtag: tag for exporting nwb file (1) or not (default 0)
+% Inputs
+%       rawtdtpath      ---- the folder containing all the tdt files
 %
-% outputs:
-%       nwb: nwb structure containing tdt information (i.e. neural data, electrodes, etc)
+%       nwb             ---- exist nwb structure (if missing, will create a new nwb structure)
+%
+%       newnwbtag       ---- tag for creating new nwb (default, 1) or not (0)
+%
+%       exportnwbtag    ---- tag for exporting nwb file (1) or not (default 0)
+%
+% Output:
+%       nwb             ---- nwb structure containing tdt information (i.e. neural data, electrodes, etc)
 
 
 if nargin < 3

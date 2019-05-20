@@ -6,19 +6,25 @@ function nwb = convraw_ma2nwb(rawmapath, blocknum, nwb, exportnwbtag)
 % 
 % Example usage:
 %           rawtdtpath = fullfile('H:','My Drive','NMRC_umn', 'Projects', 'DataStorageAnalysis','workingfolders','home','data_shared','raw','bug','expdata', 'setupchair','bug-190111', 'tdt','block-1');
+%
 %           nwb = convraw_tdt2nwb(rawtdtpath);
+%
 %           nwb = convraw_ma2nwb(rawmapath, blocknum);
+%
 %           nwb = convraw_ma2nwb(rawmapath, blocknum, nwb);
+%
 %           nwb = convraw_ma2nwb(rawmapath, blocknum, nwb, exportnwbtag);
 % 
 % Inputs:
-%       rawmapath: the folder containing all the tdt files
-%       blocknum: the block number (default 1)
-%       nwb: exist nwb structure (if missing, will create a new nwb structure)
-%       exportnwbtag: tag for exporting nwb file (1) or not (default 0)
+%       rawmapath       ---- the folder containing all the tdt files
 %
-% Outputs:
-%       nwb: nwb structure containing ma .anc and .trc information 
+%       blocknum        ---- the block number (default 1)
+%
+%       nwb             ---- exist nwb structure (if missing, will create a new nwb structure)
+%       exportnwbtag    ---- tag for exporting nwb file (1) or not (default 0)
+%
+% Outputs
+%       nwb             ---- nwb structure containing ma .anc and .trc information 
 
 if nargin < 4
     exportnwbtag = 1;

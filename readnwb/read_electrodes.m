@@ -6,15 +6,18 @@ function elec_tbl = read_electrodes(nwb)
 % 
 %  Example:
 %           nwbfile = fullfile(fileparts(pwd), 'test.nwb');
+%
 %           addpath(genpath(fullfile(fileparts(pwd), 'toolbox', 'matnwb')))
+%
 %           nwb = nwbRead(nwbfile);
+%
 %           elec_tbl = read_electrodes(nwb);
 %
 %  Input:
-%           nwb         ----  NWB structure
+%           nwb:  NWB structure
 %
 %  Output:
-%           elec_tbl    ----- electrode information table
+%           elec_tbl electrode information table
 %
 
 dyntblreg = nwb.acquisition.get('tdtneur').electrodes; % dyntblreg: DynamicTableRegion type, a region/index into a DynamicTable
