@@ -6,11 +6,6 @@ function elec_tbl = read_electrodes(nwb)
 % 
 % 
 %  Example:
-%           nwbfile = fullfile(fileparts(pwd), 'test.nwb');
-%
-%           addpath(genpath(fullfile(fileparts(pwd), 'toolbox', 'matnwb')))
-%
-%           nwb = nwbRead(nwbfile);
 %
 %           elec_tbl = read_electrodes(nwb);
 %

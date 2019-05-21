@@ -15,7 +15,8 @@ Contents:
 
 
    aboutNWB
-   pretoolboxes
+   installation
    inputsystems
    functions
    examples
+   release

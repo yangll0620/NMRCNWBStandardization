@@ -1,19 +1,14 @@
-function nwb = convraw_ma2nwb(rawmapath, blocknum, nwb, exportnwbtag)
+function nwb = convraw_ma2nwb(rawmapath, blocknum, exportnwbtag, nwb)
 %  convraw_ma2nwb convert raw ma data in rawmapath to NWB.acquisition
+%
 %    nwb = convraw_ma2nwb(rawmapath, blocknum, nwb, exportnwbtag) return nwb 
-%    structure containing ma .anc and .trc information
+%    structure containing ma information in both .anc and .trc files 
 % 
 % 
 % Example usage:
-%           rawtdtpath = fullfile('H:','My Drive','NMRC_umn', 'Projects', 'DataStorageAnalysis','workingfolders','home','data_shared','raw','bug','expdata', 'setupchair','bug-190111', 'tdt','block-1');
-%
-%           nwb = convraw_tdt2nwb(rawtdtpath);
+%           rawmapath = fullfile('H:','My Drive','NMRC_umn', 'Projects', 'DataStorageAnalysis','workingfolders','home','data_shared','raw','bug','expdata', 'setupchair','bug-190111', 'ma');
 %
 %           nwb = convraw_ma2nwb(rawmapath, blocknum);
-%
-%           nwb = convraw_ma2nwb(rawmapath, blocknum, nwb);
-%
-%           nwb = convraw_ma2nwb(rawmapath, blocknum, nwb, exportnwbtag);
 % 
 % Inputs:
 %       rawmapath       ---- the folder containing all the tdt files
@@ -21,19 +16,18 @@ function nwb = convraw_ma2nwb(rawmapath, blocknum, nwb, exportnwbtag)
 %       blocknum        ---- the block number (default 1)
 %
 %       nwb             ---- exist nwb structure (if missing, will create a new nwb structure)
+%
 %       exportnwbtag    ---- tag for exporting nwb file (1) or not (default 0)
 %
 % Outputs
 %       nwb             ---- nwb structure containing ma .anc and .trc information 
 
 if nargin < 4
-    exportnwbtag = 1;
-end
-if nargin < 3
     newnwbtag = 1;
 end
-if nargin < 2
-    blocknum = 1;
+
+if nargin < 3
+    exportnwbtag = 0;
 end
 
 addpath(genpath(fullfile(fileparts(pwd), 'toolbox', 'matnwb'))) % add matnwb path ../toolbox/matnwb
@@ -78,17 +72,18 @@ if exportnwbtag == 1
 end
 
 function ma_trc = parse_matrcfile(file_matrc)
-%% parse_matrcfile() parses the ma .trc tracking file into a types.core.TimeSeries structure
+% parse_matrcfile() parses the ma .trc tracking file into a types.core.TimeSeries structure
 %
 % Example usage:
 %       file_maarc = fullfile('H:','My Drive','NMRC_umn', 'Projects', 'DataStorageAnalysis','workingfolders','home','data_shared','raw','bug','expdata', 'setupchair','bug-190111', 'ma','Bug_20190111_1_cleaned.trc');
+%
 %       ma_trc = parse_matrcfile(file_matrc);
 %
-% input:
+% Input:
 %       file_matrc: the full path of ma .trc file
 %
 %
-% output: 
+% Output: 
 %       ma_trc: a types.core.TimeSeries structure storing the joint tracking data
 %               of ma system
 

@@ -2,18 +2,13 @@ function neurdata = readraw_tdtneurdata(nwb, chn_read, idx_read)
 %  readraw_tdtneurdata read raw neural data. 
 %
 %    neurdata = readraw_tdtneurdata(nwb, chn_read, idx_read) return the 
-%    readed neural data (matrix: nchns * ntemporal) 
-% 
+%    readed neural data (matrix: nchns * ntemporal), will take a while
+%    for loading the tdt data
 % 
 % 
 %  Example:
-%           nwbfile = fullfile(fileparts(pwd), 'test.nwb');
 %
-%           addpath(genpath(fullfile(fileparts(pwd), 'toolbox', 'matnwb')))
-%
-%           nwb = nwbRead(nwbfile);
-%
-%           relec_tbl = read_electrodes(nwb);
+%           neurdata = readraw_tdtneurdata(nwb, [1 5]);
 % 
 %  Input:
 %           nwb         ----  NWB structure

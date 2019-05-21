@@ -3,6 +3,9 @@
 *.mp4
 *.pyc
 *.asv
-toolbox/matnwb
+*.nwb
+
+toolbox/matnwb-master
 toolbox/TDTMatlabSDK
 docs/_build
+
