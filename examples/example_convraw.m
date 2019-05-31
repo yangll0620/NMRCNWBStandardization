@@ -14,7 +14,8 @@ onedaypath = fullfile('H:','My Drive','NMRC_umn', 'Projects',...
 'DataStorageAnalysis','workingfolders',...
 'home', 'data_shared', 'raw',animal, ...
     'expdata',setup ,[animal '-' datestr(dateofexp, 'yymmdd')]);
-googledocid_electable = '1s7MvnI3C4WzyW2dxexYaShCHL_z-AzEHE-N3uXaSMJU';% the value between 'd/'  and '/edit' in your electrode spreadsheet's url
+googledocid_electable = '1Acg2vV2C6Lb8zIFtP2Qf3E9ugQ0TjJMX2S_sv2J18zk';% the value between 'd/'  and '/edit' in your electrode spreadsheet's url
+
 
 % convert raw tdt data into nwb structure
 rawtdtpath = fullfile(onedaypath, 'tdt',['block-' num2str(blocknum)]);
