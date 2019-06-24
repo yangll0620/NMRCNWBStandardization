@@ -13,12 +13,12 @@ end
 nwb = nwbRead(nwbfile);
 
 % read tdt electrode information
-elec_tbl = read_electrodes(nwb);
+elec_tbl = readnwb_electrodes(nwb);
 
 % read raw tdt neural data
 chn_read = [1 5]; % read neural data of channels [1:5], default read all channels
 idx_read = [100 1000]; % read the neural data of time stamps [100:1000], default read all time stamps 
-neurdata = readraw_tdtneurdata(nwb, chn_read, idx_read);
+neurdata = readnwb_rawtdtneurdata(nwb, chn_read, idx_read);
 
 % read raw touch pad synchronization data
-stpddata = readraw_tdtstpddata(nwb);
+stpddata = readnwb_rawtdtstpddata(nwb);

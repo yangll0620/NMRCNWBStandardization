@@ -71,7 +71,7 @@ if ~isempty(find(ismember(streams_keys, neural_key)))
     stream_neur = tdt.streams.(neural_key);
     nwb = parse_tdtelect(nwb, googledocid_electable);
     tdtneur = parse_tdtneur(stream_neur);
-    nwb.acquisition.set('tdtneur', tdtneur);
+    nwb.acquisition.set('tdt_neur', tdtneur);
 end
 
 %  parse the tdt.streams.Stpd structure
@@ -79,7 +79,7 @@ stpd_key = 'Stpd';
 if ~isempty(find(ismember(streams_keys, stpd_key)))
     stream_stpd = tdt.streams.(stpd_key);
     tdtstpd = parse_tdtstpd(stream_stpd);
-    nwb.acquisition.set('tdtstpd', tdtstpd);
+    nwb.acquisition.set('tdt_stpd', tdtstpd);
 end
 
 
