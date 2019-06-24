@@ -6,7 +6,7 @@ function nwb = convraw_ma2nwb(rawmapath, blocknum, exportnwbtag, nwb)
 % 
 % 
 % Example usage:
-%           rawmapath = fullfile('H:','My Drive','NMRC_umn', 'Projects', 'DataStorageAnalysis','workingfolders','home','data_shared','raw','bug','expdata', 'setupchair','bug-190111', 'ma');
+%           rawmapath = fullfile('F:', 'yang7003@umn', 'NMRC_umn', 'Projects', 'NWBStandardization', 'workingfolders', 'home', 'data_shared', 'raw', 'bug', 'expdata','setupchair', 'bug-190111', 'ma')
 %
 %           nwb = convraw_ma2nwb(rawmapath, blocknum);
 % 
@@ -15,9 +15,9 @@ function nwb = convraw_ma2nwb(rawmapath, blocknum, exportnwbtag, nwb)
 %
 %       blocknum        ---- the block number (default 1)
 %
-%       nwb             ---- exist nwb structure (if missing, will create a new nwb structure)
-%
 %       exportnwbtag    ---- tag for exporting nwb file (1) or not (default 0)
+%       
+%       nwb             ---- exist nwb structure (if missing, will create a new nwb structure)
 %
 % Outputs
 %       nwb             ---- nwb structure containing ma .anc and .trc information 
@@ -30,7 +30,7 @@ if nargin < 3
     exportnwbtag = 0;
 end
 
-addpath(genpath(fullfile(fileparts(pwd), 'toolbox', 'matnwb'))) % add matnwb path ../toolbox/matnwb
+addpath(genpath(fullfile('..', 'toolbox', 'matnwb'))) % add matnwb path ../toolbox/matnwb
 
 %% extract animal, dateofexp, setup et.al information
 animal = rawmapath(strfind(rawmapath, 'raw')+4: strfind(rawmapath, 'expdata')-2);
@@ -48,18 +48,18 @@ if newnwbtag == 1
         'file_create_date', datestr(now, 'yyyy-mm-dd HH:MM:SS'));
 end
 
-%% parse ma .anc file
+%% parse ma .trc file
 filename_matrc = [[upper(animal(1)) animal(2:end)] '_' datestr(dateofexp, 'yyyymmdd') '_' num2str(blocknum) '_cleaned.trc']; % filename_matrc = 'Bug_20190111_1_cleaned.trc'
 file_matrc = fullfile(rawmapath,filename_matrc);
 
 ma_trc = parse_matrcfile(file_matrc);
-nwb.acquisition.set('ma_trc', ma_trc);
+nwb.acquisition.set('ma_marker', ma_trc);
 
 %% parse ma .anc file
 filename_maanc = [[upper(animal(1)) animal(2:end)] '_' datestr(dateofexp, 'yyyymmdd') '_' num2str(blocknum) '.anc']; % filename_maanc = 'Bug_20190111_1.anc'
 file_maanc = fullfile(rawmapath,filename_maanc);
 ma_anc = parse_maancfile(file_maanc);
-nwb.acquisition.set('ma_anc', ma_anc);
+nwb.acquisition.set('ma_sync', ma_anc);
 
 %% export
 if exportnwbtag == 1
@@ -93,7 +93,7 @@ dataimport = importdata(file_matrc,'\t',numlinestart-1);% reading numeric data s
 
 % dataimport.data (ntimes * ncolumns): 
 %   first column (frame #), second column (time stamps)
-%   third -end columns (x,y,z positions for each joints)
+%   third -end columns (x,y,z positions for all joints)
 time = dataimport.data(:,2);
 data = dataimport.data(:,3:end);
 
