@@ -7,6 +7,9 @@
 
 toolbox/matnwb
 toolbox/TDTMatlabSDK
-docs/_build
+
 funcsuseful/
 
+# sphinx related ignore files or folders
+docs/_build
+docs/_table_tgn
