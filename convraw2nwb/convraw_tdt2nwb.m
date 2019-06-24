@@ -4,7 +4,7 @@
 %   nwb = convraw_tdt2nwb(rawmapath, googledocid_electable, nwb, exportnwbtag) return nwb 
 %   structure containing containing tdt information (i.e. neural data, 
 %   electrodes, touchpad sync data,etc).  
-
+%
 %   Electrode information are extracted from a spreadsheet of ['https://docs.google.com/spreadsheet/ccc?key=' googledocid_electable '&output=csv&pref=2']. 
 %   Example of electrode spreadsheet can be seen here ('https://docs.google.com/spreadsheet/ccc?key=1s7MvnI3C4WzyW2dxexYaShCHL_z-AzEHE-N3uXaSMJU&output=csv&pref=2').
 % 
