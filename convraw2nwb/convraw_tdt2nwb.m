@@ -1,15 +1,15 @@
  function nwb = convraw_tdt2nwb(rawtdtpath, googledocid_electable, exportnwbtag, nwb)
 % convraw_tdt2nwb converts raw TDT data.
 %
-%   nwb = convraw_tdt2nwb(rawmapath, nwb, exportnwbtag) return nwb 
+%   nwb = convraw_tdt2nwb(rawmapath, googledocid_electable, nwb, exportnwbtag) return nwb 
 %   structure containing containing tdt information (i.e. neural data, 
-%   electrodes, touchpad sync data,etc)
+%   electrodes, touchpad sync data,etc).  
+
+%   Electrode information are extracted from a spreadsheet of ['https://docs.google.com/spreadsheet/ccc?key=' googledocid_electable '&output=csv&pref=2']. 
+%   Example of electrode spreadsheet can be seen here ('https://docs.google.com/spreadsheet/ccc?key=1s7MvnI3C4WzyW2dxexYaShCHL_z-AzEHE-N3uXaSMJU&output=csv&pref=2').
 % 
 % Example usage:
-%           rawtdtpath = fullfile('H:','My Drive','NMRC_umn', 'Projects', ...
-%                                 'DataStorageAnalysis','workingfolders', ...
-%                                 'home', 'data_shared', 'raw','bug', ...
-%                                 'expdata', 'setupchair','bug-190111', 'tdt','block-1');
+%           rawtdtpath = 'F:\yang7003@umn\NMRC_umn\Projects\NWBStandardization\workingfolders\home\data_shared\raw\bug\expdata\setupchair\bug-190111\tdt\block-1';
 %
 %           googledocid_electable = '1s7MvnI3C4WzyW2dxexYaShCHL_z-AzEHE-N3uXaSMJU'
 %
@@ -36,18 +36,13 @@ if nargin < 3
     exportnwbtag = 0;
 end
 
-addpath(genpath(fullfile(fileparts(pwd), 'toolbox', 'matnwb'))) % add matnwb path ../toolbox/matnwb
-addpath(genpath(fullfile(fileparts(pwd), 'util'))) % add util path ../util
+addpath(genpath(fullfile('..', 'toolbox', 'matnwb'))) % add matnwb path ../toolbox/matnwb
 
 % load tdt file to matlab
-if isunix || ispc % unix-like platform
+if isunix || ispc 
     addpath(genpath(fullfile(fileparts(pwd), 'toolbox', 'TDTMatlabSDK'))) % add tdt sdk path ../toolbox/TDTMatlabSDK
     tdt = TDTbin2mat(rawtdtpath);
 end
-% if ispc % windows platform : not use now
-%     addpath(genpath(fullfile(fileparts(pwd), 'util'))) % add util path ../util for tdt2matlab_activeX
-%     tdt = tdt2matlab_activeX(rawtdtpath);
-% end
 
 animal = rawtdtpath(strfind(rawtdtpath, 'raw')+4: strfind(rawtdtpath, 'expdata')-2);
 dateofexp = datenum(tdt.info.date); % tdt.info.date = '2019-Jan-11'
