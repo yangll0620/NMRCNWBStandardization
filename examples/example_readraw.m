@@ -7,7 +7,7 @@ function example_readraw()
 nwbfile = 'test.nwb';
 if ~exist(nwbfile)
     disp('Please first download the test.nwb file here:')
-    disp('https://drive.google.com/file/d/1resIFv20QiY2mXc1mta-TE9_1xK6PVWj/view?usp=sharing')
+    disp('https://drive.google.com/open?id=1rqT5kkedZTvqGoWwNhGrS4Wly_1OQxPZ')
 end
 
 nwb = nwbRead(nwbfile);
