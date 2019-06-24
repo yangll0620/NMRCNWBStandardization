@@ -21,9 +21,9 @@ TDT Electrodes Read Function
 
 .. autofunction:: readnwb_electrodes
 
-.. _readnwb_rawstpd:
+.. _readnwb_rawtdtstpddata:
 
 raw TDT Touch Pad Data Read Function
 ------------------------------------
 
-.. autofunction:: readnwb_rawstpddata
+.. autofunction:: readnwb_rawtdtstpddata
