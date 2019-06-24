@@ -2,7 +2,7 @@ function example_readraw()
 % example_readraw() demonstrates about how to read data from nwb structure
 %
 % first download the test.nwb file here: 
-%  'https://drive.google.com/file/d/1resIFv20QiY2mXc1mta-TE9_1xK6PVWj/view?usp=sharing'
+%  'https://drive.google.com/open?id=1rqT5kkedZTvqGoWwNhGrS4Wly_1OQxPZ'
 
 nwbfile = 'test.nwb';
 if ~exist(nwbfile)

@@ -1,6 +1,6 @@
 function example_gentestnwb()
 % example_gentestnwb demonstrates how to generate the example test.nwb file
-% 
+% test.nwb can also be downloaded from https://drive.google.com/open?id=1rqT5kkedZTvqGoWwNhGrS4Wly_1OQxPZ
 
 addpath(fullfile('..','convraw2nwb'))
 
@@ -18,7 +18,6 @@ nwb = convraw_ma2nwb(rawmapath, blocknum, exportnwbtag, nwb);
 
 
 %% export 
-out_dir = 'F:\yang7003@umn\NMRC_umn\Projects\NWBStandardization\example_dataset';
-nwbExport(nwb, fullfile(out_dir,'test.nwb'));
-
+savefile = 'test.nwb';
+nwbExport(nwb, savefile);
 end
