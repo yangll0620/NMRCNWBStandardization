@@ -1,7 +1,7 @@
-function stpddata = readraw_tdtstpddata(nwb)
-%  readraw_tdtstpddata read raw sync. touchpad data of tdt system. 
+function stpddata = readnwb_rawtdtstpddata(nwb)
+%  readnwb_rawtdtstpddata read raw sync. touchpad data of tdt system. 
 %
-%    stpddata = readraw_tdtstpddata(nwb) return the readed touchpad
+%    stpddata = readnwb_rawtdtstpddata(nwb) return the readed touchpad
 %    synchronization data (vector: 1 * ntemporal)
 % 
 %  Example:
