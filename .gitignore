@@ -5,7 +5,8 @@
 *.asv
 *.nwb
 
-toolbox/matnwb-master
+toolbox/matnwb
 toolbox/TDTMatlabSDK
 docs/_build
+funcsuseful/
 
