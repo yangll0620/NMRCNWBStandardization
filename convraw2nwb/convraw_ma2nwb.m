@@ -6,7 +6,9 @@ function nwb = convraw_ma2nwb(rawmapath, blocknum, exportnwbtag, nwb)
 % 
 % 
 % Example usage:
-%           rawmapath = fullfile('F:', 'yang7003@umn', 'NMRC_umn', 'Projects', 'NWBStandardization', 'workingfolders', 'home', 'data_shared', 'raw', 'bug', 'expdata','setupchair', 'bug-190111', 'ma')
+%           rawmapath = 'workingfolders\\home\\data_shared\\raw\\bug\\expdata\\setupchair\\bug-190111\\ma';
+%
+%           blocknum = 1;
 %
 %           nwb = convraw_ma2nwb(rawmapath, blocknum);
 % 
@@ -24,6 +26,8 @@ function nwb = convraw_ma2nwb(rawmapath, blocknum, exportnwbtag, nwb)
 
 if nargin < 4
     newnwbtag = 1;
+else
+    newnwbtag = 0;
 end
 
 if nargin < 3
@@ -44,8 +48,12 @@ if newnwbtag == 1
     session_description = ['NWB file test on ' animal ' performing ' setup ' on day ' datestr(dateofexp,'yymmdd')];
     nwb = nwbfile(...
         'identifier', identifier, ...
-        'session_description', session_description, ...
-        'file_create_date', datestr(now, 'yyyy-mm-dd HH:MM:SS'));
+        'session_description', session_description);
+else
+    if isa(nwb.file_create_date,'types.untyped.DataStub') % nwb.file_create_date is not a datetime format
+        file_create_date = nwb.file_create_date.load();
+        nwb.file_create_date = file_create_date;
+    end
 end
 
 %% parse ma .trc file
@@ -65,7 +73,7 @@ nwb.acquisition.set('ma_sync', ma_anc);
 if exportnwbtag == 1
     outdest = fullfile(['test_convrawma' '.nwb']);
     % fill the requied field of nwb for exporting
-    if ~isempty(nwb.session_start_time) % nwb.session_start_time
+    if isempty(nwb.session_start_time) % nwb.session_start_time
         nwb.session_start_time = '';
     end
     nwbExport(nwb, outdest);
@@ -159,4 +167,5 @@ ma_anc = types.core.TimeSeries(... % analog data
     'starting_time', time(1), ...
     'starting_time_rate', sr,...
     'timestamps',time,...
-    'data',data);
+    'data',data,...
+    'data_unit', 'uV?');

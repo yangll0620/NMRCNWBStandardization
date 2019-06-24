@@ -5,8 +5,9 @@
 %   structure containing containing tdt information (i.e. neural data, 
 %   electrodes, touchpad sync data,etc).  
 %
-%   Electrode information are extracted from a spreadsheet of ['https://docs.google.com/spreadsheet/ccc?key=' googledocid_electable '&output=csv&pref=2']. 
-%   Example of electrode spreadsheet can be seen here ('https://docs.google.com/spreadsheet/ccc?key=1s7MvnI3C4WzyW2dxexYaShCHL_z-AzEHE-N3uXaSMJU&output=csv&pref=2').
+%   Electrode information are extracted from a spreadsheet.
+%   Example of electrode spreadsheet can be seen here 
+%   ('https://docs.google.com/spreadsheet/ccc?key=1s7MvnI3C4WzyW2dxexYaShCHL_z-AzEHE-N3uXaSMJU&output=csv&pref=2').
 % 
 % Example usage:
 %           rawtdtpath = 'workingfolders\\home\\data_shared\\raw\\bug\\expdata\\setupchair\\bug-190111\\tdt\\block-1';
@@ -21,7 +22,7 @@
 %
 %       googledocid_electable   ---- the value between 'd/'  and '/edit' in your electrode spreadsheet's url
 %
-%       exportnwbtag            ---- tag for exporting nwb file (1) or not (default 0)
+%       exportnwbtag            ---- tag for exporting nwb file (1) to test.nwb or not (default 0)
 %
 %       nwb                     ---- exist nwb structure (if missing, will create a new nwb structure)
 %
@@ -30,6 +31,8 @@
 
 if nargin < 4
     newnwbtag = 1;
+else
+    newnwbtag = 0;
 end
 
 if nargin < 3
@@ -45,7 +48,7 @@ if isunix || ispc
 end
 
 animal = rawtdtpath(strfind(rawtdtpath, 'raw')+4: strfind(rawtdtpath, 'expdata')-2);
-dateofexp = datenum(tdt.info.date); % tdt.info.date = '2019-Jan-11'
+dateofexp = datenum(tdt.info.date, 'yyyy-mmm-dd'); % tdt.info.date = '2019-Jan-11'
 setup = char(regexp(rawtdtpath, 'setup[a-z]*', 'match'));
 blockname = char(regexp(rawtdtpath, 'block-[0-9]*', 'match')); % blockname = 'block1-rest'
 blocknum = str2num(blockname(6:strfind(blockname, '-')-1)); % blocknum = 1
@@ -56,8 +59,12 @@ if newnwbtag == 1
     session_description = ['NWB file test on ' animal ' performing ' setup ' on day ' datestr(dateofexp,'yymmdd')];
     nwb = nwbfile(...
         'identifier', identifier, ...
-        'session_description', session_description, ...
-        'file_create_date', datetime('now'));
+        'session_description', session_description);
+else
+    if isa(nwb.file_create_date,'types.untyped.DataStub') % nwb.file_create_date is not a datetime format
+        file_create_date = nwb.file_create_date.load();
+        nwb.file_create_date = file_create_date;
+    end
 end
 session_start_time = datevec([tdt.info.date tdt.info.utcStartTime], 'yyyy-mmm-ddHH:MM:SS');
 nwb.session_start_time = datestr(session_start_time, 'yyyy-mm-dd HH:MM:SS');
@@ -85,10 +92,10 @@ end
 
 if exportnwbtag == 1
     %% export
-    outdest = fullfile(['test' '.nwb']);
+    outdest = fullfile(['test_convrawtdt' '.nwb']);
     nwbExport(nwb, outdest);
 end
-
+end
 
 function nwb = parse_tdtelect(nwb, googledocid_electable)
 % parse_tdtelect parses the tdt electrode information from google sheet
@@ -136,7 +143,7 @@ end
 elec_tbl = [elec_tbl table(elecgroup_ref)];
 elec_dyntable = util.table2nwb(elec_tbl, 'all electrodes');
 nwb.general_extracellular_ephys_electrodes = elec_dyntable;
-
+end
 
 function tdtneur = parse_tdtneur(stream)
 % parse_tdtneuro parses the tdt.streams.Neur structure
@@ -165,7 +172,7 @@ tdtneur = types.core.ElectricalSeries(...
     'starting_time_rate',stream.fs,...
     'data',stream.data,...
     'electrodes', tablereg);  % electrode is required, otherwise error when exporting
-
+end
 
 
 function tdtstpd = parse_tdtstpd(stream)
@@ -191,3 +198,4 @@ tdtstpd = types.core.TimeSeries(...
     'starting_time_rate',stream.fs, ...
     'data', stream.data,...
     'data_unit', 'Volt');
+end
