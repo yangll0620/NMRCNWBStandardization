@@ -13,15 +13,6 @@ Convert raw TDT Data to NWb Structure
 
 .. autofunction:: convraw_tdt2nwb
 
-function convraw_tdt2nwb() calls parse_tdtneur()
-
-.. _parse_tdtneur:
-
-Parse TDT Neural Data
-"""""""""""""""""""""
-
-.. autofunction:: parse_tdtneur
-
 
 .. _convraw_ma2nwb:
 
