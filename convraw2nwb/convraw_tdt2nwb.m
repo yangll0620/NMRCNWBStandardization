@@ -9,7 +9,7 @@
 %   Example of electrode spreadsheet can be seen here ('https://docs.google.com/spreadsheet/ccc?key=1s7MvnI3C4WzyW2dxexYaShCHL_z-AzEHE-N3uXaSMJU&output=csv&pref=2').
 % 
 % Example usage:
-%           rawtdtpath = 'F:\yang7003@umn\NMRC_umn\Projects\NWBStandardization\workingfolders\home\data_shared\raw\bug\expdata\setupchair\bug-190111\tdt\block-1';
+%           rawtdtpath = 'workingfolders\\home\\data_shared\\raw\\bug\\expdata\\setupchair\\bug-190111\\tdt\\block-1';
 %
 %           googledocid_electable = '1s7MvnI3C4WzyW2dxexYaShCHL_z-AzEHE-N3uXaSMJU'
 %

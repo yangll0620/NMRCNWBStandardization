@@ -1,22 +1,29 @@
------------------------
+***********************
 Read from NWB Structure
------------------------
+***********************
 
 .. automodule:: readnwb
 
 
 
-.. _readraw_tdtneurdata:
+.. _readnwb_rawtdtneurdata:
 
 raw TDT Neural Data Read Function
-++++++++++++++++++++++++++++++++++
+---------------------------------
 
-.. autofunction:: readraw_tdtneurdata
+.. autofunction:: readnwb_rawtdtneurdata
 
 
-.. _read_electrodes:
+.. _readnwb_electrodes:
 
 TDT Electrodes Read Function
-++++++++++++++++++++++++++++
+----------------------------
 
-.. autofunction:: read_electrodes
+.. autofunction:: readnwb_electrodes
+
+.. _readnwb_rawstpd:
+
+raw TDT Touch Pad Data Read Function
+------------------------------------
+
+.. autofunction:: readnwb_rawstpddata
