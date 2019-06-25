@@ -1,4 +1,4 @@
- function nwb = convraw_tdt2nwb(rawtdtpath, googledocid_electable, exportnwbtag, nwb)
+function nwb = convraw_tdt2nwb(rawtdtpath, googledocid_electable, exportnwbtag, nwb)
 % convraw_tdt2nwb converts raw TDT data to NWB.acquisition
 %
 %   nwb = convraw_tdt2nwb(rawmapath, googledocid_electable, nwb, exportnwbtag) return nwb 
