@@ -7,7 +7,7 @@ function nwb = convraw_tdt2nwb(rawtdtpath, googledocid_electable, exportnwbtag, 
 %
 %   Electrode information are extracted from a spreadsheet.
 %   Example of electrode spreadsheet can be seen here 
-%   ('https://docs.google.com/spreadsheet/ccc?key=1s7MvnI3C4WzyW2dxexYaShCHL_z-AzEHE-N3uXaSMJU&output=csv&pref=2').
+%   ('https://drive.google.com/open?id=1rqT5kkedZTvqGoWwNhGrS4Wly_1OQxPZ').
 % 
 % Example usage:
 %           rawtdtpath = 'workingfolders\\home\\data_shared\\raw\\bug\\expdata\\setupchair\\bug-190111\\tdt\\block-1';
