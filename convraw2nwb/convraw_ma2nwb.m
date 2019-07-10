@@ -83,7 +83,7 @@ function ma_trc = parse_matrcfile(file_matrc)
 % parse_matrcfile() parses the ma .trc tracking file into a types.core.TimeSeries structure
 %
 % Example usage:
-%       file_maarc = fullfile('H:','My Drive','NMRC_umn', 'Projects', 'DataStorageAnalysis','workingfolders','home','data_shared','raw','bug','expdata', 'setupchair','bug-190111', 'ma','Bug_20190111_1_cleaned.trc');
+%       file_matrc = fullfile('H:','My Drive','NMRC_umn', 'Projects', 'DataStorageAnalysis','workingfolders','home','data_shared','raw','bug','expdata', 'setupchair','bug-190111', 'ma','Bug_20190111_1_cleaned.trc');
 %
 %       ma_trc = parse_matrcfile(file_matrc);
 %
@@ -132,11 +132,11 @@ function ma_anc = parse_maancfile(file_maanc)
 %% parse_maancfile() parses the ma .anc analog data file into a types.core.TimeSeries structure
 %
 % Example usage:
-%       file_maarc = fullfile('H:','My Drive','NMRC_umn', 'Projects', 'DataStorageAnalysis','workingfolders','home','data_shared','raw','bug','expdata', 'setupchair','bug-190111', 'ma','Bug_20190111_1.anc');
+%       file_maanc = fullfile('H:','My Drive','NMRC_umn', 'Projects', 'DataStorageAnalysis','workingfolders','home','data_shared','raw','bug','expdata', 'setupchair','bug-190111', 'ma','Bug_20190111_1.anc');
 %       ma_trc = parse_matrcfile(file_matrc);
 %
 % input:
-%       file_matrc: the full path of ma .trc file
+%       file_maanc: the full path of ma .trc file
 %
 %
 % output: 
