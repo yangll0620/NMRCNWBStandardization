@@ -16,7 +16,7 @@ function stpddata = readnwb_rawtdtstpddata(nwb)
 % 
 
 %%
-elecserial_tdtstpd = nwb.acquisition.get('tdtstpd'); % elecserial_tdtneur:  ElectricalSeries type
+elecserial_tdtstpd = nwb.acquisition.get('tdt_stpd'); % elecserial_tdtneur:  ElectricalSeries type
 data = elecserial_tdtstpd.data;
 if isa(data, 'types.untyped.DataStub')
     stpddata = data.load();

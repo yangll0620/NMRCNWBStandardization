@@ -40,7 +40,7 @@ if ~(isvector(chn_read) && length(chn_read) == 2 || chn_read == 0) % check chn_r
 end
 
 %%
-elecserial_tdtneur = nwb.acquisition.get('tdtneur'); % elecserial_tdtneur:  ElectricalSeries type
+elecserial_tdtneur = nwb.acquisition.get('tdt_neur'); % elecserial_tdtneur:  ElectricalSeries type
 data = elecserial_tdtneur.data;
 if isa(data, 'types.untyped.DataStub')
     if isscalar(idx_read) && idx_read == 0

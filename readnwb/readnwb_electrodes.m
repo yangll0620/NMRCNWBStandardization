@@ -16,7 +16,7 @@ function elec_tbl = readnwb_electrodes(nwb)
 %           elec_tbl electrode information table
 %
 
-dyntblreg = nwb.acquisition.get('tdtneur').electrodes; % dyntblreg: DynamicTableRegion type, a region/index into a DynamicTable
+dyntblreg = nwb.acquisition.get('tdt_neur').electrodes; % dyntblreg: DynamicTableRegion type, a region/index into a DynamicTable
 dyntbl = dyntblreg.table.refresh(nwb);
 colnames = dyntbl.colnames;
 id = dyntbl.id.data.load;
