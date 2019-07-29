@@ -34,8 +34,6 @@ if nargin < 3
     exportnwbtag = 0;
 end
 
-addpath(genpath(fullfile('..', 'toolbox', 'matnwb'))) % add matnwb path ../toolbox/matnwb
-
 %% extract animal, dateofexp, setup et.al information
 animal = rawmapath(strfind(rawmapath, 'raw')+4: strfind(rawmapath, 'expdata')-2);
 datefoldername = char(regexp(rawmapath, [animal '-[0-9]*'], 'match'));

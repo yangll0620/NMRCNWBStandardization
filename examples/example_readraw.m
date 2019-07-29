@@ -10,10 +10,6 @@ if ~exist(nwbfile)
     disp('https://drive.google.com/open?id=1rqT5kkedZTvqGoWwNhGrS4Wly_1OQxPZ')
 end
 
-% add path
-addpath(fullfile('..','toolbox','matnwb'))
-addpath(fullfile('..','readnwb'))
-
 nwb = nwbRead(nwbfile);
 
 % read tdt electrode information

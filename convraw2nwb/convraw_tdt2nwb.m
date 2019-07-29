@@ -39,8 +39,6 @@ if nargin < 3
     exportnwbtag = 0;
 end
 
-addpath(genpath(fullfile('..', 'toolbox', 'matnwb'))) % add matnwb path ../toolbox/matnwb
-
 % load tdt file to matlab
 if isunix || ispc 
     addpath(genpath(fullfile(fileparts(pwd), 'toolbox', 'TDTMatlabSDK'))) % add tdt sdk path ../toolbox/TDTMatlabSDK

@@ -12,8 +12,8 @@ NWB Standardization Codes Installation
 
 #. Change the folder name 'NMRCNWBStandardization-master' to 'NMRCNWBStandardization'
 
-#. add path and subpath of NWB Standardization Codes into matlab::
-	
-	addpath(genpath('path/to/NWB Standardization Code'))
 
-	savepath
+
+#. add 'NMRCNWBStandardization' folder and its subfolders into matlab using 'Set Path' button. Please select 'Add with Subfolders' in the apprearing dialog box. Please refer to `here`_ if needed. 
+	
+	.. _here: https://www.mathworks.com/help/matlab/matlab_env/add-remove-or-reorder-folders-on-the-search-path.html

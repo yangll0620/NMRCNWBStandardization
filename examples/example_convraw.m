@@ -3,8 +3,6 @@ function example_convraw()
 % nwb structure
 % 
 
-addpath(fullfile('..','convraw2nwb'))
-
 % dateset parameters, modify these according to your dataset
 animal = 'bug';
 setup = 'setupchair'; % 'setupchair' or 'setupgait'
