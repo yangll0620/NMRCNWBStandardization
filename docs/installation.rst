@@ -14,6 +14,8 @@ NWB Standardization Codes Installation
 	
 	addpath(genpath('path/to/NWB Standardization Code'))
 
+	savepath
+
 
 
 Used Toolboxes Installation
