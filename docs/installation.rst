@@ -10,6 +10,8 @@ NWB Standardization Codes Installation
 
 	.. _NWB Standardization Codes: https://github.com/yangll0620/DataStorageAnalysisArchitecture
 
+#. Change the folder name 'NMRCNWBStandardization-master' to 'NMRCNWBStandardization'
+
 #. add path and subpath of NWB Standardization Codes into matlab::
 	
 	addpath(genpath('path/to/NWB Standardization Code'))
@@ -34,13 +36,15 @@ MatNWB
 
 	#. Download the `MatNWB`_.
 
-		.. _MatNWB: https://github.com/NeurodataWithoutBorders/matnwb
+		.. _MatNWB: https://github.com/NeurodataWithoutBorders/matnwb 
 
-	#. From the Matlab command line, generate matlab m-files::
+	#. Change the folder name 'matnwb-master' to 'matnwb'
+
+	#. From the Matlab command line, generate matlab m-files inside matnwb folder::
 
 		generateCore('schema/core/nwb.namespace.yaml');
 
-	#. Copy the folder matnwb-master into folder toolbox/ 
+	#. Copy the folder matnwb into folder NMRCNWBStandardization/toolbox/ 
 	
 	
 	#. add MatNWB path and its subpath to matlab
