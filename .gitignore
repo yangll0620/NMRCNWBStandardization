@@ -5,9 +5,6 @@
 *.asv
 *.nwb
 
-toolbox/matnwb
-toolbox/TDTMatlabSDK
-
 funcsuseful/
 
 # sphinx related ignore files or folders
