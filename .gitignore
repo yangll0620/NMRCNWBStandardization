@@ -10,3 +10,6 @@ funcsuseful/
 # sphinx related ignore files or folders
 docs/_build
 docs/table_tgn
+
+# ignore the matnwb toolbox folder
+toolbox/matnwb
