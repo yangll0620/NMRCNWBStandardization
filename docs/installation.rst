@@ -13,7 +13,7 @@ NWB Standardization Codes Installation
 #. Change the folder name 'NMRCNWBStandardization-master' to 'NMRCNWBStandardization'.
 
 
-MatNWB Toolboxe Installation
+MatNWB Toolbox Installation
 ----------------------------
 
 .. IMPORTANT::
