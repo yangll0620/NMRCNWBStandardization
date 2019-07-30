@@ -1,4 +1,4 @@
-function nwb = convraw_tdt2nwb(rawtdtpath, googledocid_electable, exportnwbtag, nwb)
+function nwb = convraw_tdt2nwb(rawtdtpath, googlesheet_electrode, exportnwbtag, nwb)
 % convraw_tdt2nwb converts raw TDT data to NWB.acquisition
 %
 %   nwb = convraw_tdt2nwb(rawmapath, googledocid_electable, nwb, exportnwbtag) return nwb 
@@ -10,9 +10,9 @@ function nwb = convraw_tdt2nwb(rawtdtpath, googledocid_electable, exportnwbtag, 
 %   ('https://drive.google.com/open?id=1rqT5kkedZTvqGoWwNhGrS4Wly_1OQxPZ').
 % 
 % Example usage:
-%           rawtdtpath = 'workingfolders\\home\\data_shared\\raw\\bug\\expdata\\setupchair\\bug-190111\\tdt\\block-1';
+%           rawtdtpath = 'Y:\Animals2\Bug\Recording\Raw\rawTDT\Bug-190111\Block-1';
 %
-%           googledocid_electable = '1s7MvnI3C4WzyW2dxexYaShCHL_z-AzEHE-N3uXaSMJU'
+%           googlesheet_electrode = '1s7MvnI3C4WzyW2dxexYaShCHL_z-AzEHE-N3uXaSMJU'
 %
 %           nwb = convraw_tdt2nwb(rawtdtpath, googledocid_electable);
 % 
@@ -20,7 +20,7 @@ function nwb = convraw_tdt2nwb(rawtdtpath, googledocid_electable, exportnwbtag, 
 % Inputs
 %       rawtdtpath              ---- the folder containing all the tdt files
 %
-%       googledocid_electable   ---- the value between 'd/'  and '/edit' in your electrode spreadsheet's url
+%       googlesheet_electrode   ---- the online google sheet storing electrode information, the value between 'd/'  and '/edit' in your electrode spreadsheet's url
 %
 %       exportnwbtag            ---- tag for exporting nwb file (1) to test.nwb or not (default 0)
 %
@@ -39,22 +39,26 @@ if nargin < 3
     exportnwbtag = 0;
 end
 
+% parse animal and tdt block number infomation
+[animal, tdtblocknum] = parsetdtpath(rawtdtpath);
+if isempty(animal) || isempty(tdtblocknum)
+    disp(['animal or tdtblocknum is not parsed!']);
+    return;
+end
+
 % load tdt file to matlab
 if isunix || ispc 
     addpath(genpath(fullfile(fileparts(pwd), 'toolbox', 'TDTMatlabSDK'))) % add tdt sdk path ../toolbox/TDTMatlabSDK
     tdt = TDTbin2mat(rawtdtpath);
 end
 
-animal = rawtdtpath(strfind(rawtdtpath, 'raw')+4: strfind(rawtdtpath, 'expdata')-2);
-dateofexp = datenum(tdt.info.date, 'yyyy-mmm-dd'); % tdt.info.date = '2019-Jan-11'
-setup = char(regexp(rawtdtpath, 'setup[a-z]*', 'match'));
-blockname = char(regexp(rawtdtpath, 'block-[0-9]*', 'match')); % blockname = 'block1-rest'
-blocknum = str2num(blockname(6:strfind(blockname, '-')-1)); % blocknum = 1
+% tdt.info.date = '2019-Jan-11'
+dateofexp = datenum(tdt.info.date, 'yyyy-mmm-dd'); 
 
 if newnwbtag == 1
     % create new nwb structure
-    identifier = [animal '_' datestr(dateofexp,'yymmdd') '_' setup '_block' num2str(blocknum)];
-    session_description = ['NWB file test on ' animal ' performing ' setup ' on day ' datestr(dateofexp,'yymmdd')];
+    identifier = [animal '_' datestr(dateofexp,'yymmdd') '_block' num2str(tdtblocknum)];
+    session_description = ['NWB file test on ' animal ' performing on day ' datestr(dateofexp,'yymmdd')];
     nwb = nwbfile(...
         'identifier', identifier, ...
         'session_description', session_description);
@@ -71,10 +75,10 @@ nwb.session_start_time = datestr(session_start_time, 'yyyy-mm-dd HH:MM:SS');
 streams_keys = fieldnames(tdt.streams);
 
 %  parse the tdt.streams.Neur structure
-neural_key = 'BUGG';
+neural_key = 'BUGG'
 if ~isempty(find(ismember(streams_keys, neural_key)))
     stream_neur = tdt.streams.(neural_key);
-    nwb = parse_tdtelect(nwb, googledocid_electable);
+    nwb = parse_tdtelect(nwb, googlesheet_electrode);
     tdtneur = parse_tdtneur(stream_neur);
     nwb.acquisition.set('tdt_neur', tdtneur);
 end
@@ -95,26 +99,26 @@ if exportnwbtag == 1
 end
 end
 
-function nwb = parse_tdtelect(nwb, googledocid_electable)
+function nwb = parse_tdtelect(nwb, googlesheet_electrode)
 % parse_tdtelect parses the tdt electrode information from google sheet
 %
 %   tdtneur = parse_tdtneur(stream) return types.core.ElectricalSeries structure
 %   of the parsed tdt neural data 
 %
 % Example usage:
-%       googledocid_electable = '1s7MvnI3C4WzyW2dxexYaShCHL_z-AzEHE-N3uXaSMJU';
+%       googlesheet_electrode = '1s7MvnI3C4WzyW2dxexYaShCHL_z-AzEHE-N3uXaSMJU';
 %       nwb = parse_tdtelect(stream, googledocid_electable);
 %
 % Input:
 %       nwb: exist nwb structure
-%       googledocid_electable: the value between 'd/'  and '/edit' in your spreadsheet's url
+%       googlesheet_electrode: the value between 'd/'  and '/edit' in your spreadsheet's url
 %
 % Output:
 %       nwb:    nwb structure containing tdt electrodes information
 %
 
 % read data from google sheet
-elec_tbl = webread(['https://docs.google.com/spreadsheet/ccc?key=' googledocid_electable '&output=csv&pref=2']);
+elec_tbl = webread(['https://docs.google.com/spreadsheet/ccc?key=' googlesheet_electrode '&output=csv&pref=2']);
 
 % deal with the electrode information
 n_etrodes = height(elec_tbl);
@@ -126,7 +130,7 @@ elegroups_name = unique(etrode_labels, 'stable'); % 1xn cell array: {'utah'}    
 % matter device
 device_name = 'tdt';
 nwb.general_devices.set( device_name, types.core.Device());
-elecgroup_ref = repmat(types.untyped.ObjectView('null'), n_etrodes,1);
+% elecgroup_ref = repmat(types.untyped.ObjectView('null'), n_etrodes,1);
 for i_elecgroup = 1: length(elegroups_name)
     group_name = elegroups_name{i_elecgroup}; % 
     nwb.general_extracellular_ephys.set(group_name, ...
@@ -135,10 +139,12 @@ for i_elecgroup = 1: length(elegroups_name)
         'location', 'unknown', ...
         'device', types.untyped.SoftLink(['/general/devices/' device_name])));
     
-    elec_nums = find(strcmp(etrode_labels, group_name));
-    elecgroup_ref(elec_nums) = types.untyped.ObjectView(['/general/extracellular_ephys/' group_name]);
+    
+%     % elecgroup_ref, not quite sure for what
+%     elec_nums = find(strcmp(etrode_labels, group_name));
+%     elecgroup_ref(elec_nums) = types.untyped.ObjectView(['/general/extracellular_ephys/' group_name]);
 end
-elec_tbl = [elec_tbl table(elecgroup_ref)];
+% elec_tbl = [elec_tbl table(elecgroup_ref)];
 elec_dyntable = util.table2nwb(elec_tbl, 'all electrodes');
 nwb.general_extracellular_ephys_electrodes = elec_dyntable;
 end

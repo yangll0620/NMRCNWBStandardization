@@ -6,7 +6,7 @@ function nwb = convraw_ma2nwb(rawmapath, blocknum, exportnwbtag, nwb)
 % 
 % 
 % Example usage:
-%           rawmapath = 'workingfolders\\home\\data_shared\\raw\\bug\\expdata\\setupchair\\bug-190111\\ma';
+%           rawmapath = 'Y:\Animals2\Bug\Recording\Raw\rawTDT\Bug-190111\Block-1';;
 %
 %           blocknum = 1;
 %
@@ -34,16 +34,17 @@ if nargin < 3
     exportnwbtag = 0;
 end
 
-%% extract animal, dateofexp, setup et.al information
-animal = rawmapath(strfind(rawmapath, 'raw')+4: strfind(rawmapath, 'expdata')-2);
-datefoldername = char(regexp(rawmapath, [animal '-[0-9]*'], 'match'));
-dateofexp = datenum(datefoldername(length(animal)+2:end),'yymmdd');
-setup = char(regexp(rawmapath, 'setup[a-z]*', 'match'));
+%% extract animal, dateofexp information
+[animal, dateofexp] = parsemapath(rawmapath);
+if isempty(animal) || isempty(dateofexp)
+    disp(['animal or dateofexp is not parsed!']);
+    return;
+end
 
 if newnwbtag == 1
     % create new nwb structure
-    identifier = [animal '_' datestr(dateofexp,'yymmdd') '_' setup '_block' num2str(blocknum)];
-    session_description = ['NWB file test on ' animal ' performing ' setup ' on day ' datestr(dateofexp,'yymmdd')];
+    identifier = [animal '_' datestr(dateofexp,'yymmdd') '_block' num2str(blocknum)];
+    session_description = ['NWB file test on ' animal ' performing on day ' datestr(dateofexp,'yymmdd')];
     nwb = nwbfile(...
         'identifier', identifier, ...
         'session_description', session_description);
@@ -81,7 +82,7 @@ function ma_trc = parse_matrcfile(file_matrc)
 % parse_matrcfile() parses the ma .trc tracking file into a types.core.TimeSeries structure
 %
 % Example usage:
-%       file_matrc = fullfile('H:','My Drive','NMRC_umn', 'Projects', 'DataStorageAnalysis','workingfolders','home','data_shared','raw','bug','expdata', 'setupchair','bug-190111', 'ma','Bug_20190111_1_cleaned.trc');
+%       file_matrc = 'Y:\Animals2\Bug\Recording\Raw\rawMA\MA20190111\Bug_20190111_1_cleaned.trc;
 %
 %       ma_trc = parse_matrcfile(file_matrc);
 %
@@ -130,7 +131,7 @@ function ma_anc = parse_maancfile(file_maanc)
 %% parse_maancfile() parses the ma .anc analog data file into a types.core.TimeSeries structure
 %
 % Example usage:
-%       file_maanc = fullfile('H:','My Drive','NMRC_umn', 'Projects', 'DataStorageAnalysis','workingfolders','home','data_shared','raw','bug','expdata', 'setupchair','bug-190111', 'ma','Bug_20190111_1.anc');
+%       file_maanc = 'Y:\Animals2\Bug\Recording\Raw\rawMA\MA20190111\Bug_20190111_1.anc';
 %       ma_trc = parse_matrcfile(file_matrc);
 %
 % input:
