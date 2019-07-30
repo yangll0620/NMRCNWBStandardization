@@ -6,14 +6,16 @@ function example_readraw()
 
 nwbfile = 'test.nwb';
 if ~exist(nwbfile)
-    disp('Please first download the test.nwb file here:')
+    disp('Please first download the test.nwb file and copy it to this folder.')
     disp('https://drive.google.com/open?id=1rqT5kkedZTvqGoWwNhGrS4Wly_1OQxPZ')
 end
 
+% Reads the nwbfile  and returns an nwbfile object representing its contents.
 nwb = nwbRead(nwbfile);
 
-% read tdt electrode information
+% read tdt electrode information to elec_tbl
 elec_tbl = readnwb_electrodes(nwb);
+disp(elec_tbl)
 
 % read raw tdt neural data
 chn_read = [1 5]; % read neural data of channels [1:5], default read all channels
