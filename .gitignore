@@ -12,4 +12,4 @@ docs/_build
 docs/table_tgn
 
 # ignore the matnwb toolbox folder
-toolbox/matnwb
+toolbox/matnwb/
