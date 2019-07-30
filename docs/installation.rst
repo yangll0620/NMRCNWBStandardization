@@ -12,8 +12,39 @@ NWB Standardization Codes Installation
 
 #. Change the folder name 'NMRCNWBStandardization-master' to 'NMRCNWBStandardization'
 
-
-
-#. add 'NMRCNWBStandardization' folder and its subfolders into matlab using 'Set Path' button. Please select 'Add with Subfolders' in the apprearing dialog box. Please refer to `here`_ if needed. 
+#. add path and subpath of NWB Standardization Codes into matlab::
 	
-	.. _here: https://www.mathworks.com/help/matlab/matlab_env/add-remove-or-reorder-folders-on-the-search-path.html
+	addpath(genpath('path/to/NWB Standardization Code'))
+
+	savepath
+
+
+
+MatNWB Toolboxe Installation
+---------------------------
+
+.. IMPORTANT::
+
+	Please installed the following toolboxes before using NWB standardized processing codes.
+
+.. _installmatnwb-label:
+
+MatNWB 
+^^^^^^
+
+	MatNWB is the Matlab interface for reading and writing NWB file. To generate and use NWB structure, MatNWB should be inside the folder /util/. 
+
+	#. Download the `MatNWB`_.
+
+		.. _MatNWB: https://github.com/NeurodataWithoutBorders/matnwb 
+
+	#. Change the folder name 'matnwb-master' to 'matnwb'
+
+	#. From the Matlab command line, generate matlab m-files inside matnwb folder::
+
+		generateCore('schema/core/nwb.namespace.yaml');
+
+	#. Copy the folder matnwb into folder NMRCNWBStandardization/toolbox/ 
+	
+	
+	#. add MatNWB path and its subpath to matlab
