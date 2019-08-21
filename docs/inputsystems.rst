@@ -8,5 +8,4 @@ Input Systems
 
    systemtdt
    systemma
-   systemeyetracking
    systemgaitmat
