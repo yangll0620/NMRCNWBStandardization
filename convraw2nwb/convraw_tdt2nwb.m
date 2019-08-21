@@ -28,6 +28,21 @@ function nwb = convraw_tdt2nwb(rawtdtpath, googlesheet_electrode, exportnwbtag, 
 %
 % Output:
 %       nwb                     ---- nwb structure containing tdt information (i.e. neural data, electrodes, etc)
+% * Direct estimation by assuming the out-of-plane gradients are statistically
+% equal to the in-plane gradients:$\[\varepsilon = 3\nu \Big[\Big \langle \Big
+% (\frac{\partial u_1}{\partial x_1}\Big)^2\Big \rangle +\Big \langle \Big(\frac{\partial
+% u_3}{\partial x_3}\Big)^2\Big \rangle + \Big \langle \Big(\frac{\partial u_3}{\partial
+% x_1}\Big)^2\Big \rangle +\Big \langle \Big(\frac{\partial u_1}{\partial x_3}\Big)^2\Big
+% \rangle +2\Big \langle \Big(\frac{\partial u_3}{\partial x_1}\frac{\partial
+% u_1}{\partial x_3}\Big)\Big \rangle +\frac{2}{3}\Big \langle \Big(\frac{\partial
+% u_1}{\partial x_1}\frac{\partial u_3}{\partial x_3}\Big)\Big \rangle\Big]\]$
+%
+
+
+
+
+
+
 
 if nargin < 4
     newnwbtag = 1;
