@@ -10,7 +10,7 @@ function nwb = convraw_tdt2nwb(rawtdtpath, googlesheet_electrode, exportnwbtag, 
 %   ('https://drive.google.com/open?id=1rqT5kkedZTvqGoWwNhGrS4Wly_1OQxPZ').
 % 
 % Example usage:
-%           rawtdtpath = 'Y:\Animals2\Bug\Recording\Raw\rawTDT\Bug-190111\Block-1';
+%           rawtdtpath = 'Y:\\Animals2\\Bug\\Recording\\Raw\\rawTDT\\Bug-190111\\Block-1';
 %
 %           googlesheet_electrode = '1s7MvnI3C4WzyW2dxexYaShCHL_z-AzEHE-N3uXaSMJU'
 %
