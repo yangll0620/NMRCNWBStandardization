@@ -65,7 +65,7 @@ dateofexp = datenum(tdt.info.date, 'yyyy-mmm-dd');
 if newnwbtag == 1
     % create new nwb structure
     identifier = [animal '_' datestr(dateofexp,'yymmdd') '_block' num2str(tdtblocknum)];
-    session_description = ['NWB file test on ' animal ' performing on day ' datestr(dateofexp,'yymmdd')];
+    session_description = ['NWB file on ' animal ' performing on day ' datestr(dateofexp,'yymmdd')];
     nwb = nwbfile(...
         'identifier', identifier, ...
         'session_description', session_description);
@@ -152,7 +152,8 @@ for i_elecgroup = 1: length(elegroups_name)
 %     elecgroup_ref(elec_nums) = types.untyped.ObjectView(['/general/extracellular_ephys/' group_name]);
 end
 % elec_tbl = [elec_tbl table(elecgroup_ref)];
-elec_dyntable = util.table2nwb(elec_tbl, 'all electrodes');
+elec_tbl.Properties.Description = 'electrode information';
+elec_dyntable = util.table2nwb(elec_tbl);
 nwb.general_extracellular_ephys_electrodes = elec_dyntable;
 end
 

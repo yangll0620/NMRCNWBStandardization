@@ -6,7 +6,7 @@ function nwb = convraw_ma2nwb(rawmapath, blocknum, exportnwbtag, nwb)
 % 
 % 
 % Example usage:
-%           rawmapath = 'Y:\Animals2\Bug\Recording\Raw\rawTDT\Bug-190111\Block-1';;
+%           rawmapath = 'Y:\\Animals2\\Bug\\Recording\\Raw\\rawTDT\\Bug-190111\\Block-1';;
 %
 %           blocknum = 1;
 %
@@ -41,10 +41,11 @@ if isempty(animal) || isempty(dateofexp)
     return;
 end
 
+%% new nwb 
 if newnwbtag == 1
     % create new nwb structure
     identifier = [animal '_' datestr(dateofexp,'yymmdd') '_block' num2str(blocknum)];
-    session_description = ['NWB file test on ' animal ' performing on day ' datestr(dateofexp,'yymmdd')];
+    session_description = ['NWB file on ' animal ' performing on day ' datestr(dateofexp,'yymmdd')];
     nwb = nwbfile(...
         'identifier', identifier, ...
         'session_description', session_description);
@@ -73,7 +74,7 @@ if exportnwbtag == 1
     outdest = fullfile(['test_convrawma' '.nwb']);
     % fill the requied field of nwb for exporting
     if isempty(nwb.session_start_time) % nwb.session_start_time
-        nwb.session_start_time = '';
+        nwb.session_start_time = datestr(dateofexp);
     end
     nwbExport(nwb, outdest);
 end
