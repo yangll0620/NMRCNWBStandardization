@@ -15,6 +15,7 @@ nwb = nwbRead(nwbfile);
 
 % read tdt electrode information to elec_tbl
 elec_tbl = readnwb_electrodes(nwb);
+disp('tdt electrode information');
 disp(elec_tbl)
 
 % read raw tdt neural data
@@ -24,3 +25,10 @@ neurdata = readnwb_rawtdtneurdata(nwb, chn_read, idx_read);
 
 % read raw touch pad synchronization data
 stpddata = readnwb_rawtdtstpddata(nwb);
+
+
+% read raw ma data
+[data_ma, timestamps_ma] = readnwb_rawmadata(nwb);
+
+% read raw gait mat data and time stamps
+[data_gaitmat, timestamps_gaitmat] = readnwb_rawgaitmatdata(nwb);

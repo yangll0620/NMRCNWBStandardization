@@ -1,25 +1,32 @@
-function [animal, dateofexp] = parsemapath(mapath)
-% parsemapath return the parsed animal name and block number from mapath
+function [animal, dateofexp] = parsegaitmatpath(gaitmatpath)
+% parsegaitmatpath return the parsed animal name and block number from mapath
+% Y:\Animals2\Bug\Recording\Raw\Habit Trail\Gaitmat\20181128
+%
+% Example usage:
+%       gaitmatpath = "Y:\Animals2\Bug\Recording\Raw\Habit Trail\Gaitmat\20181128"
+%       
+%       [animal, dateofexp] = parsegaitmatpath(gaitmatpath);
 %
 % Input:
-%       mapath: the absoluate ma path with structure of Animals\Bug\....\MA20190111 or
-%       Animals2\Bug\...\MA20190111
+%       gaitmatpath: the absoluate gaitmat path with structure of: 
+%       Animals\Bug\....\Gaitmat\20181128
 %
 % Outputs:
 %       animal: the parsed animal name, i.e. 'Bug', 'Pinky', et.al
+%
 %       dateofexp: the parsed date of experiment using datenum format
 
 
 % convert to lowercase
-mapath = lower(mapath);
+gaitmatpath = lower(gaitmatpath);
 
 % split mapath into string array, i.e. separate subfolder names
 if ispc
-    foldernames = split(mapath, '\');
+    foldernames = split(gaitmatpath, '\');
 end
 
 if isunix
-    foldernames = split(mapath, '/');
+    foldernames = split(gaitmatpath, '/');
 end
 
 % parse animal name
@@ -39,6 +46,8 @@ end
 
 % parse date of experiment
 dateofexp = [];
+
+% dateexpression format yyyymmdd (e.g 20180219)
 dateexpression = '(?<year>\d{4}+)(?<month>\d{2}+)(?<day>\d{2}+)';
 for i = animali : length(foldernames)
     if ~isempty(regexp(foldernames{i}, dateexpression, 'match'))

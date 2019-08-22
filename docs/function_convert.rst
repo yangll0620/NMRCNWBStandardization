@@ -20,3 +20,8 @@ Convert raw MA Data to NWb Structure
 -------------------------------------
 
 .. autofunction:: convraw_ma2nwb
+
+Convert raw gaitmat Data to NWb Structure
+-----------------------------------------
+
+.. autofunction:: convraw_gaitmat2nwb
