@@ -11,3 +11,5 @@ Read here: https://datastorageanalysisarchitecture.readthedocs.io/en/latest/
 Add  deep lab cut videos to NWB.
 
 Add  eye-tracking data to the NWB structure
+
+Change example to Barb
