@@ -1,31 +1,41 @@
 classdef TDTUDP < handle
     %TDTUDP  TDT UDP class.
-    %   obj = TDTUDP(TDT_UDP_HOSTNAME, TYPE) connects to RZ specified by
-    %   TDT_UDP_HOSTNAME, which can be either the RZ's IP address or
-    %   NetBIOS name
-    %   TYPE (optional) specifies the data type to expect.  Default is
-    %   'int32'.
+    %   obj = TDTUDP(TDT_UDP_HOSTNAME) connects to RZ specified by
+    %   TDT_UDP_HOSTNAME, which can be either the RZ's IP address or NetBIOS
+    %   name.
     %
     %   obj                 reference to TDTUDP object
     %   obj.read            get next packet
     %   obj.write(data)     write data to RZ
     %
+    %   'parameter', value pairs
+    %      'SEND_TYPE'  string, type of data to send to RZ UDP. Can be 32-bit
+    %                       float ('single') or 32-bit integer ('int32').
+    %                       Default is 'int32'.
+    %      'RECV_TYPE'  string, type of data to receive from RZ UDP. Can be
+    %                       32-bit float ('single') or 32-bit integer
+    %                       ('int32').  Default is 'int32'.
+    %      'SORTS'      scalar, number of sort code per bin (if data is
+    %                       received from Sort Binner gizmo).
+    %      'BITS'       scalar, number of bits per bin (if data is
+    %                       received from Sort Binner gizmo).
     
     properties
         TDT_UDP_HOSTNAME = '10.10.10.123';
-
+        
         % data type of received packets
-        TYPE = 'int32';
+        RECV_TYPE = 'int32';
+        SEND_TYPE = 'int32';
         
         % every RZ UDP command starts with this
         MAGIC = '55AA';
-
+        
         % UDP command constants
         CMD_SEND_DATA        = '00';
         CMD_GET_VERSION      = '01';
         CMD_SET_REMOTE_IP    = '02';
         CMD_FORGET_REMOTE_IP = '03';
-
+        
         % Important: the RZ UDP interface port is fixed at 22022
         UDP_PORT = 22022;
         
@@ -41,7 +51,7 @@ classdef TDTUDP < handle
         SOCK = [];
         U = [];
         data = [];
-
+        
     end
     
     methods
@@ -58,7 +68,7 @@ classdef TDTUDP < handle
                 obj.REORDER(ind:ind+obj.BITS-1) = j-obj.BITS+1:j;
                 ind = ind + obj.BITS;
             end
-
+            
             obj.TDT_UDP_HOSTNAME = TDT_UDP_HOSTNAME;
             % create a UDP socket object, connect the PC to the target UDP interface
             
@@ -99,7 +109,7 @@ classdef TDTUDP < handle
             % configure the header. Notice that it includes the header
             % information followed by the command 2 (set remote IP)
             % and hex '00' (no data packets for header).
-
+            
             % Sends the packet to the UDP interface, setting the remote IP
             % address of the UDP interface to the host PC
             if obj.USE_TOOLBOX
@@ -119,7 +129,7 @@ classdef TDTUDP < handle
                 %delete(obj.SOCK);
             end
         end
-
+        
         function obj = read(obj)
             % read a single packet in as uint32
             if obj.USE_TOOLBOX
@@ -132,7 +142,7 @@ classdef TDTUDP < handle
                     A = pnet(obj.SOCK, 'read', obj.INPUT_BUFFER_SIZE, 'uint32', 'network')';
                 end
             end
-
+            
             if ~exist('A','var')
                 obj.data = [];
                 return
@@ -156,18 +166,20 @@ classdef TDTUDP < handle
         function obj = write(obj, data)
             hhh = [obj.MAGIC, obj.CMD_SEND_DATA, dec2hex(numel(data),2)];
             header = hex2dec(hhh);
-            if isa(data, 'double')
+            if strcmp(obj.SEND_TYPE, 'int32')
+                data = int32(data);
+            else
                 data = single(data);
             end
             data = typecast(data, 'uint32');
             
-            xxx = [header, data];
+            packet = [header, data];
             if obj.USE_TOOLBOX
-                fwrite(obj.U, xxx, 'int32');
+                fwrite(obj.U, packet, 'uint32');
             else
                 % Write to write buffer
-                pnet(obj.SOCK, 'write', int32(xxx));
-
+                pnet(obj.SOCK, 'write', packet);
+                
                 % Send buffer as UDP packet
                 pnet(obj.SOCK, 'writepacket', obj.TDT_UDP_HOSTNAME, obj.UDP_PORT);
             end
@@ -175,7 +187,7 @@ classdef TDTUDP < handle
         
         function obj = conv(obj, data)
             if obj.SORTS == 0 || obj.BITS == 0
-                obj.data = typecast(data, obj.TYPE);
+                obj.data = typecast(data, obj.RECV_TYPE);
             else
                 % pack it all into one binary string
                 bstr = reshape(dec2bin(data, 32)',1,[]);
@@ -205,11 +217,10 @@ classdef TDTUDP < handle
                     
                     sort_ind = sort_ind + 1;
                 end
-
+                
                 obj.data = s;
-
+                
             end
         end
     end
 end
-   

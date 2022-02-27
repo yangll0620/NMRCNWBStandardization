@@ -1,12 +1,10 @@
 %% Note Filter Example
 %
-% <html>
-% Import streaming EEG data into Matlab using TDTbin2mat <br>
-% Filter around behavioral events that were timestamped by the user
-% using the Run-time Notes feature in Synapse <br>
-% Plot each occurrence in a subplot organized by Note type <br>
-% Good for sleep scoring and behavioral discrimination
-% </html>
+%  Import streaming EEG data into Matlab using TDTbin2mat
+%  Filter around behavioral events that were timestamped by the user
+% using the Run-time Notes feature in Synapse
+%  Plot each occurrence in a subplot organized by Note type
+%  Good for sleep scoring and behavioral discrimination
 
 %% Housekeeping
 % Clear workspace and close existing figures. Add SDK directories to Matlab
@@ -18,13 +16,13 @@ DATAPATH = fullfile(MAINEXAMPLEPATH, 'ExampleData'); % \TDTMatlabSDK\Examples\Ex
 addpath(genpath(SDKPATH));
 
 %% Importing the Data
-% This example assumes you downloaded our example data sets
-% (<https://www.tdt.com/support/examples/TDTExampleData.zip link>) and extracted
-% it into the \TDTMatlabSDK\Examples\ directory. To import your own data, replace
-% |BLOCKPATH| with the path to your own data block.
+% This example assumes you downloaded our
+% <https://www.tdt.com/files/examples/TDTExampleData.zip example data sets>
+% and extracted it into the \TDTMatlabSDK\Examples\ directory. To import your own data, replace
+% 'BLOCKPATH' with the path to your own data block.
 %
-% In Synapse, you can find the block path in the database. Go to Menu > History. 
-% Find your block, then Right-Click > Copy path to clipboard.
+% In Synapse, you can find the block path in the database. Go to Menu --> History. 
+% Find your block, then Right-Click --> Copy path to clipboard.
 BLOCKPATH = fullfile(DATAPATH,'Subject1-180426-120951');
 
 %%

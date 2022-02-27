@@ -1,4 +1,4 @@
-%% Stream Example
+%% Online Stream Example
 %
 % <html>
 % Read a streaming data store into Matlab from Tank server during a recording <br>
@@ -50,7 +50,8 @@ while 1
     end
     
     % for publishing, end early
-    if exist('quitEarly','var') && t.T2 > 30
+    if t.T2 > 30
+        t.SYN.setModeStr('Idle'); % set to idle mode
         break
     end
 end

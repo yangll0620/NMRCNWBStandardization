@@ -1,11 +1,9 @@
 %% Export Continuous Data To Binary File
 %
-% <html>
-% Import continuous data into Matlab using TDTbin2mat <br>
-% Export the to a binary file (f32 floating point or 16-bit integer) <br>
-% Channels are interlaced in the final output file <br>
-% Good for exporting to other data analysis applications <br>
-% </html>
+%  Import continuous data into Matlab using TDTbin2mat
+%  Export the data to a binary file (f32 floating point or 16-bit integer)
+%  Channels are interlaced in the final output file
+%  Good for exporting to other data analysis applications
 
 %% Housekeeping
 % Clear workspace and close existing figures. Add SDK directories to Matlab
@@ -17,13 +15,13 @@ DATAPATH = fullfile(MAINEXAMPLEPATH, 'ExampleData'); % \TDTMatlabSDK\Examples\Ex
 addpath(genpath(SDKPATH));
 
 %% Importing the Data
-% This example assumes you downloaded our example data sets
-% (<https://www.tdt.com/support/examples/TDTExampleData.zip link>) and extracted
-% it into the \TDTMatlabSDK\Examples\ directory. To import your own data, replace
-% |BLOCKPATH| with the path to your own data block.
+% This example assumes you downloaded our
+% <https://www.tdt.com/files/examples/TDTExampleData.zip example data sets>
+% and extracted it into the \TDTMatlabSDK\Examples\ directory. To import your own data, replace
+% 'BLOCKPATH' with the path to your own data block.
 %
-% In Synapse, you can find the block path in the database. Go to Menu > History. 
-% Find your block, then Right-Click > Copy path to clipboard.
+% In Synapse, you can find the block path in the database. Go to Menu --> History. 
+% Find your block, then Right-Click --> Copy path to clipboard.
 BLOCKPATH = fullfile(DATAPATH,'Algernon-180308-130351');
 
 %% Setup the variables for the data you want to extract
@@ -38,7 +36,7 @@ data = TDTbin2mat(BLOCKPATH, 'TYPE', {'streams'}, 'T2', 1);
 
 %% 
 % If you want an individual store, use the 'STORE' filter like this:
-% 
+%
 %   data = TDTbin2mat(BLOCKPATH, 'TYPE', {'streams'}, 'STORE', 'Wav1', 'T2', 1);
 % 
 

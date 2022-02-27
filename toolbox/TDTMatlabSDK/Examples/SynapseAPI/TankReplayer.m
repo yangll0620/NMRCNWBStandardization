@@ -18,7 +18,7 @@ addpath(genpath(SDKPATH));
 
 %% Importing the Data
 % This example assumes you downloaded our example data sets
-% (<https://www.tdt.com/support/examples/TDTExampleData.zip link>) and extracted
+% (<https://www.tdt.com/files/examples/TDTExampleData.zip link>) and extracted
 % it into the \TDTMatlabSDK\Examples\ directory. To import your own data, replace
 % |BLOCKPATH| with the path to your own data block.
 %

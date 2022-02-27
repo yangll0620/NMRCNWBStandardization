@@ -2,7 +2,7 @@ function nwb = convraw_tdt2nwb(rawtdtpath, googlesheet_electrode, exportnwbtag, 
 % convraw_tdt2nwb converts raw TDT data to NWB.acquisition
 %
 %   nwb = convraw_tdt2nwb(rawmapath, googledocid_electable, nwb, exportnwbtag) return nwb 
-%   structure containing containing tdt information (i.e. neural data, 
+%   structure containing tdt information (i.e. neural data, 
 %   electrodes, touchpad sync data,etc).  
 %
 %   Electrode information are extracted from a spreadsheet.
