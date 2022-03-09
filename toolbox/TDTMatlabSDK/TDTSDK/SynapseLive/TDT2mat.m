@@ -131,9 +131,8 @@ bUseOutsideTTX = ~isempty(TTX);
 
 if ~bUseOutsideTTX
     % create TTankX object
-    h = figure('Visible', 'off', 'HandleVisibility', 'off');
     try
-        TTX = actxcontrol('TTank.X', 'Parent', h);
+        TTX = actxserver('TTank.X');
     catch ME
         if (strcmp(ME.identifier,'MATLAB:COM:InvalidProgid'))
             error(sprintf('TTankX ActiveX control not found.\nMake sure OpenDeveloper is installed, reboot your computer, and try again'));
@@ -143,7 +142,6 @@ if ~bUseOutsideTTX
 
     % connect to server
     if TTX.ConnectServer(SERVER, 'TDT2mat') ~= 1
-        close(h)
         error(['Problem connecting to server: ' SERVER])
     end
     
@@ -173,7 +171,6 @@ if ~bUseOutsideTTX
     % open tank
     if TTX.OpenTank(tank, 'R') ~= 1
         TTX.ReleaseServer;
-        close(h);
         error(['Problem opening tank: ' tank]);
     end
     
@@ -805,5 +802,4 @@ end
 if ~bUseOutsideTTX
     TTX.CloseTank;
     TTX.ReleaseServer;
-    close(h);
 end
