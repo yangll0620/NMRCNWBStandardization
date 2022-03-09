@@ -111,7 +111,7 @@ while 1
             end
             
             % plot PSTH
-            NBINS = 20;
+            NBINS = floor(numel(TS)/10);
             if NBINS > 0
                 hist(TS, NBINS);
                 hold on;
@@ -133,8 +133,7 @@ while 1
             end
             
             % for publishing, end early
-            if num_trials > 30
-                t.SYN.setModeStr('Idle'); % set to idle mode
+            if exist('quitEarly','var') && num_trials > 30
                 break
             end
         end

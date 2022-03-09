@@ -10,16 +10,16 @@ classdef SynapseAPI < handle
 %   bSuccess        appendExperimentMemo(sExperiment, sMemo)
 %   bSuccess        appendSubjectMemo(sSubject, sMemo)
 %   bSuccess        appendUserMemo(sUser, sMemo)
-%   bSuccess        createSubject(sName, varargin)
+%   bSuccess        createSubject(varargin)
 %   bSuccess        createTank(sTankPath)
 %   sBlock          getCurrentBlock()
 %   sExperiment     getCurrentExperiment()
 %   sSubject        getCurrentSubject()
 %   sTank           getCurrentTank()
 %   sUser           getCurrentUser()
-%   cNotes          getExperimentMemos(sExperiment, varargin)
+%   cNotes          getExperimentMemos(varargin)
 %   cGizmos         getGizmoNames(varargin)
-%   tGizmoInfo      getGizmoInfo(sGizmoName)
+%   cGizmoInfo      getGizmoInfo(sGizmoName)
 %   sGizmoParent    getGizmoParent(sGizmoName)
 %   cBlocks         getKnownBlocks()
 %   cExperiments    getKnownExperiments()
@@ -29,26 +29,26 @@ classdef SynapseAPI < handle
 %   iMode           getMode()
 %   sMode           getModeStr()
 %   tParameterInfo  getParameterInfo(sGizmo, sParameter)
-%   cParameters     getParameterNames(sGizmo)
+%   sParameters     getParameterNames(sGizmo)
 %   dValue          getParameterSize(sGizmo, sParameter)
 %   dValue          getParameterValue(sGizmo, sParameter)
 %   fValues         getParameterValues(varargin)
 %   sMode           getPersistMode()
 %   cModes          getPersistModes()
 %   tSamplingRates  getSamplingRates()
-%   cNotes          getSubjectMemos(sSubject, varargin)
+%   cNotes          getSubjectMemos(varargin)
 %   tStatus         getSystemStatus()
-%   cNotes          getUserMemos(sUser, varargin)
+%   cNotes          getUserMemos(varargin)
 %   bSuccess        issueTrigger(iTriggerId)
 %   bSuccess        setCurrentBlock(sBlock)
 %   bSuccess        setCurrentExperiment(sExperiment)
 %   bSuccess        setCurrentSubject(sSubject)
 %   bSuccess        setCurrentTank(sTank)
-%   bSuccess        setCurrentUser(sUser, varargin)
+%   bSuccess        setCurrentUser(varargin)
 %   bSuccess        setMode(iNewMode)
 %   bSuccess        setModeStr(sNewMode)
 %   bSuccess        setParameterValue(sGizmo, sParameter, dValue)
-%   bSuccess        setParameterValues(sGizmo, sParameter, fValues, varargin)
+%   bSuccess        setParameterValues(varargin)
 %   bSuccess        setPersistMode(sMode)
 %   
 %   %%%%%
@@ -66,9 +66,6 @@ classdef SynapseAPI < handle
         output = '';
         extras = '';
         useFastJsonParser = ~verLessThan('matlab', '8.6');
-        reqData = '';
-        reqStr = '';
-        sizeTable = struct();
     end
     
     methods
@@ -94,24 +91,6 @@ classdef SynapseAPI < handle
             %obj.synCon.close();
         end
         
-        function checkMode(obj, value, min_mode)
-            if iscell(value)
-                return;
-            end
-            
-            warn = 0;
-            if ischar(value)
-                warn = strcmp(value, '');
-            elseif numel(value) == 1
-                warn = value == 0;
-            end
-            if warn
-                if obj.getMode() < min_mode
-                    warning('Synapse is not in a run-time mode')
-                end
-            end
-        end
-
         function retval = exceptMsg(obj)
             retval = '';
             
@@ -122,41 +101,13 @@ classdef SynapseAPI < handle
             end
         end
         
-        function respError = getRespError(obj, retval)
-            respError = 0;
-            returnCode = 0;
-            returnMsg = '';
-            codeFields = {'x_return_code_', '_return_code_'};
-            msgFields = {'x_return_msg_', '_return_msg_'};
-            for ii = 1:numel(codeFields)
-                if isfield(retval, codeFields{ii})
-                    if retval.(codeFields{ii}) ~= 200
-                        respError = 1;
-                        returnCode = retval.(codeFields{ii});
-                        for jj = 1:numel(msgFields)
-                            if isfield(retval, msgFields{jj})
-                                returnMsg = retval.(msgFields{jj});
-                            end
-                        end
-                    end
-                end
-            end
-            if respError
-                warning('Error from Synapse: %s %d %s', obj.reqData, returnCode, returnMsg);
-            end
-        end
-        
-        function retval = getResp(obj)
+        function retval = getResp(obj)              
             % success
             if obj.extras.status.value == 200
                 if isempty(obj.output)
                     retval = 1;
                 else
                     retval = obj.json2struct(obj.output);
-                    if getRespError(obj, retval)
-                        retval = '';
-                        return
-                    end
                 end
             else
                 retval = 0;
@@ -175,19 +126,16 @@ classdef SynapseAPI < handle
             else
                 reqData = '';
             end
-            obj.reqData = reqData;
-            obj.reqStr = reqStr;
+            
             if strcmp(reqData, '')
                 urlChar = [obj.synCon reqStr];
                 try
                     [obj.output, obj.extras] = urlread2(urlChar, reqTypeStr);
                 catch ME
                     if ~isempty(strfind(ME.message, 'java.net.ConnectException'))
-                        disp('Connection Error: make sure Synapse Server is enabled and Synapse is running.')
-                        return;
-                    else
-                        throw(ME)
+                        disp('Connection error, make sure Synapse Server is enabled.')
                     end
+                    throw(ME)
                 end
                    
             else
@@ -207,7 +155,7 @@ classdef SynapseAPI < handle
             if numel(varargin) > 1
                 reqData = varargin{2};
             end
-            
+
             obj.sendRequest('GET', reqStr, reqData);
             resp = obj.getResp();
             
@@ -245,50 +193,24 @@ classdef SynapseAPI < handle
             % we must read and 'clear' response
             % otherwise subsequent HTTP request may fail
             x = obj.getResp();
-            if strcmp(x, '')
-                if strcmp(reqStr, '/params/RecordingNotes.Button') || strcmp(reqStr, '/params/RecordingNotes.Note')
-                    if obj.getMode() < 3
-                        warning('Recording Notes only work in Record mode')
-                    end
-                end
-                retval = 0;
+            if isa(x, 'double')
+                retval = x;
             else
-                if isa(x, 'double')
-                    retval = x;
-                else
-                    retval = 1;
-                end
+                retval = 1;
             end
         end
         
         function retval = sendOptions(obj, reqStr, respKey)
-            retval = [];
             obj.sendRequest('OPTIONS', reqStr);
-            if obj.extras.status.value == 200
-                if isempty(obj.output)
-                    return
-                end
+            
+            try
                 retval = obj.getResp();
-                if ~strcmp(retval, '')
-                    if getRespError(obj, retval)
-                        retval = [];
-                        return
-                    end
-                    retval = retval.(respKey);
-                end
+                retval = retval.(respKey);
+            catch
+                retval = [];
             end
         end
 
-        function sField = cleanField(obj, oldField)
-            sField = strrep(oldField, '_0x28_', '_');
-            sField = strrep(sField, '_0x29_', '_');
-            sField = strrep(sField, '(', '_');
-            sField = strrep(sField, ')', '_');
-            if strcmp(sField(end), '_')
-                sField = sField(1:end-1);
-            end
-        end
-        
         function retval = struct2json(obj, s)
             if obj.useFastJsonParser
                 retval = matlab.internal.webservices.toJSON(s);
@@ -302,6 +224,16 @@ classdef SynapseAPI < handle
                 retval = matlab.internal.webservices.fromJSON(s);
             else
                 retval = fromjson(s);
+            end
+        end
+        
+        function sField = device2field(obj, sDevice)
+            sField = strrep(sDevice, '_0x28_', '_');
+            sField = strrep(sField, '_0x29_', '_');
+            sField = strrep(sField, '(', '_');
+            sField = strrep(sField, ')', '_');
+            if strcmp(sField(end), '_')
+                sField = sField(1:end-1);
             end
         end
         
@@ -331,16 +263,8 @@ classdef SynapseAPI < handle
             bSuccess = 0;
             if any(iNewMode == 0:3)
                 bSuccess = obj.sendPut('/system/mode', obj.struct2json(struct('mode', obj.MODES(iNewMode+1))));
-                if ~bSuccess
-                    currMode = obj.getMode();
-                    if currMode == iNewMode
-                        warning('Synapse is already in the desired mode');
-                    elseif currMode == 0 && iNewMode == 1
-                        warning('Check that Synapse Menu > Preferences > Standby Mode is Enabled');
-                    end
-                end
             else
-                error('Invalid input to setMode, must be integer between 0 and 3');
+                %error('invalid call to setMode()')
             end
         end
         
@@ -350,36 +274,29 @@ classdef SynapseAPI < handle
                 error('Allowed modes are: ''Idle'', ''Standby'', ''Preview'', or ''Record''')
             end
             bSuccess = obj.sendPut('/system/mode', obj.struct2json(struct('mode', sNewMode)));
-            if ~bSuccess
-                currMode = obj.getModeStr();
-                if strcmp(currMode, sNewMode)
-                    warning('Synapse is already in the desired mode');
-                elseif strcmp(currMode, 'Idle') && strcmp(sNewMode, 'Standby')
-                    warning('Check that Synapse Menu > Preferences > Standby Mode is Enabled');
-                end
-            end
-                
-            if ~bSuccess
-                if strcmp(obj.getModeStr(), sNewMode)
-                    warning('Synapse is already in the desired mode');
-                end
-            end
         end
         
         function tStatus = getSystemStatus(obj)
-            sysStat = obj.sendGet('/system/status');
+            resp = obj.sendGet('/system/status');
+
+            sysStat = struct('sysLoad','','uiLoad','','errors','','dataRate','','recDur','');
+            fields = fieldnames(resp);
+            for key = 1:numel(fields)
+                if isfield(resp, fields{key})
+                    sysStat.(fields{key}) = resp.(fields{key});
+                end
+            end
             
             % Synapse internal keys : user friendly keys
             keyMap = struct('sysLoad','iSysLoad','uiLoad','iUiLoad','errors','iErrorCount','dataRate','fRateMbps','recDur','iRecordSecs');
-            tStatus = struct();
-            
-            fields = fieldnames(keyMap);
+            fields = fieldnames(sysStat);
             for key = 1:numel(fields)
                 field = fields{key};
                 if strcmp(field, 'dataRate')
                     % '0.00 MB/s'
-                    sss = strfind(sysStat.dataRate, ' ');
-                    tStatus.(keyMap.dataRate) = str2double(sysStat.dataRate(1:sss));
+                    sss = strfind(sysStat.(field), ' ');
+                    xxx = sysStat.(field);
+                    tStatus.(keyMap.(field)) = str2double(xxx(1:sss));
                 elseif strcmp(field, 'recDur')
                     % 'HH:MM:SSs'
                     testStr = sysStat.(field)(1:end-1);
@@ -387,13 +304,13 @@ classdef SynapseAPI < handle
                     hr = testStr(1:ind(1)-1);
                     mn = testStr(ind(1)+1:ind(2)-1);
                     sec = testStr(ind(2)+1:end);
-                    tStatus.(keyMap.recDur) = str2double(hr) * 3600 + str2double(mn) * 60 + str2double(sec);
+                    tStatus.(keyMap.(field)) = str2double(hr) * 3600 + str2double(mn) * 60 + str2double(sec);
                 elseif strcmp(field, 'errors')
-                    value = str2double(sysStat.errors);
+                    value = str2double(sysStat.(field));
                     if isnan(value)
-                        tStatus.(keyMap.errors) = 0;
+                        tStatus.(keyMap.(field)) = 0;
                     else
-                        tStatus.(keyMap.errors) = value;
+                        tStatus.(keyMap.(field)) = str2double(sysStat.(field));
                     end
                 else
                     tStatus.(keyMap.(field)) = str2double(sysStat.(field));
@@ -419,24 +336,22 @@ classdef SynapseAPI < handle
                 cGizmos = obj.sendOptions('/gizmos', 'gizmos');
             end
         end
-        
-        function tGizmoInfo = getGizmoInfo(obj, sGizmoName)
+
+        function cGizmoInfo = getGizmoInfo(obj, sGizmoName)
             % info should have type, desc, cat and icon
             % icon is a string of base64-encoded text
-            tGizmoInfo = obj.sendGet(sprintf('/gizmos/%s', sGizmoName));
+            cGizmoInfo = obj.sendGet(sprintf('/gizmos/%s', sGizmoName));
         end
         
-        function cParameters = getParameterNames(obj, sGizmo)
-            cParameters = obj.sendOptions(['/params/' sGizmo], 'parameters');
+        function sParameters = getParameterNames(obj, sGizmo)
+            sParameters = obj.sendOptions(['/params/' sGizmo], 'parameters');
         end
         
         function tParameterInfo = getParameterInfo(obj, sGizmo, sParameter)
             info = obj.sendGet(sprintf('/params/info/%s.%s', sGizmo, sParameter), 'info');
-            tParameterInfo = struct();
-            if isempty(info)
-                return
-            end
             keys = {'Name', 'Unit', 'Min', 'Max', 'Access', 'Type', 'Array'};
+
+            tParameterInfo = struct();
             for i = 1:numel(keys)
                 key = keys{i};
                 tParameterInfo.(key) = info{i};
@@ -458,19 +373,10 @@ classdef SynapseAPI < handle
 
         function dValue = getParameterValue(obj, sGizmo, sParameter)
             dValue = obj.sendGet(sprintf('/params/%s.%s', sGizmo, sParameter), 'value');
-            obj.checkMode(dValue, 1);
         end
 
         function bSuccess = setParameterValue(obj, sGizmo, sParameter, dValue)
-            if numel(dValue) > 1 && ~ischar(dValue)
-                warning('%s %s: Input value is an array, using setParameterValues instead', sGizmo, sParameter);
-                bSuccess = obj.setParameterValues(sGizmo, sParameter, dValue);
-                return;
-            end 
             bSuccess = obj.sendPut(sprintf('/params/%s.%s', sGizmo, sParameter), obj.struct2json(struct('value', dValue)));
-            if ~bSuccess
-                obj.checkMode(bSuccess, 1);
-            end
         end
 
         function fValues = getParameterValues(obj, sGizmo, sParameter, varargin)
@@ -484,26 +390,13 @@ classdef SynapseAPI < handle
             end
             
             if iCount == -1
-                lookup = [sGizmo '_' sParameter];
-                if isfield(obj.sizeTable, lookup)
-                    iCount = obj.sizeTable.(lookup);
-                else
-                    iCount = double(obj.getParameterSize(sGizmo, sParameter));
-                    obj.sizeTable.(lookup) = iCount;
-                end
-                if iCount == 1
-                    % catch if getParameterValues was used to read a single parameter
-                    warning('%s %s: calling getParameterValue instead of getParameterValues', sGizmo, sParameter);
-                    fValues = obj.getParameterValue(sGizmo, sParameter);
-                    return
-                end
+                iCount = double(obj.getParameterSize(sGizmo, sParameter));
             end
             
             iCount = int64(iCount);
             iOffset = int64(iOffset);
             
             fValues = obj.sendGet(sprintf('/params/%s.%s', sGizmo, sParameter), 'values', obj.struct2json(struct('count',iCount,'offset',iOffset)));
-            obj.checkMode(fValues, 1);
             fValues = fValues(1:min(uint32(iCount), numel(fValues)));
         end
 
@@ -513,17 +406,7 @@ classdef SynapseAPI < handle
             else
                 iOffset = 0;
             end
-            params = obj.struct2json(struct('offset', iOffset, 'values', fValues(:)));
-            if numel(fValues) == 1
-                % if its a single value add brackets so Synapse treats it like a list
-                % note: if its a ParSeq parameter list, this does not work - the whole list needs to be replaced
-                colons = strfind(params, ':');
-                params = [params(1:colons(end)) '[' params((colons(end)+1):end-1) ']}'];
-            end
-            bSuccess = obj.sendPut(sprintf('/params/%s.%s', sGizmo, sParameter), params);
-            if ~bSuccess
-                obj.checkMode(bSuccess, 1);
-            end
+            bSuccess = obj.sendPut(sprintf('/params/%s.%s', sGizmo, sParameter), obj.struct2json(struct('offset', iOffset, 'values', fValues)));
         end
 
         function cModes = getPersistModes(obj)
@@ -532,23 +415,20 @@ classdef SynapseAPI < handle
 
         function tSamplingRates = getSamplingRates(obj)
             tSamplingRates = obj.sendGet('/processor/samprate');
+            
             devices = fieldnames(tSamplingRates);
             newStruct = struct();
             for i = 1:numel(devices)
                 oldField = devices{i};
-                if ~strcmp(oldField(1), '_') % can't make new struct with _return* fields, so remove
-                    newField = obj.cleanField(oldField);
-                    [newStruct.(newField)] = tSamplingRates.([oldField]);
-                end
+                newField = obj.device2field(oldField);
+                [newStruct.(newField)] = tSamplingRates.([oldField]);
             end
             tSamplingRates = newStruct;
         end
-
+        
         function sGizmoParent = getGizmoParent(obj, sGizmoName)
             sGizmoParent = obj.sendGet(['/experiment/processor/' sGizmoName], 'processor');
-            if ~isempty(sGizmoParent)
-                sGizmoParent = obj.cleanField(sGizmoParent);
-            end
+            sGizmoParent = obj.device2field(sGizmoParent);
         end
         
         function cExperiments = getKnownExperiments(obj)
@@ -581,7 +461,11 @@ classdef SynapseAPI < handle
 
         function sBlock = getCurrentBlock(obj)
             sBlock = obj.sendGet('/block/name', 'block');
-            obj.checkMode(sBlock, 2);
+            if sBlock == 0
+                if obj.getMode() < 2
+                    warning('Synapse is not in a run time mode')
+                end
+            end
         end
 
         function sMode = getPersistMode(obj)
@@ -613,31 +497,12 @@ classdef SynapseAPI < handle
             bSuccess = obj.sendPut('/subject/name/new', obj.struct2json(struct('subject', sName, 'desc', desc, 'icon', icon)));
         end
         
-        function bFound = checkExists(obj, options, input)
-            bFound = 0;
-            for x = 1:numel(options)
-                if strcmp(input, options{x})
-                    bFound = 1;
-                    break
-                end
-            end
-            if ~bFound
-                warning('''%s'' doesn''t exist', input);
-            end
-        end
-        
         function bSuccess = setCurrentExperiment(obj, sExperiment)
             bSuccess = obj.sendPut('/experiment/name', obj.struct2json(struct('experiment', sExperiment)));
-            if ~bSuccess
-                obj.checkExists(obj.getKnownExperiments(), sExperiment);
-            end
         end
         
         function bSuccess = setCurrentSubject(obj, sSubject)
             bSuccess = obj.sendPut('/subject/name', obj.struct2json(struct('subject', sSubject)));
-            if ~bSuccess
-                obj.checkExists(obj.getKnownSubjects(), sSubject)
-            end
         end
         
         function bSuccess = setCurrentUser(obj, sUser, varargin)
@@ -647,29 +512,14 @@ classdef SynapseAPI < handle
                 password = varargin{1};
             end
             bSuccess = obj.sendPut('/user/name', obj.struct2json(struct('user', sUser, 'pwd', password)));
-            if ~bSuccess
-                if obj.checkExists(obj.getKnownUsers(), sUser)
-                    warning('Provided password for user ''%s'' may be incorrect', sUser)
-                end
-            end
         end
 
         function bSuccess = setCurrentTank(obj, sTank)
             bSuccess = obj.sendPut('/tank/name', obj.struct2json(struct('tank', sTank)));
-            if ~bSuccess
-                warning('Check that Synapse Menu > Preferences > Data Saving > Tank Naming > Auto is disabled')
-            end
         end
 
         function bSuccess = setCurrentBlock(obj, sBlock)
             bSuccess = obj.sendPut('/block/name', obj.struct2json(struct('block', sBlock)));
-            if ~bSuccess
-                if obj.getMode() > 0
-                    warning('Synapse is not in idle mode')
-                else
-                    warning('Check that Synapse Menu > Preferences > Data Saving > Block Naming is set to ''Prompt''')
-                end
-            end
         end
         
         function bSuccess = setPersistMode(obj, sMode)
@@ -677,11 +527,6 @@ classdef SynapseAPI < handle
                 error('Allowed persistences are: ''Best'', ''Last'', or ''Fresh''')
             end
             bSuccess = obj.sendPut('/system/persist', obj.struct2json(struct('mode', sMode)));
-            if ~bSuccess
-                if obj.getMode() > 0
-                    warning('Synapse is not in idle mode')
-                end
-            end 
         end
 
         function cNotes = getExperimentMemos(obj, sExperiment, varargin)
@@ -784,11 +629,11 @@ classdef SynapseAPI < handle
         end
         
         function bSuccess = appendSubjectMemo(obj, sSubject, sMemo)
-            bSuccess = obj.sendPut('/subject/notes', obj.struct2json(struct('subject', sSubject, 'memo', sMemo)));
+            bSuccess = obj.sendPut('/subject/notes', obj.struct2json(struct('experiment', sSubject, 'memo', sMemo)));
         end
 
         function bSuccess = appendUserMemo(obj, sUser, sMemo)
-            bSuccess = obj.sendPut('/user/notes', obj.struct2json(struct('user', sUser, 'memo', sMemo)));
+            bSuccess = obj.sendPut('/user/notes', obj.struct2json(struct('experiment', sUser, 'memo', sMemo)));
         end
 
         function bSuccess = appendExperimentMemo(obj, sExperiment, sMemo)

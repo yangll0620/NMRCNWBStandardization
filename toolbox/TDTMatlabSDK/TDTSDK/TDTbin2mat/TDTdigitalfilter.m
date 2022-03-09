@@ -7,6 +7,9 @@ function data = TDTdigitalfilter(data, STREAM, FC, varargin)
 %
 %   data    contains updated STREAM data store with digital filter applied
 %
+%   data = TDTdigitalfilter(data, STREAM, FC, 'parameter', value, ... )
+%   data = TDTdigitalfilter(DATA, STREAM, 'NOTCH', [60 120])
+%
 %   'parameter', value pairs
 %       'TYPE'      string, specifies the TYPE of filter to use
 %                       'band': bandpass filter (default if FC is two element)
@@ -85,18 +88,11 @@ if strcmp(TYPE, 'NULL')
     return
 end
 
-Fs = data.streams.(STREAM).fs; %sampling rate
-
-Alpha = single(1-exp(-6.283 * FC(1) / Fs));
+Alpha = single(1-exp(-6.283 * FC(1) / 24414.0625));
 if strcmp(TYPE, 'high') && Alpha <= 0.0005
     if FC(1) > 0
         %%% Emulate MCSmooth HP filter
         fprintf('Using alpha smoothing for the high pass filter\n');
-        if Fs < 24414
-            fprintf(['Note: if store sampling rate ' num2str(Fs) ' does not match device rate, upscale data first\n']);
-            fprintf('e.g. upscaling a 1 kHz stored waveform that was recorded on a 6 kHz device sampling rate, use this:\n')
-            fprintf('\t>> data.streams.(STORE).data = kron(data.streams.(STORE).data, ones(1, 6));')
-        end
         for chan = 1:size(data.streams.(STREAM).data,1)
             if size(data.streams.(STREAM).data,1) == 1
                 r2 = zeros(size(data.streams.(STREAM).data));
@@ -118,7 +114,8 @@ if strcmp(TYPE, 'high') && Alpha <= 0.0005
         filter_string = 'high 0Hz;';
     end
 else
-    [Z, P, K] = butter(ORDER, FC./(Fs/2), TYPE);
+    Fs = data.streams.(STREAM).fs; %sampling rate
+    [Z, P, K] = butter(ORDER, FC./(Fs/2), TYPE);    
     SOS = zp2sos(Z, P, K);
     
     data.streams.(STREAM).data = double(data.streams.(STREAM).data);

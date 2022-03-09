@@ -1,8 +1,10 @@
 %% Filter and Threshold Raw Data Into Snippets
 %
-%  Import raw streaming data into Matlab using TDTbin2mat
-%  Digitally filter the single unit data using TDTdigitalfilter
-%  Threshold and extract snippets using TDTthresh
+% <html>
+% Import raw streaming data into Matlab using TDTbin2mat <br>
+% Digitally filter the single unit data using TDTdigitalfilter <br>
+% Threshold and extract snippets using TDTthresh
+% </html>
 
 %% Housekeeping
 % Clear workspace and close existing figures. Add SDK directories to Matlab
@@ -14,13 +16,13 @@ DATAPATH = fullfile(MAINEXAMPLEPATH, 'ExampleData'); % \TDTMatlabSDK\Examples\Ex
 addpath(genpath(SDKPATH));
 
 %% Importing the Data
-% This example assumes you downloaded our
-% <https://www.tdt.com/files/examples/TDTExampleData.zip example data sets>
-% and extracted it into the \TDTMatlabSDK\Examples\ directory. To import your own data, replace
-% 'BLOCKPATH' with the path to your own data block.
+% This example assumes you downloaded our example data sets
+% (<https://www.tdt.com/support/examples/TDTExampleData.zip link>) and extracted
+% it into the \TDTMatlabSDK\Examples\ directory. To import your own data, replace
+% |BLOCKPATH| with the path to your own data block.
 %
-% In Synapse, you can find the block path in the database. Go to Menu --> History. 
-% Find your block, then Right-Click --> Copy path to clipboard.
+% In Synapse, you can find the block path in the database. Go to Menu > History. 
+% Find your block, then Right-Click > Copy path to clipboard.
 BLOCKPATH = fullfile(DATAPATH,'Algernon-180308-130351');
 
 %%
@@ -37,11 +39,6 @@ OVERLAP = 0; % set to 1 to allow double crossings within same window to count as
 % Now read the specified data from our block into a Matlab structure.
 data = TDTbin2mat(BLOCKPATH, 'STORE', STORE, 'CHANNEL', CHANNEL);
 
-% convert int16 to floats
-if isa(data.streams.(STORE).data(1), 'int16')
-    data.streams.(STORE).data = single(data.streams.(STORE).data) / 1e6;
-end
-
 %% Use TDTdigitalfilter to filter the streaming waveforms
 % We are interested in single unit activity in the 300Hz-5000Hz band.
 su = TDTdigitalfilter(data, STORE, [300 5000]);
@@ -55,10 +52,6 @@ su = TDTthresh(su, STORE, 'MODE', 'manual', 'THRESH', THRESH, 'NPTS', NPTS, 'OVE
 % on a multiple of the RMS of a previous time period. For example,
 % set the threshold at 6*RMS of the previous 5 seconds of data
 %su = TDTthresh(su, STORE, 'MODE', 'auto', 'POLARITY', -1, 'STD', 6, 'TAU', 5);
-
-if isempty(su.snips.Snip.data)
-    error('no snippets were found using these threshold settings')
-end
 
 %% 
 % And that's it! Your data is now in Matlab and thresholded. TDTthresh
@@ -175,9 +168,6 @@ end
 [idx3, C3] = kmeans(score(:,1:3), 3);
 for ii = 1:max(idx3)
     
-    % apply sort codes to our data
-    su.snips.Snip.sortcode(idx3==ii) = ii;
-    
     % get principle components and color for this cluster
     pca1 = score(idx3==ii,1);
     pca2 = score(idx3==ii,2);
@@ -193,8 +183,3 @@ end
 axis tight;
 view([-15 25]); % set initial view on 3-D plot
 title('PCA feature space', 'FontSize', 12)
-
-% keep sort code 1 only
-idx = su.snips.Snip.sortcode == 1;
-su.snips.Snip.sortcode(~idx) = [];
-su.snips.Snip.ts(~idx) = [];

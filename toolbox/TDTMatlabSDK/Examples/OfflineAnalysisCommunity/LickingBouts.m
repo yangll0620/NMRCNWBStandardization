@@ -1,8 +1,10 @@
 %% Licking Bout Epoc Filtering
-%  This example looks at fiber photometry data in the VTA where subjects are provided sucrose water after a fasting period.
-%  Lick events are captured as TTL pulses.
-%  Objective is to combine many consecutive licking events into a single event based on time difference and lick count thresholds.
-%  New lick bout events can then be used for clear peri-event filtering.
+% This example looks at fiber photometry data in the VTA where subjects
+% are provided sucrose water after a fasting period.
+% Lick events are captured as TTL pulses.
+% Objective is to combine many consecutive licking events into a single
+% event based on time difference and lick count thresholds.
+% New lick bout events can then be used for clear peri-event filtering.
 
 %% Housekeeping
 % Clear workspace and close existing figures. Add SDK directories to Matlab
@@ -15,18 +17,19 @@ DATAPATH = fullfile(MAINEXAMPLEPATH, 'ExampleData'); % \TDTMatlabSDK\Examples\Ex
 addpath(genpath(SDKPATH));
 
 %% Importing the Data
-% This example assumes you downloaded our
-% <https://www.tdt.com/files/examples/TDTExampleData.zip example data sets>
-% and extracted it into the \TDTMatlabSDK\Examples\ directory. To import your own data, replace
-% 'BLOCKPATH' with the path to your own data block.
+% This example assumes you downloaded our example data sets
+% (<https://www.tdt.com/support/examples/TDTExampleData.zip link>) and extracted
+% it into the \TDTMatlabSDK\Examples\ directory. To import your own data, replace
+% |BLOCKPATH| with the path to your own data block.
 %
-% In Synapse, you can find the block path in the database. Go to Menu --> History. 
-% Find your block, then Right-Click --> Copy path to clipboard.
+% In Synapse, you can find the block path in the database. Go to Menu > History.
+% Find your block, then Right-Click > Copy path to clipboard.
+
 BLOCKPATH = fullfile(DATAPATH,'VTA4-190125-100559');
 
 %%
 % Call the import function from the Matlab SDK
-% <https://www.tdt.com/support/sdk.html>
+% https://www.tdt.com/support/sdk.html
 data = TDTbin2mat(BLOCKPATH);
 
 %%
@@ -37,7 +40,7 @@ ISOS = 'x405G';
 LICK = 'Ler_';
 
 % Make some pretty colors for later plotting
-% <http://math.loyola.edu/~loberbro/matlab/html/colorsInMatlab.html>
+% http://math.loyola.edu/~loberbro/matlab/html/colorsInMatlab.html
 red = [0.8500, 0.3250, 0.0980];
 green = [0.4660, 0.6740, 0.1880];
 cyan = [0.3010, 0.7450, 0.9330];
@@ -84,7 +87,7 @@ legend([p1 p2], {'GCaMP','UV'});
 %% Downsample data doing local averaging
 % Average around every Nth point and downsample Nx
 
-N = 10; % multiplicative for downsampling
+N = 100; % multiplicative for downsampling
 data.streams.(GCAMP).data = arrayfun(@(i)...
     mean(data.streams.(GCAMP).data(i:i+N-1)),...
     1:N:length(data.streams.(GCAMP).data)-N+1);

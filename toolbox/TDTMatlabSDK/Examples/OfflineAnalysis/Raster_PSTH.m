@@ -1,9 +1,11 @@
 %% Raster Peristimulus Time Histogram (PSTH) Example
 %
-%  Import snippet and epoc data into Matlab using TDTbin2mat
-%  Generate peristimulus raster and histogram plots over all trials
-%  Good for stim-response experiments, such as optogenetic or electrical
+% <html>
+% Import snippet and epoc data into Matlab using TDTbin2mat <br>
+% Generate peristimulus raster and histogram plots over all trials <br>
+% Good for stim-response experiments, such as optogenetic or electrical
 % stimulation
+% </html>
 
 %% Housekeeping
 % Clear workspace and close existing figures. Add SDK directories to Matlab
@@ -15,13 +17,13 @@ DATAPATH = fullfile(MAINEXAMPLEPATH, 'ExampleData'); % \TDTMatlabSDK\Examples\Ex
 addpath(genpath(SDKPATH));
 
 %% Importing the Data
-% This example assumes you downloaded our
-% <https://www.tdt.com/files/examples/TDTExampleData.zip example data sets>
-% and extracted it into the \TDTMatlabSDK\Examples\ directory. To import your own data, replace
-% 'BLOCKPATH' with the path to your own data block.
+% This example assumes you downloaded our example data sets
+% (<https://www.tdt.com/support/examples/TDTExampleData.zip link>) and extracted
+% it into the \TDTMatlabSDK\Examples\ directory. To import your own data, replace
+% |BLOCKPATH| with the path to your own data block.
 %
-% In Synapse, you can find the block path in the database. Go to Menu --> History. 
-% Find your block, then Right-Click --> Copy path to clipboard.
+% In Synapse, you can find the block path in the database. Go to Menu > History. 
+% Find your block, then Right-Click > Copy path to clipboard.
 BLOCKPATH = fullfile(DATAPATH,'Algernon-180308-130351');
 
 %%

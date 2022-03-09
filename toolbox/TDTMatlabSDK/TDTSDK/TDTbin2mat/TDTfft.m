@@ -157,19 +157,13 @@ end
 % plot raw signal
 plot(t,y*factor)
 xlabel(['Time (' x_units ')'])
-x_axis = [0 t(end)];
-if max(abs(y)) > 0 && all(isfinite(y))
-    if max(y*factor) < 0
-        y_axis = [min(y*factor)*1.05 max(y*factor)*.95];
-    elseif min(y*factor) > 0
-        y_axis = [min(y*factor)*.95 max(y*factor)*1.05];
-    else
-        y_axis = [min(y*factor)*1.05 max(y*factor)*1.05];
-    end
+if max(y*factor) < 0
+    axis([0 t(end) min(y*factor)*1.05 max(y*factor)*.95]);
+elseif min(y*factor) > 0
+    axis([0 t(end) min(y*factor)*.95 max(y*factor)*1.05]);
 else
-    y_axis = [-1 1];
+    axis([0 t(end) min(y*factor)*1.05 max(y*factor)*1.05]);
 end
-axis([x_axis y_axis])
 grid on;
 ylabel(y_units)
 title(sprintf('Raw Signal (%.2f %srms)', r*factor, y_units))
@@ -178,6 +172,7 @@ if LEGEND
    legend(legendstr);
 end
 
+
 % plot single-sided amplitude spectrum
 subplot(numplots,1,2);
 semilogx(fft_freq, fft_data)
@@ -185,17 +180,10 @@ title('Single-Sided Amplitude Spectrum of y(t)')
 xlabel('Frequency (Hz)')
 ylabel('|Y(f)|')
 if length(FREQ) == 1
-    freq_axis = [0 fft_freq(end)];
+    axis([0 fft_freq(end) 0 max(fft_data)*1.05]);
 else
-    freq_axis = FREQ;
+    axis([FREQ(1) FREQ(2) 0 max(fft_data)*1.05]);
 end
-
-y_axis = [-1 1];
-mx = max(fft_data);
-if mx ~= 0 && isfinite(mx)
-    y_axis = [0 mx*1.05];
-end
-axis([freq_axis y_axis])
 
 % plot power spectrum
 subplot(numplots,1,3)
@@ -204,16 +192,14 @@ semilogx(fft_freq, fft_data)
 title('Power Spectrum')
 xlabel('Frequency (Hz)')
 ylabel('dBV')
-
-y_axis = [-1 1];
-if max(abs(fft_data)) > 0 && all(isfinite(fft_data))
-    y_axis = [min(fft_data)*1.05 max(fft_data)/1.05];
+if length(FREQ) == 1
+    axis([0 fft_freq(end) min(fft_data)*1.05 max(fft_data)/1.05]);
+else
+    axis([FREQ(1) FREQ(2) min(fft_data)*1.05 max(fft_data)/1.05]);
 end
-axis([freq_axis y_axis]);
 
 % plot spectrogram
 if ~SPECPLOT, return, end
 subplot(numplots,1,4)
 spectrogram(double(y),256,240,256,Fs,'yaxis'); 
-colormap('gray')
 title('Spectrogram')

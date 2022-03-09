@@ -107,8 +107,7 @@ while 1
             end
             
             % for publishing, end early
-            if nsweeps > 30
-                t.SYN.setModeStr('Idle'); % set to idle mode
+            if exist('quitEarly','var') && nsweeps > 30
                 break
             end
         end
