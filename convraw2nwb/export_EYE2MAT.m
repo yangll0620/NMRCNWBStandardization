@@ -267,4 +267,8 @@ for file_num=1:length(ss) %% ix sessions FOLDERS
    clear data idx_sata_lines;
 end
     
-    
+%% Qs
+%   1. ATT, AQT, ART AQU AGX, AGY and CNT not store?
+%   2. TrialDataEye.TTS_sec is the timestamp? Why not use ATT?
+%   3. TotalTime	DeltaTime	X_Gaze	.... (code == 5) is the meaning of ATT, ADT, ALX ..., 
+%      any suggestions (how) if to store the names
