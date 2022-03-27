@@ -1,3 +1,11 @@
+# Build Online Read the Docs
+
+1. Commit the codes into github
+
+2. Check whether an updated version is generated.
+
+https://readthedocs.org/projects/datastorageanalysisarchitecture/
+
 # Build Docs Locally
 
 ## Install Sphinx
