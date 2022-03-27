@@ -1,4 +1,4 @@
-function nwb = convraw_tdt2nwb(rawtdtpath, googlesheet_electrode, exportnwbtag, nwb)
+function nwb = convraw_tdt2nwb(rawtdtpath, googlesheet_electrode, varargin)
 % convraw_tdt2nwb converts raw TDT data to NWB.acquisition
 %
 %   nwb = convraw_tdt2nwb(rawmapath, googledocid_electable, nwb, exportnwbtag) return nwb 
@@ -10,11 +10,11 @@ function nwb = convraw_tdt2nwb(rawtdtpath, googlesheet_electrode, exportnwbtag, 
 %   ('https://drive.google.com/open?id=1rqT5kkedZTvqGoWwNhGrS4Wly_1OQxPZ').
 % 
 % Example usage:
-%           rawtdtpath = 'Y:\\Animals2\\Bug\\Recording\\Raw\\rawTDT\\Bug-190111\\Block-1';
+%           rawtdtpath = 'H:\My Drive\NMRC_umn\Projects\NWBStandardization\example_dataset\testData\Recording\Raw\rawTDT\Barb-220303\Block-1';
 %
 %           googlesheet_electrode = '1s7MvnI3C4WzyW2dxexYaShCHL_z-AzEHE-N3uXaSMJU'
 %
-%           nwb = convraw_tdt2nwb(rawtdtpath, googledocid_electable);
+%           nwb = convraw_tdt2nwb(rawtdtpath, googledocid_electable, 'export2nwbfile', 'true');
 % 
 % 
 % Inputs
@@ -22,7 +22,8 @@ function nwb = convraw_tdt2nwb(rawtdtpath, googlesheet_electrode, exportnwbtag, 
 %
 %       googlesheet_electrode   ---- the online google sheet storing electrode information, the value between 'd/'  and '/edit' in your electrode spreadsheet's url
 %
-%       exportnwbtag            ---- tag for exporting nwb file (1) to test.nwb or not (default 0)
+%   Name-Value: 
+%       export2nwbfile          ---- tag for exporting nwb file (true) to test.nwb or not (false), default false
 %
 %       nwb                     ---- exist nwb structure (if missing, will create a new nwb structure)
 %
@@ -32,7 +33,10 @@ function nwb = convraw_tdt2nwb(rawtdtpath, googlesheet_electrode, exportnwbtag, 
 
 
 
-
+p = inputParser;
+addParameter(p, 'export2nwbfile', false, @(x)isscalar(x)&&islogical(x));
+parse(p,varargin{:});
+export2nwbfile = p.Results.export2nwbfile;
 
 
 
@@ -42,9 +46,6 @@ else
     newnwbtag = 0;
 end
 
-if nargin < 3
-    exportnwbtag = 0;
-end
 
 % parse animal and tdt block number infomation
 [animal, tdtblocknum] = parsetdtpath(rawtdtpath);
@@ -99,7 +100,7 @@ if ~isempty(find(ismember(streams_keys, stpd_key)))
 end
 
 
-if exportnwbtag == 1
+if export2nwbfile
     %% export
     outdest = fullfile(['test_convrawtdt' '.nwb']);
     nwbExport(nwb, outdest);

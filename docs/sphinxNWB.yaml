@@ -1,0 +1,6 @@
+name: sphinxNWB
+channels:
+  - conda-forge
+dependencies:
+  - python=3.7 
+  - sphinx=4.4.0

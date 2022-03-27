@@ -6,6 +6,6 @@ Input Systems
    :maxdepth: 1
    :glob:
 
-   systemtdt
-   systemma
-   systemgaitmat
+   system_tdt
+   system_ma
+   system_gaitmat

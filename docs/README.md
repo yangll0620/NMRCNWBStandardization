@@ -1,8 +1,23 @@
-# build docs locally
+# Build Docs Locally
 
-# Install Sphinx
+## Install Sphinx
 
-`pip install -U Sphinx`
+`$ conda create -n sphinxNWB python=3.7 sphinx=4.4.0`
+
+`$ conda activate sphinxNWB`
+
+`pip install sphinxcontrib-matlabdomain==0.13.0`
 
 
+or
+
+`$ conda env create -f sphinxNWB.yaml`
+
+`$ conda activate sphinxNWB`
+
+`$ pip install sphinxcontrib-matlabdomain==0.13.0`
+
+## Run Build
+
+`$ make html`
 
