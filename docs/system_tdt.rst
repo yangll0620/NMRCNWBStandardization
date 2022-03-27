@@ -75,8 +75,8 @@ NWB Structure Storing TDT data
 Folder Naming for Storing TDT data
 ----------------------------------
 
-All recorded raw tdt data should be stored under folder rawTDT with the subfolder structure like rawTDT\animal-yymmdd\Block-#.
+All recorded raw tdt data should be stored under folder rawTDT with the subfolder structure like rawTDT\\animal-yymmdd\\Block-#.
 
 Example:
 
-rawTDT\Barb-220203\Block-1
+rawTDT\\Barb-220203\\Block-1
