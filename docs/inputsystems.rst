@@ -9,4 +9,4 @@ Input Systems
    system_tdt
    system_ma
    system_gaitmat
-   systemtdt
+   system-tdt
