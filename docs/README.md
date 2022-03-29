@@ -1,14 +1,16 @@
-# Build Online Read the Docs
+# Build Docs
+
+## Build Online Read the Docs
 
 1. Commit the codes into github
 
-2. Check whether an updated version is generated.
+2. Check whether an updated version is generated. (remember to refresh the page, F)
 
 https://readthedocs.org/projects/datastorageanalysisarchitecture/
 
-# Build Docs Locally
+## Build Docs Locally
 
-## Install Sphinx
+### Install Sphinx
 
 `$ conda create -n sphinxNWB python=3.7 sphinx=4.4.0`
 
@@ -25,7 +27,14 @@ or
 
 `$ pip install sphinxcontrib-matlabdomain==0.13.0`
 
-## Run Build
+### Run Build
 
 `$ make html`
+
+
+# Useful Resouces
+
+#. rst table generate
+
+https://www.tablesgenerator.com/text_tables
 
