@@ -5,55 +5,65 @@ TDT System
 Structure of TDT System
 -----------------------
 
+Data are mainly stored in tdt.streams and tdt.epocs. 
 
+* Streams standardized naming rules:
 
-+-----------+-----------+-------+------+------------------------------------+---------------+
-| tdt filed | sub-field | chair | gait |             description            |unified in tdt |
-+===========+===========+=======+======+====================================+===============+
-|           |   .Cam1   |  yes  |  yes |                                    | Cam1          |
-+           +-----------+-------+------+ | Cam1/2:  onset and offset time   +---------------+
-|   .epocs  |   .Cam2   |   no  |  yes | | of each frame                    | Cam2          |
-+           +-----------+-------+------+------------------------------------+---------------+
-|           |   .Spd\_  |   no  |  yes | | Spd\_: onset  and  offset  time  | Spdg          |
-|           |           |       |      | | of gait mat                      |               |
-+-----------+-----------+-------+------+------------------------------------+---------------+
-|           |           |       |      | BUGG: store the neural data        |               |
-|           |           |       |      |                                    |               |
-|           |   .BUGG   |  yes  |  yes | [n_chns,  n_temporal]              | Neur          |
-|           |           |       |      |                                    |               |
-|           |           |       |      | start_time = 0                     |               |
-+           +-----------+-------+------+------------------------------------+---------------+
-|           |           |       |      | x,y positions of eyes              |               |
-|           |           |       |      |                                    |               |
-|           |   .EYEa   |  yes  |  no  | [2, n_temporal]                    | EYEa          |
-|           |           |       |      |                                    |               |
-| .steams   |           |       |      | start_time = 9.5367e-07            |               |
-+           +-----------+-------+------+------------------------------------+---------------+
-|           |           |       |      | sync data from eye tracking system |               |
-|           |           |       |      |                                    |               |
-|           |   .EYEt   |  yes  |  no  | [1, n_temporal]                    | EYEt          |
-|           |           |       |      |                                    |               |
-|           |           |       |      | start_time = 9.5367e-07            |               |
-+           +-----------+-------+------+------------------------------------+---------------+
-|           |           |       |      | | Stpd: synchronization signal     |               |
-|           |           |       |      | | from the touch pad.              |               |
-|           |   .Stpd   |  yes  |  no  |                                    | Stpd          |
-|           |           |       |      | [1, n_temporal]                    |               |
-|           |           |       |      |                                    |               |
-|           |           |       |      | start_time = 9.5367e-07            |               |
-+           +-----------+-------+------+------------------------------------+---------------+
-|           |           |       |      | For what?                          |               |
-|           |           |       |      |                                    |               |
-|           |   .Para   |  yes  |  no  | [4,  n_temporal]                   | Para          |
-|           |           |       |      |                                    |               |
-|           |           |       |      | start_time = 9.5367e-07            |               |
-+-----------+-----------+-------+------+------------------------------------+---------------+
+    * All data is stored using four capital letters, e.g. UDLP, DBSS and STPD.
+    
+    * Starting with capital letter U represents Utah array recordings, e.g. UDLP are utah array data recording in DLP.
 
-Example dataset:
+    * Starting with capital letter U represent DBS recordings, e.g. DBSS are DBS recording in STN.
 
-* setup-chair: Bug-190111 -> Block-1
+    * STPD, TASK and EYET represent startpad signal, 4-bit event task codes and eye tracking data. 
 
-* setup-gait: Bug-181130 -> Block-1
+.. csv-table:: Table Title
+    :file: tables/table_tdtField.csv
+    :header-rows:1
+
+* tdt field Description
+
+.. table:: Each tdt field in details 
++-----------+-----------+--------------------------------------------------------------------+
+| tdt field | sub-field | description                                                        |
++===========+===========+====================================================================+
+|           | Cam1      |                                                                    |
+|   epocs   +-----------+ Cam1/2: onset and offset time of each frame                        |
+|           | Cam2      |                                                                    |
++-----------+-----------+--------------------------------------------------------------------+
+|           | UDLP      | Utah array data recordings in dorsolateral prefrontal cortex (DLP) |
+|           |           |                                                                    |
+|           |           | [n_chns,  n_temporal]                                              |
+|           +-----------+--------------------------------------------------------------------+
+|           | UMCX      | Utah array data recordings in motor cortex (MC)                    |
+|           |           |                                                                    |
+|           |           | [n_chns,  n_temporal]                                              |
+|           +-----------+--------------------------------------------------------------------+
+|           | UPMC      | Utah array data recordings in premotor cortex (PMC)                |
+| streams   |           |                                                                    |
+|           |           | [n_chns,  n_temporal]                                              |
+|           +-----------+--------------------------------------------------------------------+
+|           | DBSS      | DBS recordins in STN                                               |
+|           |           |                                                                    |
+|           |           | [n_chns,  n_temporal]                                              |
+|           +-----------+--------------------------------------------------------------------+
+|           | DBSG      | DBS recordings in GP                                               |
+|           |           |                                                                    |
+|           |           | [n_chns,  n_temporal]                                              |
+|           +-----------+--------------------------------------------------------------------+
+|           | EYET      | x,y positions of eyes from eye tracking system                     |
+|           |           |                                                                    |
+|           |           | [2, n_temporal]                                                    |
+|           +-----------+--------------------------------------------------------------------+
+|           | TASK      | 4-bit event codes from GoNogo/COT task program.                    |
+|           |           |                                                                    |
+|           |           | [4,  n_temporal]                                                   |
+|           +-----------+--------------------------------------------------------------------+
+|           | STPD      | Startpad signal                                                    |
+|           |           |                                                                    |
+|           |           | [1,  n_temporal]                                                   |
++-----------+-----------+--------------------------------------------------------------------+
+                                                          Example dataset: Barb-220324\Block-2
 
 
 NWB Structure Storing TDT data
@@ -77,6 +87,6 @@ Folder Naming for Storing TDT data
 
 All recorded raw tdt data should be stored under folder rawTDT with the subfolder structure like rawTDT\\animal-yymmdd\\Block-#.
 
-Example:
+Example folder structure:
 
-rawTDT\\Barb-220203\\Block-1
+rawTDT\\Barb-220324\\Block-1

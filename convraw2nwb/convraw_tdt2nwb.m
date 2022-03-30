@@ -25,59 +25,70 @@ function nwb = convraw_tdt2nwb(rawtdtpath, googlesheet_electrode, varargin)
 %   Name-Value: 
 %       export2nwbfile          ---- tag for exporting nwb file (true) to test.nwb or not (false), default false
 %
-%       nwb                     ---- exist nwb structure (if missing, will create a new nwb structure)
+%       nwbf_in                 ---- input nwb file (if provided)
 %
 % Output:
 %       nwb                     ---- nwb structure containing tdt information (i.e. neural data, electrodes, etc)
 
 
 
-
-p = inputParser;
-addParameter(p, 'export2nwbfile', false, @(x)isscalar(x)&&islogical(x));
-parse(p,varargin{:});
-export2nwbfile = p.Results.export2nwbfile;
-
-
-
-if nargin < 4
-    newnwbtag = 1;
-else
-    newnwbtag = 0;
-end
-
-
-% parse animal and tdt block number infomation
-[animal, tdtblocknum] = parsetdtpath(rawtdtpath);
-if isempty(animal) || isempty(tdtblocknum)
-    disp(['animal or tdtblocknum is not parsed!']);
+if ~(isunix || ispc)
+    disp('Using neither windows or unix OS.');
     return;
 end
 
-% load tdt file to matlab
-if isunix || ispc 
-    addpath(genpath(fullfile(fileparts(pwd), 'toolbox', 'TDTMatlabSDK'))) % add tdt sdk path ../toolbox/TDTMatlabSDK
-    tdt = TDTbin2mat(rawtdtpath);
+
+
+% add tdt sdk path ../toolbox/TDTMatlabSDK
+addpath(genpath(fullfile(fileparts(pwd), 'toolbox', 'TDTMatlabSDK')))
+
+
+% parse parameters
+p = inputParser;
+addParameter(p, 'export2nwbfile', false, @(x)isscalar(x)&&islogical(x));
+addParameter(p, 'nwbf_in', [], @(x)isa(x, 'nwbfile'));
+parse(p,varargin{:});
+export2nwbfile = p.Results.export2nwbfile;
+
+if isempty(nwbin)
+    create_newnwb = true;
+else
+    create_newnwb = false;
 end
 
-% tdt.info.date = '2019-Jan-11'
-dateofexp = datenum(tdt.info.date, 'yyyy-mmm-dd'); 
 
-if newnwbtag == 1
-    % create new nwb structure
-    identifier = [animal '_' datestr(dateofexp,'yymmdd') '_block' num2str(tdtblocknum)];
-    session_description = ['NWB file on ' animal ' performing on day ' datestr(dateofexp,'yymmdd')];
+
+
+% parse animal and tdt block number infomation
+[animal, ~, ~] = parsetdtpath(rawtdtpath);
+if isempty(animal) 
+    disp('animal is not parsed!');
+    return;
+end
+
+
+
+% load tdt file to matlab
+tdt = TDTbin2mat(rawtdtpath);
+
+% parse dateofexp and bktdt
+dateofexp = datenum(tdt.info.date, 'yyyy-mmm-dd'); 
+bktdt = str2num(tdt.info.blockname(length('block-')+1:end)); 
+
+if create_newnwb % create new nwb structure
+    identifier = [animal '_' datestr(dateofexp,'yymmdd') '_block' num2str(bktdt)];
+    session_description = [animal '-' datestr(dateofexp,'yymmdd') ', block' num2str(bktdt)];
+    session_start_time = datevec([tdt.info.date tdt.info.utcStartTime]);
     nwb = nwbfile(...
         'identifier', identifier, ...
-        'session_description', session_description);
+        'session_description', session_description, ...
+        'session_start_time', datestr(session_start_time, 'yyyy-mm-dd HH:MM:SS'));
 else
     if isa(nwb.file_create_date,'types.untyped.DataStub') % nwb.file_create_date is not a datetime format
         file_create_date = nwb.file_create_date.load();
         nwb.file_create_date = file_create_date;
     end
 end
-session_start_time = datevec([tdt.info.date tdt.info.utcStartTime], 'yyyy-mmm-ddHH:MM:SS');
-nwb.session_start_time = datestr(session_start_time, 'yyyy-mm-dd HH:MM:SS');
 
 %% deal with tdt.streams
 streams_keys = fieldnames(tdt.streams);
@@ -107,7 +118,7 @@ if export2nwbfile
 end
 end
 
-function nwb = parse_tdtelect(nwb, googlesheet_electrode)
+function nwbf = parse_tdtelect(nwbf, googlesheet_electrode)
 % parse_tdtelect parses the tdt electrode information from google sheet
 %
 %   tdtneur = parse_tdtneur(stream) return types.core.ElectricalSeries structure
@@ -137,11 +148,11 @@ elegroups_name = unique(etrode_labels, 'stable'); % 1xn cell array: {'utah'}    
 % array type ('utah' or 'gray matter') or an index pointing to utah or gray
 % matter device
 device_name = 'tdt';
-nwb.general_devices.set( device_name, types.core.Device());
+nwbf.general_devices.set( device_name, types.core.Device());
 % elecgroup_ref = repmat(types.untyped.ObjectView('null'), n_etrodes,1);
 for i_elecgroup = 1: length(elegroups_name)
     group_name = elegroups_name{i_elecgroup}; % 
-    nwb.general_extracellular_ephys.set(group_name, ...
+    nwbf.general_extracellular_ephys.set(group_name, ...
         types.core.ElectrodeGroup( ...
         'description', ['array type is' group_name], ...
         'location', 'unknown', ...
@@ -155,7 +166,7 @@ end
 % elec_tbl = [elec_tbl table(elecgroup_ref)];
 elec_tbl.Properties.Description = 'electrode information';
 elec_dyntable = util.table2nwb(elec_tbl);
-nwb.general_extracellular_ephys_electrodes = elec_dyntable;
+nwbf.general_extracellular_ephys_electrodes = elec_dyntable;
 end
 
 function tdtneur = parse_tdtneur(stream)

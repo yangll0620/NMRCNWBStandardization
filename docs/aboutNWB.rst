@@ -7,4 +7,4 @@ Neurodata Without Borders (NWB) format is unified data format designed in the Ne
 
 The official website of NWB:N project can be found `here`_.
 
-.. _here: https://neurodatawithoutborders.github.io/
+.. _here: https://www.nwb.org/
