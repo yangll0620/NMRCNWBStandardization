@@ -4,6 +4,8 @@
 
 1. Commit the codes into github
 
+    .readthedocs.yaml file is required.
+
 2. Check whether an updated version is generated. (remember to refresh the page, F)
 
 https://readthedocs.org/projects/datastorageanalysisarchitecture/
