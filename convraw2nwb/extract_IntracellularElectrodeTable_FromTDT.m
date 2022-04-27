@@ -1,10 +1,10 @@
-function [nwb, tbl4elecs] = extract_IntracellularElectrodeTable_FromTDT(nwb, tdt_stream_name, nelectrodes)
+function [nwb, tbl4elecs] = extract_IntracellularElectrodeTable_FromTDT(nwb, tdt_stream_name, nelecs)
 % extract intracelluar electrode table from tdt stream name
 %
 % Input:
 %       nwb: 
 %       tdt_stream_name: tdt stream name, e.g. 'DBSS', 'DBSG', 'UDLP', 'UMCX', 'UPMC' 
-%       nelectrodes: number of electrodes
+%       nelecs: number of electrodes
 %
 % Return:
 %       nwb: nwb with added devices in nwb.general_devices and electrode_group in nwb.general_extracellular_ephys
@@ -40,9 +40,9 @@ nwb.general_extracellular_ephys.set(['electrode_group_' tdt_stream_name], eg);
 % generate tbl4elecTable
 ov = types.untyped.ObjectView(['/general/extracellular_ephys/elect_group_' tdt_stream_name]);
 
-variables = {'id', 'x', 'y', 'z', 'imp', 'brainarea', 'group', 'group_name'};
-tbl4elecs = table(int64(1), NaN, NaN, NaN, NaN, {loc}, ov, {['elect_group_' tdt_stream_name]}, 'VariableNames', variables);
-for ei = 2 : nelectrodes
-    tbl4elecs = [tbl4elecs; {int64(ei), NaN, NaN, NaN, NaN, {loc}, ov, {['elect_group_' tdt_stream_name]}}];
+variables = {'id', 'x', 'y', 'z', 'imp', 'brainarea', 'group', 'label'};
+tbl4elecs = table(int64(1), NaN, NaN, NaN, NaN, {loc}, ov, {[tdt_stream_name '-elect1']}, 'VariableNames', variables);
+for ei = 2 : nelecs
+    tbl4elecs = [tbl4elecs; {int64(ei), NaN, NaN, NaN, NaN, {loc}, ov, {[tdt_stream_name '-elect' num2str(ei)]}}];
 end
 
