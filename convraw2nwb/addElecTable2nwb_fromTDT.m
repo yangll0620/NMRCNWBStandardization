@@ -36,6 +36,7 @@ for sni = 1 : length(neurostream_names)
     
     clear tdt_stream_name nelecs tbl
 end
+tbl4elecs.id = (int64(1:height(tbl4elecs)))';
 nwb.general_extracellular_ephys_electrodes = util.table2nwb(tbl4elecs, 'all neural electrodes');
 
 

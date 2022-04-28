@@ -1,3 +1,5 @@
+% https://neurodatawithoutborders.github.io/matnwb/tutorials/html/ecephys.html#H_83ADFE4C
+
 addpath(genpath(fullfile('C:\Users\lingling\Desktop\NMRCNWBStandardization', 'toolbox')))
 
 rawtdtpath = fullfile('H:', 'My Drive', 'NMRC_umn', 'Projects', 'NWBStandardization', 'example_dataset', 'testData', ...
@@ -5,28 +7,42 @@ rawtdtpath = fullfile('H:', 'My Drive', 'NMRC_umn', 'Projects', 'NWBStandardizat
 
 animal = 'Barb';
 
-blockpath = rawtdtpath;
-tdt = TDTbin2mat(blockpath);
+testNwbfile = 'H:\My Drive\NMRC_umn\Projects\NWBStandardization\example_dataset\testData\test_Barb.nwb';
 
-% extract dateofexp and bktdt
-dateofexp = datenum(tdt.info.date, 'yyyy-mmm-dd'); 
-bktdt = str2double(tdt.info.blockname(length('block-')+1:end)); 
-
-%% Create new file
-
-identifier = [animal '_' datestr(dateofexp,'yymmdd') '_block' num2str(bktdt)];
-session_description = [animal '-' datestr(dateofexp,'yymmdd') ', block' num2str(bktdt)];
-session_start_time = datevec([tdt.info.date tdt.info.utcStartTime]);
-nwb = NwbFile(...
-    'identifier', identifier, ...
-        'session_description', session_description, ...
-        'session_start_time', datestr(session_start_time, 'yyyy-mm-dd HH:MM:SS'));
-
-%% Electrode Table
+%% Code Start here
+createNWB_fromtdt = false;
+readNWB = true;
 
 
-% stop here 04/25/2022 11pm
-% next step: added all tdt_stream_name into
-%               nwb.general_extracellular_ephys_electrodes by combing all tbl4elecs of tdt_stream_name
-% using this function [nwb, tbl4elecs] = extract_IntracellularElectrodeTable_FromTDT(nwb, tdt_stream_name, nelectrodes);
+
+% create a new nwb structure from tdt 
+if createNWB_fromtdt
+    tdt = TDTbin2mat(rawtdtpath);
+    nwb = convraw_tdt2nwb(tdt, 'animal', animal);
+    if exist(testNwbfile, 'file')
+        delete(testNwbfile);
+    end
+    nwbExport(nwb, testNwbfile);
+end
+
+
+% read nwb file
+if readNWB
+    nwb = nwbRead(testNwbfile);
+end
+
+
+%% description
+nwb
+
+nwb.acquisition
+
+
+
+
+
+
+
+
+
 

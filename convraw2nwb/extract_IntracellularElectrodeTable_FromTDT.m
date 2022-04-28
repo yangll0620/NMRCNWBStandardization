@@ -31,18 +31,18 @@ elseif strcmpi(tdt_stream_name(1:3), 'DBS')
         loc = 'GP';
     end
 end
-eg = types.core.ElectrodeGroup(...
+eg = types.core.ElectrodeGroup('description', ['electrode group of ' tdt_stream_name], ...
     'location', loc, ...
     'device', types.untyped.SoftLink(['/general/devices/' devName]));
-nwb.general_extracellular_ephys.set(['electrode_group_' tdt_stream_name], eg);
+nwb.general_extracellular_ephys.set(['elect_group_' tdt_stream_name], eg);
 
 
 % generate tbl4elecTable
 ov = types.untyped.ObjectView(['/general/extracellular_ephys/elect_group_' tdt_stream_name]);
 
-variables = {'id', 'x', 'y', 'z', 'imp', 'brainarea', 'group', 'label'};
-tbl4elecs = table(int64(1), NaN, NaN, NaN, NaN, {loc}, ov, {[tdt_stream_name '-elect1']}, 'VariableNames', variables);
+variables = {'id', 'x', 'y', 'z', 'imp', 'brainarea', 'group', 'tdt_stream_name', 'label'};
+tbl4elecs = table(int64(1), NaN, NaN, NaN, NaN, {loc}, ov, {tdt_stream_name}, {[tdt_stream_name '-elect1']}, 'VariableNames', variables);
 for ei = 2 : nelecs
-    tbl4elecs = [tbl4elecs; {int64(ei), NaN, NaN, NaN, NaN, {loc}, ov, {[tdt_stream_name '-elect' num2str(ei)]}}];
+    tbl4elecs = [tbl4elecs; {int64(ei), NaN, NaN, NaN, NaN, {loc}, ov, {tdt_stream_name}, {[tdt_stream_name '-elect' num2str(ei)]}}];
 end
 
