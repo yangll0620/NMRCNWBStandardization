@@ -17,18 +17,26 @@ readNWB = true;
 
 % create a new nwb structure from tdt 
 if createNWB_fromtdt
+    tic
     tdt = TDTbin2mat(rawtdtpath);
+    toc
+    tic
     nwb = convraw_tdt2nwb(tdt, 'animal', animal);
+    toc
     if exist(testNwbfile, 'file')
         delete(testNwbfile);
     end
+    tic
     nwbExport(nwb, testNwbfile);
+    toc
 end
 
 
 % read nwb file
 if readNWB
+    tic
     nwb = nwbRead(testNwbfile);
+    toc
 end
 
 
