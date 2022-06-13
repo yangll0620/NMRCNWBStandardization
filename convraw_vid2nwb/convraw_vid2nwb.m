@@ -77,7 +77,7 @@ end
 
 
 % set ImageSeries into nwb.acqusition
-nwb.acquisition.set('ImageSeries', vid_raw);
+nwb.acquisition.set(nwb.identifier, vid_raw);
 
 end
 
