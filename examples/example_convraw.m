@@ -1,59 +1,72 @@
-% this script demonstrates about how to convert data from tdt, ma systems into
-% nwb structure. 
-% 
-% Please read through the codes, modify the corresponding variables and
-% write codes for convert your data into nwb struture.
-%
+%% This script demonstrate how to 
+%   1. read exist Nwb file
+%   2. convert raw tdt data to nwb structure
+%   3. export nwb to Nwb file
 
-%% modify these required variables accordingly
-drive = 'Y:\Animals2';
-
-% tdtfolder: folder path storing tdt data, required for converting tdt data
-tdtfolder = '\Bug\Recording\Raw\rawTDT\Bug-190111\Block-1';
-
-% googlesheet_electrode: the online google sheet storing electrode information, 
-% required for converting raw tdt data, 
-% an electrode google sheet template can be seen in 
-% https://docs.google.com/spreadsheets/d/1Acg2vV2C6Lb8zIFtP2Qf3E9ugQ0TjJMX2S_sv2J18zk/edit?usp=sharing
-% the value between 'd/'  and '/edit' in your electrode spreadsheet's url
-googlesheet_electrode = '1Acg2vV2C6Lb8zIFtP2Qf3E9ugQ0TjJMX2S_sv2J18zk';
+%% Add Path
+curFolder = pwd;
+[nwbpath,~,~] = fileparts(curFolder);
+addpath(genpath(nwbpath));
 
 
-% mafolder: folder path storing ma data, required for converting ma data
-mafolder = '\Bug\Recording\Raw\rawMA\MA20190111';
-% mablocknum: corresponding ma block number
-mablocknum = 1;
+%% Code Start here
+
+[outcodepath,~,~] = fileparts(nwbpath);
+
+read_existNwbFile = true;
+conv_rawtdt2Nwb = true;
+export_NwbFile = true;
+
+if read_existNwbFile
+    
+    % the used test_Barb.nwb file can be download at https://drive.google.com/file/d/14IWrm_9LjOmuEehworaPmePUoKvBO7HB/view?usp=sharing
+    % changed the existNwbfile to your own exist nwb file path
+    existNwbfile = fullfile(outcodepath, 'NMRCNWB_TestData', 'test_Barb.nwb');
+    
+    disp('... Reading existing Nwb file .....')
+    nwb = nwbRead(existNwbfile);
+end
 
 
-% gaitmat fsxfile
-fsxfilename = "\Bug\Recording\Raw\Habit Trail\Gaitmat\20181128\CPB01.fsx";
-% gaitmat system: map file path containing .mp file
-mapfilepath = "Y:\yll\NMRCNWB\gaitmatfiles";
-% gaitmat equilibration file .equ
-equilibrationfile = "Y:\yll\NMRCNWB\gaitmatfiles\CES-2016-12-09-7101QL-40PSI.equ";
-% gaitmat calibration file .cal
-calibrationfile = "Y:\yll\NMRCNWB\gaitmatfiles\Azula_calibrationfile_9.1_080918.cal";
+if conv_rawtdt2Nwb
 
-%% convert raw tdt data into nwb structure
-disp('It will take a while to convert tdt data to NWB structure......')
-rawtdtpath = fullfile(drive, tdtfolder);
-% tag for exproting nwb file (1) or not (0) 
-exportnwbtag = 0; 
-nwb = convraw_tdt2nwb(rawtdtpath, googlesheet_electrode, exportnwbtag);
+    % change the rawtdtpath to your own tdt path
+    rawtdtpath = fullfile(outcodepath, 'NMRCNWB_TestData', 'Barb', 'Recording','Raw', 'rawTDT', 'Barb-220324', 'Block-2');
 
-%% convert raw ma data into nwb structure 
-rawmapath = fullfile(drive, mafolder);
-exportnwbtag = 0; % not export nwb file
-nwb = convraw_ma2nwb(rawmapath, mablocknum, exportnwbtag, nwb);
+    disp('... Reading tdt data will take a while .....')
+    tdt = TDTbin2mat(rawtdtpath);
 
-%% convert raw gaitmat data into nwb structure 
-fsxfile = fullfile(drive,fsxfilename);
+    if ~exist('nwb', 'var')
+        nwb = [];
+    end
 
-% tag for exproting nwb file (1) or not (0) 
-exportnwbtag = 0; 
+    nwb = convraw_tdt2nwb(tdt, 'nwb_in', nwb, 'animal', 'Barb'); % change the animal name accordingly
+end
 
-nwb = convraw_gaitmat2nwb(fsxfile, mapfilepath, equilibrationfile, calibrationfile, exportnwbtag, nwb);
+if export_NwbFile
+    outNwbFile = fullfile(outcodepath,  'NMRCNWB_TestData', 'outNwb.nwb');
 
-%% export nwb into test.nwb 
-outdest = fullfile(['test.nwb']);
-nwbExport(nwb, outdest);
+    if ~exist('nwb', 'var')
+        
+        % the used test_Barb.nwb file can be download at https://drive.google.com/file/d/14IWrm_9LjOmuEehworaPmePUoKvBO7HB/view?usp=sharing
+        testNwbfile = fullfile(outcodepath, 'NMRCNWB_TestData', 'test_Barb.nwb');
+
+        nwb = nwbRead(testNwbfile);
+    end
+
+    if exist(outNwbFile, 'file')
+        delete(outNwbFile);
+    end
+
+    disp(['...Exporting NWB file to ' outNwbFile ' ...'])
+    nwbExport(nwb, outNwbFile);
+end
+
+
+
+
+
+
+
+
+

@@ -1,6 +1,18 @@
+function example_convraw2nwb()
+
 % https://neurodatawithoutborders.github.io/matnwb/tutorials/html/ecephys.html#H_83ADFE4C
 
-addpath(genpath(fullfile('C:\Users\lingling\Desktop\NMRCNWBStandardization', 'toolbox')))
+%% Add Path
+curFolder = pwd;
+[nwbpath,~,~] = fileparts(curFolder);
+addpath(genpath(nwbpath));
+
+%% Download example dataset
+[outfolder, ~, ~] = fileparts(nwbpath);
+
+
+
+
 
 rawtdtpath = fullfile('H:', 'My Drive', 'NMRC_umn', 'Projects', 'NWBStandardization', 'example_dataset', 'testData', ...
     'Barb', 'Recording','Raw', 'rawTDT', 'Barb-220324', 'Block-2');
@@ -14,13 +26,10 @@ createNWB_fromtdt = false;
 readNWB = true;
 
 
-
 % create a new nwb structure from tdt 
 if createNWB_fromtdt
-    tic
+    disp('... Reading tdt data .....')
     tdt = TDTbin2mat(rawtdtpath);
-    toc
-    tic
     nwb = convraw_tdt2nwb(tdt, 'animal', animal);
     toc
     if exist(testNwbfile, 'file')
