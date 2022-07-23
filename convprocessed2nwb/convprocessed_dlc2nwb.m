@@ -40,14 +40,14 @@ if ~(isunix || ispc)
 end
 
 Mcell = readcell(processed_dlc);
-Mtable = readtable(processed_dlc);
-[rownum,colnum] = size(Mtable);
+xyTable = readtable(processed_dlc);
+[~,colnum] = size(xyTable);
 
 
 
 %creating a SpatialSeries Object of hand
 jointsXY = types.core.SpatialSeries();
-jointsXY.data = Mtable{:,:};
+jointsXY.data = xyTable{:,:};
 jointsXY.reference_frame = '(0,0) is the bottom left corner'; %ask ziling
 jointsXY.starting_time = 0; %ask ziling
 jointsXY.data_unit = 'pixels'; %ask ziling
@@ -59,20 +59,11 @@ varNames(1) = "timepoint";
 for i = 2:colnum
     joint_name = Mcell{2,i};
     coord = Mcell{3,i};
-    colname = strcat(joint_name,coord);
-    varNames(i) = colname;
-    disp(varNames);
+    varNames(i) = strcat(joint_name,coord);
 end
 
-varTypes = strings(colnum,1);
-for i = 1:colnum
-    varTypes(i) = "double";
-end
-
-xyTable = table('Size',[rownum colnum],'VariableTypes',varTypes,'VariableNames',varNames);
-xyTable(:,:) = Mtable(:,:);
-
-
+%change column names of original table
+xyTable.Properties.VariableNames = varNames;
 
 %if no data exists, return
 if isempty(jointsXY.data) == 1
