@@ -1,7 +1,7 @@
 %% This script demonstrate how to
 %
 %   1. read exist Nwb file
-%   2. convert raw tdt data to nwb structure
+%   2. convert processed deeplabcut xy trajectory data to nwb structure
 %   3. export nwb to Nwb file
 
 %% Add Path
@@ -15,8 +15,8 @@ addpath(genpath(nwbpath));
 [outcodepath,~,~] = fileparts(nwbpath);
 
 read_existNwbFile = true;
-conv_rawtdt2Nwb = false;
-export_NwbFile = false;
+conv_processedDLCxy2Nwb = true;
+export_NwbFile = true;
 
 if read_existNwbFile
     
@@ -28,21 +28,17 @@ if read_existNwbFile
     nwb = nwbRead(existNwbfile);
 end
 
+if conv_processedDLCxy2Nwb
 
-if conv_rawtdt2Nwb
-
-    % change the rawtdtpath to your own tdt path
-    rawtdtpath = fullfile(outcodepath, 'NMRCNWB_TestData', 'Barb', 'Recording','Raw', 'rawTDT', 'Barb-220324', 'Block-2');
-
-    disp('... Reading tdt data will take a while .....')
-    tdt = TDTbin2mat(rawtdtpath);
+    % change the processed_dlc to your own processed_dlc path
+    processed_dlc = fullfile(outcodepath, 'NMRCNWB_TestData', 'DLCXYdata', 'v-20220606-130339-camera-1DLC_resnet50_DLC-GoNogo-Set10-camera1Jun22shuffle1_30000.csv');
 
     if exist('nwb', 'var')
-        nwb = convraw_tdt2nwb(tdt, 'nwb_in', nwb, 'animal', 'Barb'); % change the animal name accordingly
+        [nwb,xyTable] = convprocessed_dlc2nwb(processed_dlc, 'nwb_in', nwb);
     else
-        nwb = convraw_tdt2nwb(tdt, 'animal', 'Barb'); % change the animal name accordingly
+        [nwb,xyTable] = convprocessed_dlc2nwb(processed_dlc);
     end
-
+    
 end
 
 if export_NwbFile
@@ -63,12 +59,3 @@ if export_NwbFile
     disp(['...Exporting NWB file to ' outNwbFile ' ...'])
     nwbExport(nwb, outNwbFile);
 end
-
-
-
-
-
-
-
-
-
