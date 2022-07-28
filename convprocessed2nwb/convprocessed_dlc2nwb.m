@@ -1,10 +1,19 @@
-function [nwb,xyTable] = convprocessed_dlc2nwb(processed_dlc,varargin)
+function [nwb] = convprocessed_dlc2nwb(processed_dlc,varargin)
 % converts processed xy dlc data to nwb and xyTable
+%
+% Variable names:
+%
+%   processed_dlc: path of the file, can be obtained in jointsXY.description, stored as character
+%
+%   jointsXY: SpatialSeries object containing information from the processed_dlc file
+%
+%   DLCXYPosition: Position object that stores the SpatialSeries Object named jointsXY
+%
+%   DLC_2D_mod: ProcessingModule object that contains a description and Position object named DLCXYPosition, can be found at nwb.processing.DLC_2D_XYpos
+%   
 % 
 % Example usage:
-%       [nwb,xyTable] = convprocessed_dlc2nwb(processed_dlc)
-%       
-%       eg. use xyTable.('handx') to get x coordinates of hand overtime
+%       [nwb] = convprocessed_dlc2nwb(processed_dlc)
 % 
 % Inputs
 %   
@@ -14,11 +23,8 @@ function [nwb,xyTable] = convprocessed_dlc2nwb(processed_dlc,varargin)
 %
 %       'nwb_in': input an exist nwb, default [] create a new nwb       
 %
-%       
-%
 % Output:
-%       nwb       ---- nwb structure containing tdt information 
-%       xyTable   ---- table that stores position data under appropriate column names
+%       nwb       ---- nwb structure containing processed xy position information 
 
 
 % parse params
@@ -48,9 +54,11 @@ xyTable = readtable(processed_dlc);
 %creating a SpatialSeries Object of hand
 jointsXY = types.core.SpatialSeries();
 jointsXY.data = xyTable{:,:};
-jointsXY.reference_frame = '(0,0) is the bottom left corner'; %ask ziling
-jointsXY.starting_time = 0; %ask ziling
-jointsXY.data_unit = 'pixels'; %ask ziling
+jointsXY.reference_frame = '(0,0) is the bottom left corner'; %not sure
+jointsXY.description = char(processed_dlc);
+%jointsXY.starting_time = processed_dlc(12:27); 
+jointsXY.data_unit = 'pixels'; %not sure
+jointsXY.starting_time_rate = 30;
 
 
 
@@ -59,11 +67,12 @@ varNames(1) = "timepoint";
 for i = 2:colnum
     joint_name = Mcell{2,i};
     coord = Mcell{3,i};
-    varNames(i) = strcat(joint_name,coord);
+    varNames(i) = strcat(joint_name,"_",coord);
+    
 end
 
-%change column names of original table
-xyTable.Properties.VariableNames = varNames;
+jointsXY.comments = char(varNames);
+
 
 %if no data exists, return
 if isempty(jointsXY.data) == 1
@@ -71,8 +80,11 @@ if isempty(jointsXY.data) == 1
 end
 
 
-%create position object
-DLCXYPosition = types.core.Position('SpatialSeries', jointsXY);
+%create position object and name it as 'camera-index'
+icam = strfind(processed_dlc,"camera");
+icam = icam(1);
+camname = extractBetween(processed_dlc,icam,icam+7);
+DLCXYPosition = types.core.Position(char(camname), jointsXY);
 
 
 % create processing module
