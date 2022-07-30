@@ -22,7 +22,7 @@ if read_existNwbFile
     
     % the used test_Barb.nwb file can be download at https://drive.google.com/file/d/14IWrm_9LjOmuEehworaPmePUoKvBO7HB/view?usp=sharing
     % changed the existNwbfile to your own exist nwb file path
-    existNwbfile = fullfile(outcodepath, 'NMRCNWB_TestData', 'test_Barb.nwb');
+    existNwbfile = fullfile(outcodepath, 'NMRCNWB_TestData', 'test.nwb');
     
     disp('... Reading existing Nwb file .....')
     nwb = nwbRead(existNwbfile);
@@ -30,31 +30,18 @@ end
 
 if conv_processedDLCxy2Nwb
 
-    % change the processed_dlc to your own processed_dlc path
-    processed_dlc = fullfile(outcodepath, 'NMRCNWB_TestData', 'DLCXYdata', 'v-20220606-130339-camera-1DLC_resnet50_DLC-GoNogo-Set10-camera1Jun22shuffle1_30000.csv');
+    % change the filepath to your own filepath
+    filepath = fullfile(outcodepath, 'NMRCNWB_TestData', 'DLCXYdata', 'v-20220606-130339-camera-1DLC_resnet50_DLC-GoNogo-Set10-camera1Jun22shuffle1_30000.csv');
 
     if exist('nwb', 'var')
-        [nwb] = convprocessed_dlc2nwb(processed_dlc, 'nwb_in', nwb);
+        [nwb] = convprocessed_dlc2nwb(file_path, 'nwb_in', nwb);
     else
-        [nwb] = convprocessed_dlc2nwb(processed_dlc);
+        [nwb] = convprocessed_dlc2nwb(file_path);
     end
 
-    % get xyTable from nwb file
-    icam = strfind(processed_dlc,"camera");
-    icam = icam(1);
-    camname = char(extractBetween(processed_dlc,icam,icam+7));
-
-    
-    spatialseries = nwb.processing.get('DLC_2D_XYpos').nwbdatainterface.get('DLCXYPosition').spatialseries.get(camname);
-    xyTable = array2table(spatialseries.data);
-    [~,colnum] = size(xyTable);
-
-    varNames = strings(colnum,1);
-    for i = 1:colnum
-        varNames(i) = strtrim(convertCharsToStrings(spatialseries.comments(i,:)));
-    end
-    xyTable.Properties.VariableNames = varNames;
-      
+    % get position table (posTable) from nwb file
+    cam_idx = input("Enter camera index (it should be an integer): ");
+    posTable = readnwb_processedXY(nwb,cam_idx); 
 end
 
 if export_NwbFile
@@ -62,8 +49,8 @@ if export_NwbFile
 
     if ~exist('nwb', 'var')
         
-        % the used test_Barb.nwb file can be download at https://drive.google.com/file/d/14IWrm_9LjOmuEehworaPmePUoKvBO7HB/view?usp=sharing
-        testNwbfile = fullfile(outcodepath, 'NMRCNWB_TestData', 'test_Barb.nwb');
+        % the used test.nwb file can be download at https://drive.google.com/file/d/14IWrm_9LjOmuEehworaPmePUoKvBO7HB/view?usp=sharing
+        testNwbfile = fullfile(outcodepath, 'NMRCNWB_TestData', 'test.nwb');
 
         nwb = nwbRead(testNwbfile);
     end
