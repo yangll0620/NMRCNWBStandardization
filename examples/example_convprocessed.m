@@ -14,9 +14,9 @@ addpath(genpath(nwbpath));
 
 [outcodepath,~,~] = fileparts(nwbpath);
 
-read_existNwbFile = true;
+read_existNwbFile = false;
 conv_processedDLCxy2Nwb = true;
-export_NwbFile = true;
+export_NwbFile = false;
 
 if read_existNwbFile
     
@@ -34,13 +34,13 @@ if conv_processedDLCxy2Nwb
     filepath = fullfile(outcodepath, 'NMRCNWB_TestData', 'DLCXYdata', 'v-20220606-130339-camera-1DLC_resnet50_DLC-GoNogo-Set10-camera1Jun22shuffle1_30000.csv');
 
     if exist('nwb', 'var')
-        [nwb] = convprocessed_dlc2nwb(file_path, 'nwb_in', nwb);
+        [nwb] = convprocessed_dlc2nwb(filepath, 'nwb_in', nwb);
     else
-        [nwb] = convprocessed_dlc2nwb(file_path);
+        [nwb] = convprocessed_dlc2nwb(filepath, 'nwb_in'); % 'identifier' = ''; nwb.identifier = '';
     end
 
     % get position table (posTable) from nwb file
-    cam_idx = input("Enter camera index (it should be an integer): ");
+    cam_idx = input("Enter camera index (it should be an integer 1/2 for our example): ");
     posTable = readnwb_processedXY(nwb,cam_idx); 
 end
 

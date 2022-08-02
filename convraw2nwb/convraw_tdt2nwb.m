@@ -7,7 +7,7 @@ function nwb = convraw_tdt2nwb(tdt, varargin)
 %       
 %       nwb = convraw_tdt2nwb(tdt)
 % 
-% Inputs
+% Inputs:
 %   
 %   tdt: tdt data extracted using TDTbin2mat(rawtdtpath), required
 %   

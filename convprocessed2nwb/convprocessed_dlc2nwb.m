@@ -22,7 +22,9 @@ function [nwb] = convprocessed_dlc2nwb(filepath,varargin)
 %       nwb.processing.get('DLC_2D_XYpos')
 %
 % Example usage:
-%       [nwb] = convprocessed_dlc2nwb(filename)
+%       [nwb] = convprocessed_dlc2nwb(filepath, 'identifier', identifier)
+%       [nwb] = convprocessed_dlc2nwb(filepath, 'nwb_in', nwb)
+%       [nwb] = convprocessed_dlc2nwb(filepath, 'nwb_in', nwb, 'identifier', identifier)
 % 
 % Inputs
 %   
@@ -31,6 +33,7 @@ function [nwb] = convprocessed_dlc2nwb(filepath,varargin)
 %   Name-Value (optional parameters): 
 %
 %       'nwb_in': input an exist nwb, default [] create a new nwb  
+%
 %       command to use when nwb exist:
 %        newnwb = convprocessed_dlc2nwb(filepath,'nwb_in',existNWB)
 %       
@@ -42,9 +45,9 @@ function [nwb] = convprocessed_dlc2nwb(filepath,varargin)
 % parse params
 p = inputParser;
 addParameter(p, 'nwb_in', [], @(x) isa(x, 'NwbFile'));
-addParameter(p, 'identifier', '', @ischar);
+addParameter(p, 'identifier', '', @ischar&&(~isempty));
 parse(p,varargin{:});
-nwb = p.Results.nwb_in;
+nwb = p.Results.nwb_in; % [] or a NwbFile variable
 
 
 if isempty(nwb)
@@ -91,6 +94,13 @@ second = str2double(extractBetween(filepath,idate_second,idate_second+1));
 
 jointsXY = types.core.SpatialSeries();
 jointsXY.data = xyTable{:,:};
+if(isempty(nwb.identifier))
+    if(~isempty(p.Results.identifier))
+        nwb.identifier = p.Results.identifier;
+    else
+        % throw some error; say: should input parameter 'identifier'
+    end
+end
 nwb.identifier = 'xydata'; % change to better version later?
 nwb.session_description = char(filepath); % change to better version later?
 
