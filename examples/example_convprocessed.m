@@ -32,11 +32,18 @@ if conv_processedDLCxy2Nwb
 
     % change the filepath to your own filepath
     filepath = fullfile(outcodepath, 'NMRCNWB_TestData', 'DLCXYdata', 'v-20220606-130339-camera-1DLC_resnet50_DLC-GoNogo-Set10-camera1Jun22shuffle1_30000.csv');
+    
+    identifier = input("Enter the appropriate identifier(eg.'animal yyyymmdd '_block_' blockNumber',quotation marks required): ");
+    
 
-    if exist('nwb', 'var')
+    if exist('nwb','var') && exist('identifier','var')
+        [nwb] = convprocessed_dlc2nwb(filepath, 'nwb_in', nwb, 'identifier', identifier);
+    elseif exist('nwb','var')
         [nwb] = convprocessed_dlc2nwb(filepath, 'nwb_in', nwb);
+    elseif exist('identifier','var')
+        [nwb] = convprocessed_dlc2nwb(filepath, 'identifier',identifier); % 'identifier' = ''; nwb.identifier = '';
     else
-        [nwb] = convprocessed_dlc2nwb(filepath, 'nwb_in'); % 'identifier' = ''; nwb.identifier = '';
+        disp('Input parameter "identifier" is missing. example');
     end
 
     % get position table (posTable) from nwb file
