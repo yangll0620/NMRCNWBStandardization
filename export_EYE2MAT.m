@@ -14,9 +14,11 @@ FileInfoMATLAB.(func_name)=['V:' num2str(c_version) ' created:' str];
 % addpath('Y:\hendrix\MATLAB Code\lib_NHP\')
 % % ---------- choose NHP files to search ---------------
 FileInfoMATLAB.NHP2RUN={'Bug' 'Pinky' 'Tootie' 'Lulu', 'Barb'};
+
 % %- - - - - - - QUERRY USR TO SELECT NHP SESSION(S) 2 RUN - - - - - - - -
 idx_nhp = menu('Choose NHP',FileInfoMATLAB.NHP2RUN);
 NHP2RUN=FileInfoMATLAB.NHP2RUN{1,idx_nhp };
+
 % % --------- I/O paths -----------------
 DirInfo.Local='C:\TempData\';%% create if does not exist
 DirInfo.root2='Z:\';
@@ -74,7 +76,7 @@ for file_num=1:length(ss) %% ix sessions FOLDERS
     FileInfoBlock.NHP=NHP2RUN;
     FileInfoBlock.FileNameRaw=fn_str;
     FileInfoBlock.FileDirRaw=[DirInfo.dir2load.(NHP2RUN)  fn_str];
-    FileInfoBlock.FileDirInfo=dir([DirInfo.dir2load.(NHP2RUN) '\' fn_str]);
+    FileInfoBlock.FileDirInfo=dir(fullfile(DirInfo.dir2load.(NHP2RUN), fn_str));
     temp_split=strsplit(FileInfoBlock.FileDirInfo.date,' ');
     FileInfoBlock.Date_ddmmmyyyy=temp_split{1,1};
     FileInfoBlock.DateNum=datenum(FileInfoBlock.Date_ddmmmyyyy,'dd-mmm-yyyy') ;
