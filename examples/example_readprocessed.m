@@ -21,6 +21,7 @@ addpath(genpath(nwbpath));
 
 read_existNwbFile = true;
 read_processedDLCxy2Nwb = true;
+read_eyeTracking2nwb = true;
 export_NwbFile = false;
 
 if read_existNwbFile
@@ -39,6 +40,12 @@ if read_processedDLCxy2Nwb
 
     % get position table (posTable) from nwb file
     posTable = readnwb_processedXY(nwb,cam_idx); 
+end
+
+if read_eyeTracking2nwb
+
+    % get eyetracking table from nwb file
+    EyeTrackingTable = readnwb_processedEyeTracking(nwb);
 end
 
 if export_NwbFile

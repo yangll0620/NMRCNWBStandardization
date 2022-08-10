@@ -16,6 +16,7 @@ addpath(genpath(nwbpath));
 
 read_existNwbFile = false;
 conv_processedDLCxy2Nwb = true;
+conv_processedEyeTracking = true;
 export_NwbFile = false;
 
 if read_existNwbFile
@@ -49,6 +50,28 @@ if conv_processedDLCxy2Nwb
     % get position table (posTable) from nwb file
     cam_idx = input("Enter camera index (it should be an integer 1/2 for our example): ");
     posTable = readnwb_processedXY(nwb,cam_idx); 
+end
+
+if conv_processedEyeTracking
+
+    % change the filepath to your own filepath
+    filepath = fullfile(outcodepath, 'NMRCNWB_TestData', 'DLCXYdata', 'v-20220606-130339-camera-1DLC_resnet50_DLC-GoNogo-Set10-camera1Jun22shuffle1_30000.csv');
+    
+    identifier = input("Enter the appropriate identifier(eg.'animal yyyymmdd '_block_' blockNumber',quotation marks required): ");
+    
+
+    if exist('nwb','var') && exist('identifier','var')
+        [nwb] = conveyetracking2nwb(TrialDataEye,FileInfoBlock, 'nwb_in', nwb, 'identifier', identifier);
+    elseif exist('nwb','var')
+        [nwb] = conveyetracking2nwb(TrialDataEye,FileInfoBlock, 'nwb_in', nwb);
+    elseif exist('identifier','var')
+        [nwb] = conveyetracking2nwb(TrialDataEye,FileInfoBlock, 'identifier', identifier); % 'identifier' = ''; nwb.identifier = '';
+    else
+        disp('Input parameter "identifier" is missing.');
+    end
+
+    % get EyeTracking Table from nwb file
+    EyeTrackingTable = readnwb_processedEyeTracking(nwb);
 end
 
 if export_NwbFile
