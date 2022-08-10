@@ -41,9 +41,9 @@ if conv_processedDLCxy2Nwb
     elseif exist('nwb','var')
         [nwb] = convprocessed_dlc2nwb(filepath, 'nwb_in', nwb);
     elseif exist('identifier','var')
-        [nwb] = convprocessed_dlc2nwb(filepath, 'identifier',identifier); % 'identifier' = ''; nwb.identifier = '';
+        [nwb] = convprocessed_dlc2nwb(filepath, 'identifier', identifier); % 'identifier' = ''; nwb.identifier = '';
     else
-        disp('Input parameter "identifier" is missing. example');
+        disp('Input parameter "identifier" is missing.');
     end
 
     % get position table (posTable) from nwb file

@@ -1,5 +1,5 @@
 function [nwb] = convprocessed_dlc2nwb(filepath,varargin)
-% converts processed xy dlc data to nwb and xyTable
+% converts processed xy dlc data to nwb
 %
 % Variable names and the cammand to get them:
 %
@@ -90,11 +90,7 @@ minute = str2double(extractBetween(filepath,idate_minute,idate_minute+1));
 idate_second = idate_minute+2;
 second = str2double(extractBetween(filepath,idate_second,idate_second+1));
 
-%creating a SpatialSeries Object of hand
-
-
-
-
+%creating a SpatialSeries Object
 jointsXY = types.core.SpatialSeries();
 jointsXY.data = xyTable{:,:};
 if(isempty(nwb.identifier))

@@ -21,8 +21,8 @@ NHP2RUN=FileInfoMATLAB.NHP2RUN{1,idx_nhp };
 DirInfo.Local='C:\TempData\';%% create if does not exist
 DirInfo.root2='Z:\';
 DirInfo.root='Y:\';
-DirInfo.dir2load.(NHP2RUN)=['/Users/linglingyang/Desktop/NMRCNWB_TestData/EyetrackingData/'];
-DirInfo.dir2save.(NHP2RUN)=[ '/Users/linglingyang/Desktop/NMRCNWB_TestData/EyetrackingData/'];
+DirInfo.dir2load.(NHP2RUN)=['/Users/apple/Documents/MATLAB/Barb_EYE/'];
+DirInfo.dir2save.(NHP2RUN)=['/Users/apple/Documents/MATLAB/Barb_EYE/'];
 FileInfoMATLAB.DirInfo=DirInfo;
 %% %%%%%%%%%   init vars function   %%%%%%%%%%%%%%%%
 % %------ init flags------------------------
@@ -74,7 +74,7 @@ for file_num=1:length(ss) %% ix sessions FOLDERS
     FileInfoBlock.NHP=NHP2RUN;
     FileInfoBlock.FileNameRaw=fn_str;
     FileInfoBlock.FileDirRaw=[DirInfo.dir2load.(NHP2RUN)  fn_str];
-    FileInfoBlock.FileDirInfo=dir([DirInfo.dir2load.(NHP2RUN) '\' fn_str]);
+    FileInfoBlock.FileDirInfo=dir(fullfile(DirInfo.dir2load.(NHP2RUN), fn_str));
     temp_split=strsplit(FileInfoBlock.FileDirInfo.date,' ');
     FileInfoBlock.Date_ddmmmyyyy=temp_split{1,1};
     FileInfoBlock.DateNum=datenum(FileInfoBlock.Date_ddmmmyyyy,'dd-mmm-yyyy') ;
@@ -93,18 +93,18 @@ for file_num=1:length(ss) %% ix sessions FOLDERS
             disp(['Overwrite is flagged, deleting old file ' FileInfoBlock.fn2save]);
             delete( [DirInfo.dir2save.(NHP2RUN) FileInfoBlock.DirName '\' FileInfoBlock.fn2save]);
     end
-    %% check firt line of code
+    %% check first line of code, it must starts with number 3 to be a eyetracking data
     fileID = fopen(FileInfoBlock.FileDirRaw,'r');
     first=textscan(fileID,'%s' ,1); %% update this in future to read first line?
     fclose(fileID);
     if ~strcmp(first{1,1},'3') 
-%         if ~strcmp(first{1,1},day of the week ) CHECH if header or history file.
+%         if ~strcmp(first{1,1},day of the week ) CHECK if header or history file.
        disp(['ERROR:: Filename '  FileInfoBlock.FileNameRaw ' is not an eyetracking data.txt file'  ]);
        continue; 
     end    
     %% open eyetracking file get header info + codes
-    delimiter = '\t';
-    formatSpec = '%f%[^\n\r]';
+    delimiter = '\t'; %tab
+    formatSpec = '%f%[^\n\r]'; %?
     fileID = fopen(FileInfoBlock.FileDirRaw,'r');
     try
     dataArray = textscan(fileID, formatSpec, 'Delimiter', delimiter, 'EmptyValue' ,NaN , 'ReturnOnError', false);
@@ -241,7 +241,7 @@ for file_num=1:length(ss) %% ix sessions FOLDERS
       disp( ['ERROR:: Filename '  FileInfoBlock.FileNameRaw  ' has bad/no data , file not saved' ] );
       continue; 
    end    
-   TrailDataEye.raw_data=raw_data;
+   TrialDataEye.raw_data=raw_data;
    TrialDataEye.TTS_sec=TTS;
    TrialDataEye.Fs=Fs;
    TrialDataEye.hdr=hdr;
