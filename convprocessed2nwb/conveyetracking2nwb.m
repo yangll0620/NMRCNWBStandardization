@@ -78,9 +78,10 @@ comments = "TTS_sec";
 s = size(varNames);
 s = s(1);
 data = [];
-for i = 1:s
-    comments = strcat(comments,";",varNames(i));
-    data{i} = getfield(TrialDataEye,varNames(i));
+data{1} = transpose(getfield(TrialDataEye,"TTS_sec"));
+for i = 2:(s+1)
+    comments = strcat(comments,";",varNames(i-1));
+    data{i} = getfield(TrialDataEye,varNames(i-1));
 end
 
 %get datetime information from filename
