@@ -14,9 +14,11 @@ FileInfoMATLAB.(func_name)=['V:' num2str(c_version) ' created:' str];
 % addpath('Y:\hendrix\MATLAB Code\lib_NHP\')
 % % ---------- choose NHP files to search ---------------
 FileInfoMATLAB.NHP2RUN={'Bug' 'Pinky' 'Tootie' 'Lulu', 'Barb'};
+
 % %- - - - - - - QUERRY USR TO SELECT NHP SESSION(S) 2 RUN - - - - - - - -
 idx_nhp = menu('Choose NHP',FileInfoMATLAB.NHP2RUN);
 NHP2RUN=FileInfoMATLAB.NHP2RUN{1,idx_nhp };
+
 % % --------- I/O paths -----------------
 DirInfo.Local='C:\TempData\';%% create if does not exist
 DirInfo.root2='Z:\';

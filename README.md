@@ -8,7 +8,6 @@ Read here: https://datastorageanalysisarchitecture.readthedocs.io/en/latest/
 
 
 ## To do list
-Add  deep lab cut videos to NWB.
 
 Add  eye-tracking data to the NWB structure
 
@@ -38,9 +37,9 @@ Change example to Barb
 
 5. DLC data
 
-- Store the link to the recorded videos
+- Store the link to the recorded videos (done)
 
-- Store the dlc processed x, y trajectory data 
+- Store the dlc processed x, y trajectory data (Done)
 
 6. MA data
 
