@@ -1,26 +1,26 @@
-function [nwb] = conveyetracking2nwb(TrialDataEye, FileInfoBlock,varargin)
+function [nwb] = convprocessed_eye2nwb(TrialDataEye, FileInfoBlock,varargin)
 % converts processed eyetracking data to nwb
 %
-% Variable names and the cammand to get them:
+% Variable names and the command to get them:
 %
 %   eyeTracking: SpatialSeries object containing processed eyetracking information from the txt file
 %       nwb.processing.get('EyeTrackingInfo').nwbdatainterface.get('EyeTrackingPos').spatialseries.get('eyeTracking');
 %       
 %
 %   EyeTrackingPos: Position object that stores the SpatialSeries Objects named eyeTracking
-%       nwb.processing.get('EyeTrackingInfo').nwbdatainterface.get('EyeTrackingPos')
+%       nwb.processing.get('EyeTrackingInfo').nwbdatainterface.get('EyeTrackingPos');
 %       
 %
 %   EyeTrackingInfo: ProcessingModule object that contains a description and Position object named EyeTrackingPos
-%       nwb.processing.get('EyeTrackingInfo')
+%       nwb.processing.get('EyeTrackingInfo');
 %
 % Example usage:
 %
-%       [nwb] = convprocessed_dlc2nwb(filepath, 'identifier', identifier)
+%       [nwb] = convprocessed_eye2nwb(filepath, 'identifier', identifier)
 %
-%       [nwb] = convprocessed_dlc2nwb(filepath, 'nwb_in', nwb)
+%       [nwb] = convprocessed_eye2nwb(filepath, 'nwb_in', nwb)
 %
-%       [nwb] = convprocessed_dlc2nwb(filepath, 'nwb_in', nwb, 'identifier', identifier)
+%       [nwb] = convprocessed_eye2nwb(filepath, 'nwb_in', nwb, 'identifier', identifier)
 % 
 % Inputs
 %   
@@ -91,9 +91,17 @@ str = string(startTime);
 dateVal = strsplit(str,{'-',';'});
 
 %set attributes of nwbfile object
-nwb.session_description = FileInfoBlock.FileDirRaw; %not sure
-nwb.session_start_time = datetime(str2double(dateVal));
-nwb.timestamps_reference_time = nwb.session_start_time;
+if(isempty(nwb.session_description))
+    nwb.session_description = nwb.identifier; %not sure
+end
+
+if(isempty(nwb.session_start_time))
+    nwb.session_start_time = datetime(str2double(dateVal));
+end
+
+if(isempty(nwb.timestamps_reference_time))
+    nwb.timestamps_reference_time = nwb.session_start_time;
+end
 
 %set attributes of spatialseries object
 eyeTracking.comments = char(comments); % a character array of column names that are diliminated by ';'

@@ -16,7 +16,7 @@ addpath(genpath(nwbpath));
 
 read_existNwbFile = false;
 conv_processedDLCxy2Nwb = true;
-conv_processedEyeTracking = true;
+conv_processedEyeT2Nwb = true;
 export_NwbFile = false;
 
 if read_existNwbFile
@@ -49,14 +49,11 @@ if conv_processedDLCxy2Nwb
 
     % get position table (posTable) from nwb file
     cam_idx = input("Enter camera index (it should be an integer 1/2 for our example): ");
-    posTable = readnwb_processedXY(nwb,cam_idx); 
+    posTable = readnwb_processedDLCXY(nwb,cam_idx); 
 end
 
-if conv_processedEyeTracking
+if conv_processedEyeT2Nwb
 
-    % change the filepath to your own filepath
-    filepath = fullfile(outcodepath, 'NMRCNWB_TestData', 'DLCXYdata', 'v-20220606-130339-camera-1DLC_resnet50_DLC-GoNogo-Set10-camera1Jun22shuffle1_30000.csv');
-    
     identifier = input("Enter the appropriate identifier(eg.'animal yyyymmdd '_block_' blockNumber',quotation marks required): ");
     
 
