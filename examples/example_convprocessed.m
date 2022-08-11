@@ -16,6 +16,7 @@ addpath(genpath(nwbpath));
 
 read_existNwbFile = false;
 conv_processedDLCxy2Nwb = true;
+conv_processedEyeT2Nwb = true;
 export_NwbFile = false;
 
 if read_existNwbFile
@@ -41,14 +42,33 @@ if conv_processedDLCxy2Nwb
     elseif exist('nwb','var')
         [nwb] = convprocessed_dlc2nwb(filepath, 'nwb_in', nwb);
     elseif exist('identifier','var')
-        [nwb] = convprocessed_dlc2nwb(filepath, 'identifier',identifier); % 'identifier' = ''; nwb.identifier = '';
+        [nwb] = convprocessed_dlc2nwb(filepath, 'identifier', identifier); % 'identifier' = ''; nwb.identifier = '';
     else
-        disp('Input parameter "identifier" is missing. example');
+        disp('Input parameter "identifier" is missing.');
     end
 
     % get position table (posTable) from nwb file
     cam_idx = input("Enter camera index (it should be an integer 1/2 for our example): ");
-    posTable = readnwb_processedXY(nwb,cam_idx); 
+    posTable = readnwb_processedDLCXY(nwb,cam_idx); 
+end
+
+if conv_processedEyeT2Nwb
+
+    identifier = input("Enter the appropriate identifier(eg.'animal yyyymmdd '_block_' blockNumber',quotation marks required): ");
+    
+
+    if exist('nwb','var') && exist('identifier','var')
+        [nwb] = conveyetracking2nwb(TrialDataEye,FileInfoBlock, 'nwb_in', nwb, 'identifier', identifier);
+    elseif exist('nwb','var')
+        [nwb] = conveyetracking2nwb(TrialDataEye,FileInfoBlock, 'nwb_in', nwb);
+    elseif exist('identifier','var')
+        [nwb] = conveyetracking2nwb(TrialDataEye,FileInfoBlock, 'identifier', identifier); % 'identifier' = ''; nwb.identifier = '';
+    else
+        disp('Input parameter "identifier" is missing.');
+    end
+
+    % get EyeTracking Table from nwb file
+    EyeTrackingTable = readnwb_processedEyeTracking(nwb);
 end
 
 if export_NwbFile

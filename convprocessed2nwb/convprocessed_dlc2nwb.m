@@ -1,7 +1,7 @@
 function [nwb] = convprocessed_dlc2nwb(filepath,varargin)
-% converts processed xy dlc data to nwb and xyTable
+% converts processed xy dlc data to nwb
 %
-% Variable names and the cammand to get them:
+% Variable names and the command to get them:
 %
 %   filepath: path of the file, can be obtained in jointsXY.description, stored as character
 %
@@ -90,11 +90,7 @@ minute = str2double(extractBetween(filepath,idate_minute,idate_minute+1));
 idate_second = idate_minute+2;
 second = str2double(extractBetween(filepath,idate_second,idate_second+1));
 
-%creating a SpatialSeries Object of hand
-
-
-
-
+%creating a SpatialSeries Object
 jointsXY = types.core.SpatialSeries();
 jointsXY.data = xyTable{:,:};
 if(isempty(nwb.identifier))
@@ -106,10 +102,19 @@ if(isempty(nwb.identifier))
     end
 end
 
-nwb.session_description = nwb.identifier; % change to better version later?
 
-nwb.session_start_time = datetime(year, month, date, hour, minute, second); % extracted from file's name
-nwb.timestamps_reference_time = datetime(year, month, date, hour, minute, second); % not sure
+if(isempty(nwb.session_description))
+    nwb.session_description = nwb.identifier; % change to better version later?
+end
+
+if(isempty(nwb.session_start_time))
+    nwb.session_start_time = datetime(year, month, date, hour, minute, second); % extracted from file's name
+end
+
+if(isempty(nwb.timestamps_reference_time))
+    nwb.timestamps_reference_time = nwb.session_start_time; % not sure
+end
+
 jointsXY.reference_frame = '(0,0) is the bottom left corner'; % not sure
 jointsXY.data_unit = 'pixels'; % not sure
 jointsXY.starting_time_rate = 30;

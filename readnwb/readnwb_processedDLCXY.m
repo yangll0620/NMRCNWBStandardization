@@ -1,4 +1,4 @@
-function [posTable] = readnwb_processedXY(nwb,cam_idx)
+function [posTable] = readnwb_processedDLCXY(nwb,cam_idx)
 %
 % A function that takes in the nwb file and camera's index and returns a table that contains the position table
 %
@@ -10,7 +10,7 @@ function [posTable] = readnwb_processedXY(nwb,cam_idx)
 %
 %   Output:
 %
-%       xyTable: a table that contains all position data with appropriate column names like "hand_x", "elbow_y", and "wrist_likelihood"
+%       posTable: a table that contains all position data with appropriate column names like "hand_x", "elbow_y", and "wrist_likelihood"
     
 
     %get the camera name with input
