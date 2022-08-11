@@ -7,14 +7,6 @@
 Read here: https://datastorageanalysisarchitecture.readthedocs.io/en/latest/
 
 
-## To do list
-
-Add  eye-tracking data to the NWB structure
-
-Eye tracking/ Utah Array/DBS Lead/Gray Matter manufacturer
-
-Change example to Barb
-
 ## Discussion on March 8 2022
 
 1. All tdt names use upper case, e.g. GRMT, UMCX
