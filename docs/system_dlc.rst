@@ -46,7 +46,11 @@ Notes:
 * spatialseries.starting_time_rate:
           Data Type: Double
         Number of timestamps recorded in one second
-          
+	
 
+Structure inside nwb.processing
+"""""""""""""""""""""""""""""""""""""""""""          
+
+.. image:: figures/systemdlc_illustration.png
 
 
