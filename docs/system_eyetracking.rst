@@ -52,11 +52,11 @@ Notes:
 
 * spatialseries.data: 
           Data Type: Double Array
- All eyetracking data across all timestamps
+ 	All eyetracking data across all timestamps
           
 * spatialseries.starting_time_rate:
           Data Type: Double
-  Number of timestamps recorded in one second
+  	Number of timestamps recorded in one second
 	
 
 Structure inside nwb.processing
