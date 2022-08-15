@@ -141,7 +141,7 @@ end
 %create position object and name it as 'camera-index'
 
 camname = extractBetween(filepath,icam,icam+7);
-if(isempty(nwb.processing.keys))
+if(~any(strcmp(nwb.processing.keys,'DLC_2D_XYpos')))
     DLCXYPosition = types.core.Position(char(camname),jointsXY);
 else
     DLCXYPosition = nwb.processing.get('DLC_2D_XYpos').nwbdatainterface.get('DLCXYPosition');
