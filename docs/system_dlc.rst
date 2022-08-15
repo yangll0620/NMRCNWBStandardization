@@ -29,7 +29,7 @@ Processed DLC XY position data are stored as a SpatialSeries structure inside a 
 
 ``nwb.processing.get('DLC_2D_XYpos').nwbdatainterface.get('DLCXYPosition').spatialseries``
 
-In order to get the spatialseries object containing processed dlc data from camera-1 from this recording, use the command below:
+In order to get the spatialseries object containing processed dlc data of camera-1 from this recording, use the command below:
 
 .. image:: figures/systemdlc_spatialseries.png
 
