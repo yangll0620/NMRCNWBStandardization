@@ -27,5 +27,5 @@ Processed DLC data in ``*``.csv file
 
 Processed DLC XY position data are stored as a SpatialSeries structure inside nwb.processing
 In order to get the spatialseries object containing processed dlc data from camera-1 from this recording, use the command below:
-.. image:: 
+.. image:: figures/systemdlc_spatialseries.png
 https://github.com/guanjingyi/NMRCNWBStandardization/blob/master/docs/figures/systemdlc_spatialseries.png
