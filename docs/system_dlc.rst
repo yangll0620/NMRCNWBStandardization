@@ -45,7 +45,7 @@ Notes:
           
 * spatialseries.starting_time_rate:
           Data Type: Double
-          Number of timestamps recorded in one second
+        Number of timestamps recorded in one second
           
 
 
