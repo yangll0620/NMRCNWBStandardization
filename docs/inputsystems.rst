@@ -9,3 +9,5 @@ Input Systems
    system_tdt
    system_ma
    system_gaitmat
+   system_eyetracking
+   system_dlc

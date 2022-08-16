@@ -110,7 +110,7 @@ eyeTracking.description = FileInfoBlock.FileDirRaw; %not sure
 eyeTracking.starting_time_rate = TrialDataEye.Fs;
 
 %create EyeTracking object and name it as 'eyetracking'
-if(isempty(nwb.processing.keys))
+if(~any(strcmp(nwb.processing.keys,'EyeTrackingInfo')))
     EyeTrackingPos = types.core.EyeTracking('eyeTracking',eyeTracking);
 else
     EyeTrackingPos = nwb.processing.get('EyeTrackingInfo').nwbdatainterface.get('EyeTrackingPos');
