@@ -33,6 +33,10 @@ or
 
 `$ make html`
 
+Or 
+
+`$ sphinx-build -b html docs docs/build/html`
+
 
 # Useful Resouces
 
