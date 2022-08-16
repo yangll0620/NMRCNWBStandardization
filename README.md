@@ -7,7 +7,7 @@
 Read here: https://datastorageanalysisarchitecture.readthedocs.io/en/latest/
 
 
-## Discussion on March 8 2022
+## Notes
 
 1. All tdt names use upper case, e.g. GRMT, UMCX
 
@@ -19,11 +19,11 @@ Read here: https://datastorageanalysisarchitecture.readthedocs.io/en/latest/
 
 - D represent DBS lead, e.g. DBSS and DBSG reprent DBS leads in STN and GP individually
 
-3. How to store eye tracking data, two alternatives (Need discussion with C)
+3. How to store eye tracking data, two alternatives
 
-- Send a link to the original txt file
+- Send a link to the original txt file (done)
 
-- Store as the time series data and the particular time stamp for eye movement detected
+- Store as the time series data and the particular time stamp for eye movement detected (done)
 
 4. In tdt system, no need to store snip field
 
