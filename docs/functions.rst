@@ -7,5 +7,11 @@ Functions
    :glob:
 
 
-   function_convert
-   function_read
+
+   function_convraw
+   function_convprocessed
+   
+
+
+   function_readraw
+   function_readprocessed
