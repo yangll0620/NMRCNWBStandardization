@@ -1,5 +1,5 @@
 ***********************
-Read from NWB Structure
+Read Processed from NWB Structure
 ***********************
 
 .. automodule:: readnwb
