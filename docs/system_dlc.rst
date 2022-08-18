@@ -25,11 +25,50 @@ NWB Structure Storing processed Deep Lab Cut Data
 Processed DLC data in ``*``.csv file
 """""""""""""""""""""""""""""""""""""""""""
 
-Processed DLC XY position data are stored as a SpatialSeries structure inside a set of spatialseries at:
+Layer1:
+-----
+Processed Deep Lab Cut data, along with other types of data, are stored inside nwb.processing:
+``nwb.processing``
 
+.. image:: figures/systemdlc_layer1.png
+
+
+Layer2:
+-----
+The ProcessingModule inside nwb.processing named DLC_2D_XYpos is where we stored processed deep lab cut data.
+You can find a description and a nwbdatainterface for it inside.
+``nwb.processing.get('DLC_2D_XYpos')``
+
+.. image:: figures/systemdlc_layer2.png
+
+
+Layer3:
+----- 
+``nwb.processing.get('DLC_2D_XYpos').nwbdatainterface``
+
+.. image:: figures/systemdlc_layer3.png
+
+
+Layer4:
+----- 
+This Position object contains a set of spatialseries objects.
+``nwb.processing.get('DLC_2D_XYpos').nwbdatainterface.get('DLCXYPosition')``
+
+.. image:: figures/systemdlc_layer4.png
+
+
+Layer5:
+----- 
+Get the set of spatialseries objects with the command below.
 ``nwb.processing.get('DLC_2D_XYpos').nwbdatainterface.get('DLCXYPosition').spatialseries``
 
+.. image:: figures/systemdlc_layer5.png
+
+
+Layer6:
+----- 
 In order to get the spatialseries object containing processed dlc data of camera-1 from this recording, use the command below:
+``nwb.processing.get('DLC_2D_XYpos').nwbdatainterface.get('DLCXYPosition').spatialseries.get('camera-1')``
 
 .. image:: figures/systemdlc_spatialseries.png
 
