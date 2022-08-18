@@ -1,5 +1,5 @@
 ***********************
-Read from NWB Structure
+Read Raw from NWB Structure
 ***********************
 
 .. automodule:: readnwb
