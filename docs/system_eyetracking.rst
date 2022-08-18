@@ -12,16 +12,18 @@ Input File containing raw eye tracking data is required in order to store inform
 +---------------+---------------------------------------------------------------------+
 |      File     |                       Description                                   |
 +===============+=====================================================+===============+
-|               | Processed eye tracking data in txt format                           |
+|               | Raw eye tracking data in txt format                                 |
 |  ``*``.txt    |                                                                     |
-|               | Can be read with function readcell() and readtable() in matlab      |
+|               | Can be processed using export_EYE2MAT.m 			      |
+|               | 			      			                      |
+|		| Example file's name: 2022-7-12;11-27-49.txt			      |		      
 +---------------+---------------------------------------------------------------------+
 
 Note: TrialDataEye and FileInfoBlock are needed to store eye tracking data into NWB format.
 
 Steps to get TrialDataEye and FileInfoBlock from raw eye tracking data file
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-1. Click the Run button at the top of the screen.
+1. Open the export_EYE2MAT.m function in Matlab and click the Run button at the top of the screen.
 
 .. image:: figures/systemeyetracking_runbutton.png
 
