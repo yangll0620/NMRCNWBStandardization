@@ -8,6 +8,10 @@
 %     2-2 processed spike data
 %   
 %   3. export nwb to Nwb file
+%
+%
+% first download the test.nwb file here: 
+%  'https://drive.google.com/open?id=1rqT5kkedZTvqGoWwNhGrS4Wly_1OQxPZ'
 
 %% Add Path
 curFolder = pwd;
