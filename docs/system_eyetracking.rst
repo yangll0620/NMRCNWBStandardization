@@ -42,6 +42,7 @@ You can find FileInfoBlock and TrialDataEye in the Workspace section at the righ
 .. image:: figures/systemeyetracking_trialdataeye1.png
 
 Various kinds of information are stored in the FileInfoBlock and TrialDataEye objects.
+
 * TrialDataEye 
   contains all eyetracking data across all timestamps
 
