@@ -8,7 +8,7 @@ Read from NWB Structure
 
 .. _readnwb_processedDLCXY:
 
-raw TDT Neural Data Read Function
+Processed DeepLabCut(DLC) Read Function
 ---------------------------------
 
 .. autofunction:: readnwb_processedDLCXY
@@ -16,7 +16,7 @@ raw TDT Neural Data Read Function
 
 .. _readnwb_processedEyeTracking:
 
-TDT Electrodes Read Function
+Processed Eye Tracking Data Read Function
 ----------------------------
 
 .. autofunction:: readnwb_processedEyeTracking
