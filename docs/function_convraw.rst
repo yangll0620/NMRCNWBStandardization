@@ -1,5 +1,5 @@
 ************************
-Convert to NWB Functions
+Convert Raw data to NWB Functions
 ************************
 
 .. automodule:: convraw2nwb
