@@ -16,7 +16,7 @@ Input File is required for storing processed DLC data into NWB Structure
 |  ``*``.csv    |                                                                     							|
 |               | Can be read with function readcell() and readtable() in matlab      							|
 |               | 			      			                      							|
-|		| Example file's name: v-20220606-130339-camera-1DLC_resnet50_DLC-GoNogo-Set10-camera1Jun22shuffle1_30000		|	
+|		| Example file's name: v-20220606-130339-camera-1DLC_resnet50_DLC-GoNogo-Set10-camera1Jun22shuffle1_30000.csv		|	
 +---------------+-----------------------------------------------------------------------------------------------------------------------+
 
 
@@ -25,7 +25,8 @@ NWB Structure Storing processed Deep Lab Cut Data
 
 
 Layer1:
-`````````````
+++++++++++
+
 Processed Deep Lab Cut data, along with other types of data, are stored inside nwb.processing:
 ``nwb.processing``
 
@@ -33,7 +34,8 @@ Processed Deep Lab Cut data, along with other types of data, are stored inside n
 
 
 Layer2:
-`````````````
+++++++++++
+
 The ProcessingModule inside nwb.processing named DLC_2D_XYpos is where we stored processed deep lab cut data.
 You can find a description and a nwbdatainterface for it inside.
 ``nwb.processing.get('DLC_2D_XYpos')``
@@ -42,14 +44,16 @@ You can find a description and a nwbdatainterface for it inside.
 
 
 Layer3:
-`````````````
+++++++++++
+
 ``nwb.processing.get('DLC_2D_XYpos').nwbdatainterface``
 
 .. image:: figures/systemdlc_layer3.png
 
 
 Layer4:
-`````````````
+++++++++++
+
 This Position object contains a set of spatialseries objects.
 ``nwb.processing.get('DLC_2D_XYpos').nwbdatainterface.get('DLCXYPosition')``
 
@@ -57,7 +61,8 @@ This Position object contains a set of spatialseries objects.
 
 
 Layer5:
-`````````````
+++++++++++
+
 Get the set of spatialseries objects with the command below.
 ``nwb.processing.get('DLC_2D_XYpos').nwbdatainterface.get('DLCXYPosition').spatialseries``
 
@@ -65,7 +70,8 @@ Get the set of spatialseries objects with the command below.
 
 
 Layer6:
-`````````````
+++++++++++
+
 In order to get the spatialseries object containing processed dlc data of camera-1 from this recording, use the command below:
 ``nwb.processing.get('DLC_2D_XYpos').nwbdatainterface.get('DLCXYPosition').spatialseries.get('camera-1')``
 
