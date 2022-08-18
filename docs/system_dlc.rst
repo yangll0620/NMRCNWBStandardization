@@ -9,13 +9,15 @@ Structure of Deep Lab Cut System
 Input File is required for storing processed DLC data into NWB Structure
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-+---------------+---------------------------------------------------------------------+
-|      File     |                       Description                                   |
-+===============+=====================================================+===============+
-|               | Processed DLC data in csv format                                    |
-|  ``*``.csv    |                                                                     |
-|               | Can be read with function readcell() and readtable() in matlab      |
-+---------------+---------------------------------------------------------------------+
++---------------+-----------------------------------------------------------------------------------------------------------------------+
+|      File     |                       Description                                   							|
++===============+=======================================================================================================+===============+
+|               | Processed DLC data in csv format                                   							|
+|  ``*``.csv    |                                                                     							|
+|               | Can be read with function readcell() and readtable() in matlab      							|
+|               | 			      			                      							|
+|		| Example file's name: v-20220606-130339-camera-1DLC_resnet50_DLC-GoNogo-Set10-camera1Jun22shuffle1_30000		|	
++---------------+-----------------------------------------------------------------------------------------------------------------------+
 
 
 NWB Structure Storing processed Deep Lab Cut Data
