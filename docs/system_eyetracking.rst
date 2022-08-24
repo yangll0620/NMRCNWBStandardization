@@ -14,51 +14,11 @@ Input File containing raw eye tracking data is required in order to store inform
 +===============+=====================================================+===============+
 |               | Raw eye tracking data in txt format                                 |
 |  ``*``.txt    |                                                                     |
-|               | Can be processed using export_EYE2MAT.m 			      |
+|               | 			      					      |
 |               | 			      			                      |
 |		| Example file's name: 2022-7-12;11-27-49.txt			      |		      
 +---------------+---------------------------------------------------------------------+
 
-Note: TrialDataEye and FileInfoBlock are needed to store eye tracking data into NWB format.
-
-Steps to get TrialDataEye and FileInfoBlock from raw eye tracking data file
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-1. Open the export_EYE2MAT.m function in Matlab and click the Run button at the top of the screen.
-
-.. image:: figures/systemeyetracking_runbutton.png
-
-2. A Menu window with NHPs' names will pop up. Click the name of the NHP you are working with.
-
-.. image:: figures/systemeyetracking_menu.png
-
-3. A window with different sessions will pop up. Click the one you want to work on, then click the OK button at the bottom of the window.
-
-.. image:: figures/systemeyetracking_choosesession.png
-
-4. Wait until the program finish saving the file. 
-
-You can find FileInfoBlock and TrialDataEye in the Workspace section at the right of the screen.
-
-.. image:: figures/systemeyetracking_fileinfoblock1.png
-
-.. image:: figures/systemeyetracking_trialdataeye1.png
-
-Various kinds of information are stored in the FileInfoBlock and TrialDataEye objects.
-
-* TrialDataEye 
-  contains all eyetracking data across all timestamps
-
-* FileInfoBlock 
-  contains all descriptive information of the data
-          
-You can view them in detail by clicking it.
-
-.. image:: figures/systemeyetracking_fileinfoblock2.png
-
-.. image:: figures/systemeyetracking_trialdataeye2.png
-
-
-After extracting TrialDataEye and FileInfoBlock using export_EYE2MAT.m, store useful information into NWB structure.
 
 
 NWB Structure Storing processed Eye Tracking Data
@@ -69,7 +29,7 @@ Layer1:
 Processed Eye Tracking data, along with other types of data, are stored inside nwb.processing:
 ``nwb.processing``
 
-.. image:: figures/systemeyetracking_layer1.png
+.. image:: figures/systemdlc_layer1.png
 
 
 Layer2:
