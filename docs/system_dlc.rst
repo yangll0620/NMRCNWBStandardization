@@ -94,7 +94,7 @@ Notes:
 Structure inside nwb.processing
 ###############################  
 
-.. image:: figures/systemdlc_illustration.png
+.. image:: figures/systemeyetracking_illustration.png
 
 
 
