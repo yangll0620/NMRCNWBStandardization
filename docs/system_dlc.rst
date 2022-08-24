@@ -96,4 +96,3 @@ Structure inside nwb.processing
 
 .. image:: figures/systemdlc_illustration.png
 
-
