@@ -29,7 +29,7 @@ Layer1:
 Processed Deep Lab Cut data, along with other types of data, are stored inside nwb.processing:
 ``nwb.processing``
 
-.. image:: figures/systemeyetracking_layer1.png
+.. image:: figures/systemdlc_layer1.png
 
 
 Layer2:
