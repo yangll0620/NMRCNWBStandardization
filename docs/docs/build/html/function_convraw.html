@@ -1,0 +1,212 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Convert Raw data to NWB Functions &#8212; NMRC NWB Standardized Structure 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css" />
+    
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Convert Processed data to NWB Functions" href="function_convprocessed.html" />
+    <link rel="prev" title="Functions" href="functions.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="mat-modindex.html" title="MATLAB Module Index"
+             >matlab index</a> |</li>
+        <li class="right" >
+          <a href="function_convprocessed.html" title="Convert Processed data to NWB Functions"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="functions.html" title="Functions"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">NMRC NWB Standardized Structure 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="functions.html" accesskey="U">Functions</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Convert Raw data to NWB Functions</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="convert-raw-data-to-nwb-functions">
+<h1>Convert Raw data to NWB Functions<a class="headerlink" href="#convert-raw-data-to-nwb-functions" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-convraw2nwb"></span><section id="convert-raw-tdt-data-to-nwb-structure">
+<span id="convraw-tdt2nwb"></span><h2>Convert raw TDT Data to NWb Structure<a class="headerlink" href="#convert-raw-tdt-data-to-nwb-structure" title="Permalink to this headline">¶</a></h2>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="convraw2nwb.convraw_tdt2nwb">
+<span class="sig-prename descclassname"><span class="pre">convraw2nwb.</span></span><span class="sig-name descname"><span class="pre">convraw_tdt2nwb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">tdt</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#convraw2nwb.convraw_tdt2nwb" title="Permalink to this definition">¶</a></dt>
+<dd><p>converts raw TDT data to nwb.acquisition</p>
+<p>Example usage:</p>
+<blockquote>
+<div><p>nwb = convraw_tdt2nwb(tdt, ‘nwb_in’, nwb, ‘animal’, ‘Barb’)</p>
+<p>nwb = convraw_tdt2nwb(tdt)</p>
+</div></blockquote>
+<p>Inputs:</p>
+<blockquote>
+<div><p>tdt: tdt data extracted using TDTbin2mat(rawtdtpath), required</p>
+<p>Name-Value (optional parameters):</p>
+<blockquote>
+<div><p>‘nwb_in’: input an exist nwb, default [] create a new nwb</p>
+<p>‘animal’: the animal data for this tdt, default ‘Barb’, don’t need if nwb_in exist</p>
+</div></blockquote>
+</div></blockquote>
+<dl class="simple">
+<dt>Output:</dt><dd><p>nwb       —- nwb structure containing tdt information</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="convert-raw-ma-data-to-nwb-structure">
+<span id="convraw-ma2nwb"></span><h2>Convert raw MA Data to NWb Structure<a class="headerlink" href="#convert-raw-ma-data-to-nwb-structure" title="Permalink to this headline">¶</a></h2>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="convraw2nwb.convraw_ma2nwb">
+<span class="sig-prename descclassname"><span class="pre">convraw2nwb.</span></span><span class="sig-name descname"><span class="pre">convraw_ma2nwb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">rawmapath</span></em>, <em class="sig-param"><span class="pre">blocknum</span></em>, <em class="sig-param"><span class="pre">exportnwbtag</span></em>, <em class="sig-param"><span class="pre">nwb</span></em><span class="sig-paren">)</span><a class="headerlink" href="#convraw2nwb.convraw_ma2nwb" title="Permalink to this definition">¶</a></dt>
+<dd><p>convraw_ma2nwb convert raw ma data in rawmapath to NWB.acquisition</p>
+<blockquote>
+<div><p>nwb = convraw_ma2nwb(rawmapath, blocknum, nwb, exportnwbtag) return nwb 
+structure containing ma information in both .anc and .trc files</p>
+</div></blockquote>
+<dl>
+<dt>Example usage:</dt><dd><p>rawmapath = ‘Y:\Animals2\Bug\Recording\Raw\rawTDT\Bug-190111\Block-1’;;</p>
+<p>blocknum = 1;</p>
+<p>nwb = convraw_ma2nwb(rawmapath, blocknum);</p>
+</dd>
+<dt>Inputs:</dt><dd><p>rawmapath       —- the folder containing all the tdt files</p>
+<p>blocknum        —- the block number (default 1)</p>
+<p>exportnwbtag    —- tag for exporting nwb file (1) or not (default 0)</p>
+<p>nwb             —- exist nwb structure (if missing, will create a new nwb structure)</p>
+</dd>
+<dt>Outputs</dt><dd><p>nwb             —- nwb structure containing ma .anc and .trc information</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="convert-raw-gaitmat-data-to-nwb-structure">
+<h2>Convert raw gaitmat Data to NWb Structure<a class="headerlink" href="#convert-raw-gaitmat-data-to-nwb-structure" title="Permalink to this headline">¶</a></h2>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="convraw2nwb.convraw_gaitmat2nwb">
+<span class="sig-prename descclassname"><span class="pre">convraw2nwb.</span></span><span class="sig-name descname"><span class="pre">convraw_gaitmat2nwb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fsxfile</span></em>, <em class="sig-param"><span class="pre">mapfilepath</span></em>, <em class="sig-param"><span class="pre">equilibrationfile</span></em>, <em class="sig-param"><span class="pre">calibrationfile</span></em>, <em class="sig-param"><span class="pre">exportnwbtag</span></em>, <em class="sig-param"><span class="pre">nwb</span></em><span class="sig-paren">)</span><a class="headerlink" href="#convraw2nwb.convraw_gaitmat2nwb" title="Permalink to this definition">¶</a></dt>
+<dd><p>convraw_gaitmat2nwb convert raw gaitmat data in rawgaitmatfile to NWB.acquisition</p>
+<blockquote>
+<div><p>Can only be used in Windows as the SDK provided by Tekscan (gait mat company) requires .Net</p>
+</div></blockquote>
+<dl>
+<dt>Example usage:</dt><dd><p>fsxfile = ‘Y:\Animals2\Bug\Recording\Raw\Habit Trail\Gaitmat\20181128\CPB01.fsx’;</p>
+<p>mapfilepath = ‘Y:\yll\NMRCNWB\gaitmatfiles’;</p>
+<p>equilibrationfile = ‘Y:\yll\NMRCNWB\gaitmatfiles\CES-2016-12-09-7101QL-40PSI.equ’;</p>
+<p>calibrationfile = ‘Y:\yll\NMRCNWB\gaitmatfiles\Azula_calibrationfile_9.1_080918.cal’;</p>
+<p>nwb = convraw_gaitmat2nwb(fsxfile, mapfilepath, equilibrationfile, calibrationfile);
+or
+nwb = convraw_gaitmat2nwb(fsxfile, mapfilepath, equilibrationfile, calibrationfile, 1, nwb);</p>
+</dd>
+<dt>Inputs:</dt><dd><p>fsxfile        —- the .fsx file</p>
+<p>mapfilepath       —- the folder containing the map file (.mp)</p>
+<p>equilibrationfile  —- the equilibration .equ file</p>
+<p>calibrationfile  —- the calibration .cal file</p>
+<p>exportnwbtag    —- tag for exporting nwb file (1) or not (default 0)</p>
+<p>nwb             —- exist nwb structure (if missing, will create a new nwb structure)</p>
+</dd>
+<dt>Outputs</dt><dd><p>nwb             —- nwb structure containing gait mat information</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Convert Raw data to NWB Functions</a><ul>
+<li><a class="reference internal" href="#convert-raw-tdt-data-to-nwb-structure">Convert raw TDT Data to NWb Structure</a></li>
+<li><a class="reference internal" href="#convert-raw-ma-data-to-nwb-structure">Convert raw MA Data to NWb Structure</a></li>
+<li><a class="reference internal" href="#convert-raw-gaitmat-data-to-nwb-structure">Convert raw gaitmat Data to NWb Structure</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="functions.html"
+                          title="previous chapter">Functions</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="function_convprocessed.html"
+                          title="next chapter">Convert Processed data to NWB Functions</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/function_convraw.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="mat-modindex.html" title="MATLAB Module Index"
+             >matlab index</a> |</li>
+        <li class="right" >
+          <a href="function_convprocessed.html" title="Convert Processed data to NWB Functions"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="functions.html" title="Functions"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">NMRC NWB Standardized Structure 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="functions.html" >Functions</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Convert Raw data to NWB Functions</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Lingling Yang.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
+    </div>
+  </body>
+</html>

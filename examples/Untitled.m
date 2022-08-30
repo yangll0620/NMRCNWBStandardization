@@ -15,8 +15,7 @@ function [nwb] = convprocessed_eye2nwb(filepath,varargin)
 %       nwb.processing.get('EyeTrackingInfo');
 %
 %
-%   TrialDataEye: a structure containing useful information extracted from
-%   the txt file. Used extractTrialDataEye(filepath) function to get it.
+%   TrialDataEye: a structure containing useful information extracted from the txt file
 %
 %
 % Example usage:
@@ -74,50 +73,7 @@ end
 %Get file name
 [~,filename,~] = fileparts(filepath);
 
-
-    function[TrialDataEye] = exportTrialDataEye(filepath)
-    % Get a struct that contains useful information from the txt file.
-    %
-    % Variable names:
-    %
-    %   
-    % TrialDataEye.raw_data: Eyetracking raw data
-    %
-    %
-    % TrialDataEye.TTS_sec: Interpolated timepoints corresponding to the estimated Fs we got
-    %
-    %
-    % TrialDataEye.Fs: Estimated Fs that we are using
-    %
-    %
-    % TrialDataEye.hdr: Containing all descriptive contents except raw data from the file, categorized by different line codes
-    %
-    % Examples:
-    % TrialDataEye.hdr.code_5: Column names with their actual names.
-    % TrialDataEye.hdr.code_6: Column names with their abbreviated names in three letters.
-    %
-    %
-    %
-    %
-    % TrialDataEye.Fs_actual=Fs_actual; % Actual Fs
-    %
-    %
-    % Example usage:
-    %
-    %       [TrialDataEye] = exportTrialDataEye(filepath)
-    % 
-    % Inputs
-    %   
-    %   filepath(required): filepath of the raw eyetracking data (txt file)
-    %   
-    %       
-    %
-    % Output:
-    %
-    %       TrialDataEye       ---- a struct containing useful information from the raw eyetracking data txt file 
-    
-
-    %Construct dataArray, which consists of a list of line codes, and a list of content of all lines
+%Construct dataArray, which consists of a list of line codes, and a list of content of all lines
     delimiter = '\t'; %tab
     formatSpec = '%f%[^\n\r]'; %?
     fileID = fopen(filepath,'r');
@@ -132,93 +88,91 @@ end
        disp(['ERROR:: Filename '  filename ' is not an eyetracking txt file'  ]);
     end
 
-    %Identify all data lines's index
-    idx_data_lines=find(dataArray{1,1}==10);
-    if isempty(idx_data_lines)
-       disp(['ERROR:: Filename ' filename    ' missing data lines'    ]) ;
-    end    
+%Identify all data lines's index
+idx_data_lines=find(dataArray{1,1}==10);
+if isempty(idx_data_lines)
+   disp(['ERROR:: Filename ' filename    ' missing data lines'    ]) ;
+end    
 
-    %There are different line codes at the beginning of each line denoting the data type of that line. 
-    %Get all different line codes that have appeared in the txt file.
-    CODES=unique(dataArray{1,1});
-    
-    %Construct hdr to store line content categorized by different line codes
-    hdr=struct();
-    hdr.code_num=CODES';
-    for ix_code=1:length(CODES) %% for each line with unique code x
-        code_txt{ix_code}={dataArray{1,2}{  find(dataArray{1,1}==CODES(ix_code)) ,:}}; %% get text for that line
-        if CODES(ix_code)==10 %% special case data lines
-           code_txt{ix_code}={};
-           continue;
-        end
-        if size(code_txt{ix_code},2)==1 %% if only one column
-                hdr.(['code_' num2str(CODES(ix_code)) ]) = strsplit(char(  code_txt{ix_code}   ),'\t');
-        elseif size(code_txt{ix_code},1)==1 %% if only one line
-            for ix_line=1:size(code_txt{ix_code},2)
-                get_str=   strsplit( char(code_txt{ix_code}{1,ix_line}), '\t');
-                if (CODES(ix_code)==7 && ix_line==1)
-                    hdr.(['code_' num2str(CODES(ix_code)) ]).temp=strsplit( char(code_txt{ix_code}{1,ix_line}) ,'\t')   ;
-                end    
-                if  ( ~isempty(str2num(get_str{1,1}))  ) 
-                    hdr.(['code_' num2str(CODES(ix_code)) ]).ts(ix_line,1)=str2num(get_str{1,1});
-                    hdr.(['code_' num2str(CODES(ix_code)) ]).txt{ix_line,1} = get_str{1,2:end};
-                    continue;
-                end
+%Unique line codes in txt file
+CODES=unique(dataArray{1,1});
+
+%Construct hdr to store line content categorized by different line codes
+hdr=struct();
+hdr.code_num=CODES';
+for ix_code=1:length(CODES) %% for each line with unique code x
+    code_txt{ix_code}={dataArray{1,2}{  find(dataArray{1,1}==CODES(ix_code)) ,:}}; %% get text for that line
+    if CODES(ix_code)==10 %% special case data lines
+       code_txt{ix_code}={};
+       continue;
+    end
+    if size(code_txt{ix_code},2)==1 %% if only one column
+            hdr.(['code_' num2str(CODES(ix_code)) ]) = strsplit(char(  code_txt{ix_code}   ),'\t');
+    elseif size(code_txt{ix_code},1)==1 %% if only one line
+        for ix_line=1:size(code_txt{ix_code},2)
+            get_str=   strsplit( char(code_txt{ix_code}{1,ix_line}), '\t');
+            if (CODES(ix_code)==7 && ix_line==1)
+                hdr.(['code_' num2str(CODES(ix_code)) ]).temp=strsplit( char(code_txt{ix_code}{1,ix_line}) ,'\t')   ;
+            end    
+            if  ( ~isempty(str2num(get_str{1,1}))  ) 
+                hdr.(['code_' num2str(CODES(ix_code)) ]).ts(ix_line,1)=str2num(get_str{1,1});
+                hdr.(['code_' num2str(CODES(ix_code)) ]).txt{ix_line,1} = get_str{1,2:end};
+                continue;
             end
         end
     end
-       
-    %Report if there is no line containing column names in the file. 
-    if ~isfield(hdr,'code_6')
-       disp(['ERROR:: Filename ' filename    ' missing column header names for data'    ]) ;
-    end
-    
-    %Count how many column names there are, which will be the number of columns.
-    n_col=size(hdr.code_6,2);
-        
-    %Set data format
-    formatSpec='%f';
-    for ix_col=1:n_col
-        formatSpec=[formatSpec '%s']; %% this sets size for data array to import
-    end    
-    formatSpec=[formatSpec '%[^\n\r]'];
-    
-    
-    % open file again and get data (1 column per variable) + 1 extra line, does not load header
-    fileID = fopen(filepath,'r');
-    raw_data = textscan(fileID, formatSpec,'HeaderLines', (idx_data_lines(1)-1) , 'Delimiter', delimiter, 'EmptyValue' ,NaN, 'ReturnOnError', false);
-    fclose(fileID);
-    
-    %number of rows of data
-    n_row=size(raw_data{1,1},1);
-    
-    
-    data=zeros(n_row,n_col+1);
-    data(:,1)=raw_data{1,1};
-    for ix_label=1:length(hdr.code_6)
-        temp_rows=length(cell2mat(cellfun(@(x) str2double(x), raw_data(ix_label+1), 'UniformOutput', false)));
-        if temp_rows == n_row;
-            data(:,ix_label+1)= cell2mat(cellfun(@(x) str2double(x), raw_data(ix_label+1), 'UniformOutput', false));
-        else %% sometimes writing to txt file gets interupted missing data
-            data(1:temp_rows,ix_label+1)  = cell2mat(cellfun(@(x) str2double(x), raw_data(ix_label+1), 'UniformOutput', false));
-            data(temp_rows+1:n_row,ix_label+1) = zeros(n_row-temp_rows,1)./0;
-            disp(['WARNING:: Variable ' char(hdr.code_6{ix_label}) ' missing data rows ' num2str(temp_rows) '-to-' num2str(n_row) ' in Filename ' FileInfoBlock.FileNameRaw  ]);
-        end
-    end
-    
-    %remove last row
-    data(end,:)=[];
-    
-    %For each line that contains the eyetracking data, the line code at the beginning of that line is 10.
-    %Find the indices of all lines that are not eyetracking data / not starting with 10.
-    idx_data=find(data(:,1)~=10); 
-    data(idx_data,:)=[];%% remove non data
-    data(:,1)=[]; %% remove first column with line codes
-    if data(2,1)==0
-        data(1,:)=[];
-    end 
+end
+   
+%Report if column names are missing
+if ~isfield(hdr,'code_6')
+   disp(['ERROR:: Filename ' filename    ' missing column header names for data'    ]) ;
+end
 
-    % get estimated Fs (sampling rate)
+%Count column names, it is the number of columns
+n_col=size(hdr.code_6,2);
+    
+%Set data format
+formatSpec='%f';
+for ix_col=1:n_col
+    formatSpec=[formatSpec '%s']; %% this sets size for data array to import
+end    
+formatSpec=[formatSpec '%[^\n\r]'];
+
+
+% open file again and get data (1 column per variable) + 1 extra line, does not load header
+fileID = fopen(filepath,'r');
+raw_data = textscan(fileID, formatSpec,'HeaderLines', (idx_data_lines(1)-1) , 'Delimiter', delimiter, 'EmptyValue' ,NaN, 'ReturnOnError', false);
+fclose(fileID);
+
+%number of rows of data
+n_row=size(raw_data{1,1},1);
+
+
+data=zeros(n_row,n_col+1);
+data(:,1)=raw_data{1,1};
+for ix_label=1:length(hdr.code_6)
+    temp_rows=length(cell2mat(cellfun(@(x) str2double(x), raw_data(ix_label+1), 'UniformOutput', false)));
+    if temp_rows == n_row;
+        data(:,ix_label+1)= cell2mat(cellfun(@(x) str2double(x), raw_data(ix_label+1), 'UniformOutput', false));
+    else %% sometimes writing to txt file gets interupted missing data
+        data(1:temp_rows,ix_label+1)  = cell2mat(cellfun(@(x) str2double(x), raw_data(ix_label+1), 'UniformOutput', false));
+        data(temp_rows+1:n_row,ix_label+1) = zeros(n_row-temp_rows,1)./0;
+        disp(['WARNING:: Variable ' char(hdr.code_6{ix_label}) ' missing data rows ' num2str(temp_rows) '-to-' num2str(n_row) ' in Filename ' FileInfoBlock.FileNameRaw  ]);
+    end
+end
+
+%remove last row
+data(end,:)=[];
+
+%index of lines that are not data
+idx_data=find(data(:,1)~=10); 
+data(idx_data,:)=[];%% remove non data
+data(:,1)=[]; %% remove first column with line codes
+if data(2,1)==0
+    data(1,:)=[];
+end 
+
+    % get estimated Fs 
     if ( isfield(hdr,'code_7') && isfield(hdr.code_7,'temp') )
         temp_split=strsplit( cell2mat(hdr.code_7.temp) ,'FrameRate'   );
     elseif ( isfield(hdr,'code_7') && iscell(hdr.code_7) )
@@ -240,7 +194,7 @@ end
     ADT_sec_target=floor(ADT_msec_mean)/1000;
     Fs=1/ADT_sec_target;
     
-    % Get timepoints according to the estimated Fs, we need to interpolate data to constant Fs
+    % need to interpolate data to constant Fs
     TTS=[0:ADT_sec_target:data(end,1)]; %% New time series used to spline data to fixed intervals
     TrialDataEye=struct();
     flag_bad=0; 
@@ -273,17 +227,11 @@ end
       disp( ['ERROR:: Filename '  filepath  ' has bad/no data , file not saved' ] );
        
    end    
-
-   TrialDataEye.raw_data=raw_data; %Eyetracking raw data
-   TrialDataEye.TTS_sec=TTS; % Interpolated timepoints corresponding to the estimated Fs we got
-   TrialDataEye.Fs=Fs; % Estimated Fs that we are using
-   TrialDataEye.hdr=hdr; % Containing all contents from the file, categorized by different line codes
-   TrialDataEye.Fs_actual=Fs_actual; % Actual Fs
-
-
-   end
-
-TrialDataEye = exportTrialDataEye(filepath);
+   TrialDataEye.raw_data=raw_data;
+   TrialDataEye.TTS_sec=TTS;
+   TrialDataEye.Fs=Fs;
+   TrialDataEye.hdr=hdr;
+   TrialDataEye.Fs_raw_est=Fs_raw_est;
 
 %Create spatialseries object and name it as eyeTracking
 eyeTracking = types.core.SpatialSeries();
