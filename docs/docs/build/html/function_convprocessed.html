@@ -1,0 +1,221 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Convert Processed data to NWB Functions &#8212; NMRC NWB Standardized Structure 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css" />
+    
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Read Raw from NWB Structure" href="function_readraw.html" />
+    <link rel="prev" title="Convert Raw data to NWB Functions" href="function_convraw.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="mat-modindex.html" title="MATLAB Module Index"
+             >matlab index</a> |</li>
+        <li class="right" >
+          <a href="function_readraw.html" title="Read Raw from NWB Structure"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="function_convraw.html" title="Convert Raw data to NWB Functions"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">NMRC NWB Standardized Structure 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="functions.html" accesskey="U">Functions</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Convert Processed data to NWB Functions</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="convert-processed-data-to-nwb-functions">
+<h1>Convert Processed data to NWB Functions<a class="headerlink" href="#convert-processed-data-to-nwb-functions" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-convprocessed2nwb"></span><section id="convert-processed-deeplabcut-dlc-data-to-nwb-structure">
+<span id="convprocessed-dlc2nwb"></span><h2>Convert processed DeepLabCut(DLC) Data to NWb Structure<a class="headerlink" href="#convert-processed-deeplabcut-dlc-data-to-nwb-structure" title="Permalink to this headline">¶</a></h2>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="convprocessed2nwb.convprocessed_dlc2nwb">
+<span class="sig-prename descclassname"><span class="pre">convprocessed2nwb.</span></span><span class="sig-name descname"><span class="pre">convprocessed_dlc2nwb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">filepath</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#convprocessed2nwb.convprocessed_dlc2nwb" title="Permalink to this definition">¶</a></dt>
+<dd><p>converts processed xy dlc data to nwb</p>
+<p>Variable names and the command to get them:</p>
+<blockquote>
+<div><p>filepath: path of the file, can be obtained in jointsXY.description, stored as character</p>
+<dl>
+<dt>jointsXY: SpatialSeries object containing information from the file</dt><dd><p>nwb.processing.get(‘DLC_2D_XYpos’).nwbdatainterface.get(‘DLCXYPosition’).spatialseries.get(camname);
+NOTE: 1.camname is in the format of ‘camera-index’, it is in character form</p>
+<blockquote>
+<div><p>2.each spatialseries object represents information from a single camera of the recording</p>
+</div></blockquote>
+</dd>
+<dt>DLCXYPosition: Position object that stores the SpatialSeries Objects named jointsXY</dt><dd><p>nwb.processing.get(‘DLC_2D_XYpos’).nwbdatainterface.get(‘DLCXYPosition’)
+NOTE: 1.This position object contains a set of all spatialseries objects, each one of which represents one camera</p>
+<blockquote>
+<div><dl class="simple">
+<dt>2.To get the set of all spatialseries objects, use</dt><dd><p>nwb.processing.get(‘DLC_2D_XYpos’).nwbdatainterface.get(‘DLCXYPosition’).spatialseries</p>
+</dd>
+<dt>3.To add another spatialseries to the spatialseries set inside the position object, use </dt><dd><p>nwb.processing.get(‘DLC_2D_XYpos’).nwbdatainterface.get(‘DLCXYPosition’).spatialseries.set(char(camname), jointsXY);</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd>
+<dt>DLC_2D_mod: ProcessingModule object that contains a description and Position object named DLCXYPosition</dt><dd><p>nwb.processing.get(‘DLC_2D_XYpos’)</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>Example usage:</p>
+<blockquote>
+<div><p>[nwb] = convprocessed_dlc2nwb(filepath, ‘identifier’, identifier)</p>
+<p>[nwb] = convprocessed_dlc2nwb(filepath, ‘nwb_in’, nwb)</p>
+<p>[nwb] = convprocessed_dlc2nwb(filepath, ‘nwb_in’, nwb, ‘identifier’, identifier)</p>
+</div></blockquote>
+<p>Inputs</p>
+<blockquote>
+<div><p>filepath: processed dlc data using deep lab cut, required</p>
+<p>Name-Value (optional parameters):</p>
+<blockquote>
+<div><p>‘nwb_in’: input an exist nwb, default [] create a new nwb</p>
+<p>‘identifier’: input an identifier, default ‘’ create an empty character string</p>
+</div></blockquote>
+</div></blockquote>
+<p>Output:</p>
+<blockquote>
+<div><p>nwb       —- nwb structure containing processed xy position information</p>
+</div></blockquote>
+</dd></dl>
+
+</section>
+<section id="convert-processed-eye-tracking-data-to-nwb-structure">
+<span id="convprocessed-eye2nwb"></span><h2>Convert processed Eye Tracking Data to NWb Structure<a class="headerlink" href="#convert-processed-eye-tracking-data-to-nwb-structure" title="Permalink to this headline">¶</a></h2>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="convprocessed2nwb.convprocessed_eye2nwb">
+<span class="sig-prename descclassname"><span class="pre">convprocessed2nwb.</span></span><span class="sig-name descname"><span class="pre">convprocessed_eye2nwb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">filepath</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#convprocessed2nwb.convprocessed_eye2nwb" title="Permalink to this definition">¶</a></dt>
+<dd><p>converts processed eyetracking data to nwb</p>
+<p>Variable names and the command to get them:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>eyeTracking: SpatialSeries object containing processed eyetracking information from the txt file</dt><dd><p>nwb.processing.get(‘EyeTrackingInfo’).nwbdatainterface.get(‘EyeTrackingPos’).spatialseries.get(‘eyeTracking’);</p>
+</dd>
+<dt>EyeTrackingPos: Position object that stores the SpatialSeries Objects named eyeTracking</dt><dd><p>nwb.processing.get(‘EyeTrackingInfo’).nwbdatainterface.get(‘EyeTrackingPos’);</p>
+</dd>
+<dt>EyeTrackingInfo: ProcessingModule object that contains a description and Position object named EyeTrackingPos</dt><dd><p>nwb.processing.get(‘EyeTrackingInfo’);</p>
+</dd>
+</dl>
+<p>TrialDataEye: a structure containing useful information extracted from
+the txt file. Used extractTrialDataEye(filepath) function to get it.</p>
+</div></blockquote>
+<p>Example usage:</p>
+<blockquote>
+<div><p>[nwb] = convprocessed_eye2nwb(filepath, ‘identifier’, identifier)</p>
+<p>[nwb] = convprocessed_eye2nwb(filepath, ‘nwb_in’, nwb)</p>
+<p>[nwb] = convprocessed_eye2nwb(filepath, ‘nwb_in’, nwb, ‘identifier’, identifier)</p>
+</div></blockquote>
+<p>Inputs</p>
+<blockquote>
+<div><p>filepath(required): filepath of the raw eyetracking data (txt file)</p>
+<p>Name-Value (optional parameters):</p>
+<blockquote>
+<div><p>‘nwb_in’: input an exist nwb, default [] create a new nwb</p>
+<p>‘identifier’: input an identifier, default ‘’ create an empty character string</p>
+</div></blockquote>
+</div></blockquote>
+<p>Output:</p>
+<blockquote>
+<div><p>nwb       —- nwb structure containing processed eyetracking data information</p>
+</div></blockquote>
+</dd></dl>
+
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Convert Processed data to NWB Functions</a><ul>
+<li><a class="reference internal" href="#convert-processed-deeplabcut-dlc-data-to-nwb-structure">Convert processed DeepLabCut(DLC) Data to NWb Structure</a></li>
+<li><a class="reference internal" href="#convert-processed-eye-tracking-data-to-nwb-structure">Convert processed Eye Tracking Data to NWb Structure</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="function_convraw.html"
+                          title="previous chapter">Convert Raw data to NWB Functions</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="function_readraw.html"
+                          title="next chapter">Read Raw from NWB Structure</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/function_convprocessed.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="mat-modindex.html" title="MATLAB Module Index"
+             >matlab index</a> |</li>
+        <li class="right" >
+          <a href="function_readraw.html" title="Read Raw from NWB Structure"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="function_convraw.html" title="Convert Raw data to NWB Functions"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">NMRC NWB Standardized Structure 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="functions.html" >Functions</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Convert Processed data to NWB Functions</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Lingling Yang.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
+    </div>
+  </body>
+</html>
