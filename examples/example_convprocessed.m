@@ -1,7 +1,7 @@
 %% This script demonstrate how to
 %
 %   1. read exist Nwb file
-%   2. convert processed deeplabcut xy trajectory data to nwb structure
+%   2. convert processed deeplabcut xy trajectory data and eyetracking data to nwb structure
 %   3. export nwb to Nwb file
 
 %% Add Path
