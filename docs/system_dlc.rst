@@ -101,6 +101,7 @@ Structure inside nwb.processing
 ###############################  
 
 .. image:: figures/systemdlc_illustration.png
+   :width: 800px
 
 
 
