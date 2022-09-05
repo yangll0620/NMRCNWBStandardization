@@ -30,6 +30,7 @@ Processed Deep Lab Cut data, along with other types of data, are stored inside n
 ``nwb.processing``
 
 .. image:: figures/systemdlc_layer1.png
+   :width: 500px
 
 
 Layer2:
@@ -40,6 +41,7 @@ You can find a description and a nwbdatainterface for it inside.
 ``nwb.processing.get('DLC_2D_XYpos')``
 
 .. image:: figures/systemdlc_layer2.png
+   :width: 600px
 
 
 Layer3:
@@ -48,6 +50,7 @@ Layer3:
 ``nwb.processing.get('DLC_2D_XYpos').nwbdatainterface``
 
 .. image:: figures/systemdlc_layer3.png
+   :width: 550px
 
 
 Layer4:
@@ -57,6 +60,7 @@ This Position object contains a set of spatialseries objects.
 ``nwb.processing.get('DLC_2D_XYpos').nwbdatainterface.get('DLCXYPosition')``
 
 .. image:: figures/systemdlc_layer4.png
+   :width: 700px
 
 
 Layer5:
@@ -66,6 +70,7 @@ Get the set of spatialseries objects with the command below.
 ``nwb.processing.get('DLC_2D_XYpos').nwbdatainterface.get('DLCXYPosition').spatialseries``
 
 .. image:: figures/systemdlc_layer5.png
+   :width: 800px
 
 
 Layer6:
@@ -75,6 +80,7 @@ In order to get the spatialseries object containing processed dlc data of camera
 ``nwb.processing.get('DLC_2D_XYpos').nwbdatainterface.get('DLCXYPosition').spatialseries.get('camera-1')``
 
 .. image:: figures/systemdlc_spatialseries.png
+   :width: 950px
 
 Notes:
 
