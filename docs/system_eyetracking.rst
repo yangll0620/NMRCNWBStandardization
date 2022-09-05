@@ -28,6 +28,7 @@ Processed Eye Tracking data, along with other types of data, are stored inside n
 ``nwb.processing``
 
 .. image:: figures/systemdlc_layer1.png
+   :width: 500px
 
 
 Layer2:
@@ -37,6 +38,8 @@ You can find a description and a nwbdatainterface inside.
 ``nwb.processing.get('EyeTrackingInfo')``
 
 .. image:: figures/systemeyetracking_layer2.png
+   :width: 480px
+
 
 
 Layer3:
@@ -44,6 +47,7 @@ Layer3:
 ``nwb.processing.get('EyeTrackingInfo').nwbdatainterface``
 
 .. image:: figures/systemeyetracking_layer3.png
+   :width: 540px
 
 
 Layer4:
@@ -52,6 +56,7 @@ This EyeTracking object contains a set of spatialseries objects.
 ``nwb.processing.get('EyeTrackingInfo').nwbdatainterface.get('EyeTrackingPos')``
 
 .. image:: figures/systemeyetracking_layer4.png
+   :width: 750px
 
 
 Layer5:
@@ -60,6 +65,7 @@ Get the set of spatialseries objects with the command below.
 ``nwb.processing.get('EyeTrackingInfo').nwbdatainterface.get('EyeTrackingPos').spatialseries``
 
 .. image:: figures/systemeyetracking_layer5.png
+   :width: 850px
 
 
 Layer6:
@@ -68,6 +74,7 @@ Inside the set of spatialseries objects, we stored processed eye tracking data i
 ``nwb.processing.get('EyeTrackingInfo').nwbdatainterface.get('EyeTrackingPos').spatialseries.get('eyeTracking')``
 
 .. image:: figures/systemeyetracking_spatialseries.png
+   :width: 1200px
 
 Notes:
 
@@ -88,3 +95,4 @@ Structure inside nwb.processing
 ###############################           
 
 .. image:: figures/systemeyetracking_illustration.png
+   :width: 800px
