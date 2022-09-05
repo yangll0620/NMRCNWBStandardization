@@ -1,25 +1,6 @@
-function [nwb] = convprocessed_dlc2nwb(filepath,varargin)
+not function [nwb] = convprocessed_dlc2nwb(filepath,varargin)
 % converts processed xy dlc data to nwb
 %
-% Variable names and the command to get them:
-%
-%   filepath: path of the file, can be obtained in jointsXY.description, stored as character
-%
-%   jointsXY: SpatialSeries object containing information from the file
-%       nwb.processing.get('DLC_2D_XYpos').nwbdatainterface.get('DLCXYPosition').spatialseries.get(camname);
-%       NOTE: 1.camname is in the format of 'camera-index', it is in character form
-%             2.each spatialseries object represents information from a single camera of the recording
-%
-%   DLCXYPosition: Position object that stores the SpatialSeries Objects named jointsXY
-%       nwb.processing.get('DLC_2D_XYpos').nwbdatainterface.get('DLCXYPosition')
-%       NOTE: 1.This position object contains a set of all spatialseries objects, each one of which represents one camera
-%             2.To get the set of all spatialseries objects, use
-%                       nwb.processing.get('DLC_2D_XYpos').nwbdatainterface.get('DLCXYPosition').spatialseries
-%             3.To add another spatialseries to the spatialseries set inside the position object, use 
-%                       nwb.processing.get('DLC_2D_XYpos').nwbdatainterface.get('DLCXYPosition').spatialseries.set(char(camname), jointsXY);
-%
-%   DLC_2D_mod: ProcessingModule object that contains a description and Position object named DLCXYPosition
-%       nwb.processing.get('DLC_2D_XYpos')
 %
 % Example usage:
 %
@@ -43,6 +24,27 @@ function [nwb] = convprocessed_dlc2nwb(filepath,varargin)
 % Output:
 %
 %       nwb       ---- nwb structure containing processed xy position information 
+%
+%
+% Variable names and the command to get them:
+%
+%       filepath: path of the file, can be obtained in jointsXY.description, stored as character
+%
+%       jointsXY: SpatialSeries object containing information from the file
+%           nwb.processing.get('DLC_2D_XYpos').nwbdatainterface.get('DLCXYPosition').spatialseries.get(camname);
+%               NOTE: 1.camname is in the format of 'camera-index', it is in character form
+%                     2.each spatialseries object represents information from a single camera of the recording
+%
+%       DLCXYPosition: Position object that stores the SpatialSeries Objects named jointsXY
+%           nwb.processing.get('DLC_2D_XYpos').nwbdatainterface.get('DLCXYPosition')
+%               NOTE: 1.This position object contains a set of all spatialseries objects, each one of which represents one camera
+%                     2.To get the set of all spatialseries objects, use
+%                           nwb.processing.get('DLC_2D_XYpos').nwbdatainterface.get('DLCXYPosition').spatialseries
+%                     3.To add another spatialseries to the spatialseries set inside the position object, use 
+%                           nwb.processing.get('DLC_2D_XYpos').nwbdatainterface.get('DLCXYPosition').spatialseries.set(char(camname), jointsXY);
+%
+%       DLC_2D_mod: ProcessingModule object that contains a description and Position object named DLCXYPosition
+%           nwb.processing.get('DLC_2D_XYpos')
 
 
 % parse params

@@ -1,19 +1,6 @@
 function [nwb] = convprocessed_eye2nwb(filepath,varargin)
 % converts raw eyetracking data to nwb.processing using a preprocessed module
 %
-% Variable names and the command to get them:
-%
-%   eyeTracking: SpatialSeries object containing processed eyetracking information from the txt file
-%       nwb.processing.get('EyeTrackingInfo').nwbdatainterface.get('EyeTrackingPos').spatialseries.get('eyeTracking');
-%       
-%
-%   EyeTrackingPos: Position object that stores the SpatialSeries Objects named eyeTracking
-%       nwb.processing.get('EyeTrackingInfo').nwbdatainterface.get('EyeTrackingPos');
-%       
-%
-%   EyeTrackingInfo: ProcessingModule object that contains a description and Position object named EyeTrackingPos
-%       nwb.processing.get('EyeTrackingInfo');
-%
 %
 % Example usage:
 %
@@ -37,6 +24,21 @@ function [nwb] = convprocessed_eye2nwb(filepath,varargin)
 % Output:
 %
 %       nwb       ---- nwb structure containing processed eyetracking data information 
+%
+%
+% Variable names and the command to get them:
+%
+%       eyeTracking: SpatialSeries object containing processed eyetracking information from the txt file
+%           nwb.processing.get('EyeTrackingInfo').nwbdatainterface.get('EyeTrackingPos').spatialseries.get('eyeTracking');
+%       
+%
+%       EyeTrackingPos: Position object that stores the SpatialSeries Objects named eyeTracking
+%           nwb.processing.get('EyeTrackingInfo').nwbdatainterface.get('EyeTrackingPos');
+%       
+%
+%       EyeTrackingInfo: ProcessingModule object that contains a description and Position object named EyeTrackingPos
+%           nwb.processing.get('EyeTrackingInfo');
+%
 
 % parse params
 p = inputParser;
