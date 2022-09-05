@@ -32,7 +32,8 @@ end
 if conv_rawtdt2Nwb
 
     % change the rawtdtpath to your own tdt path
-    rawtdtpath = fullfile(outcodepath, 'NMRCNWB_TestData', 'Barb', 'Recording','Raw', 'rawTDT', 'Barb-220324', 'Block-2');
+    rawtdtpath = fullfile(outcodepath, 'NMRCNWB_TestData', ...
+        'tdtData','Barb', 'Recording','Raw', 'rawTDT', 'Barb-220324', 'Block-2');
 
     disp('... Reading tdt data will take a while .....')
     tdt = TDTbin2mat(rawtdtpath);
