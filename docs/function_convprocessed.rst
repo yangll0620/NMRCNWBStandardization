@@ -20,4 +20,3 @@ Convert processed Eye Tracking Data to NWb Structure
 -------------------------------------
 
 .. autofunction:: convprocessed_eye2nwb
-.. autofunction:: exportTrialDataEye
