@@ -16,6 +16,7 @@ addpath(genpath(nwbpath));
 
 read_existNwbFile = true;
 conv_rawtdt2Nwb = false;
+conv_rawma2Nwb = false;
 export_NwbFile = false;
 
 if read_existNwbFile
@@ -43,6 +44,25 @@ if conv_rawtdt2Nwb
         nwb = convraw_tdt2nwb(tdt, 'animal', 'Barb'); % change the animal name accordingly
     end
 
+end
+
+if conv_rawma2Nwb
+
+    identifier = input("Enter the appropriate identifier(eg.'animal yyyymmdd '_block_' blockNumber',quotation marks required): ");
+    
+
+    if exist('nwb','var') && exist('identifier','var')
+        [nwb] = convraw_ma2nwb(rawancfile,rawtrcfile, 'nwb_in', nwb, 'identifier', identifier);
+    elseif exist('nwb','var')
+        [nwb] = convraw_ma2nwb(rawancfile,rawtrcfile, 'nwb_in', nwb);
+    elseif exist('identifier','var')
+        [nwb] = convraw_ma2nwb(rawancfile,rawtrcfile, 'identifier', identifier); % 'identifier' = ''; nwb.identifier = '';
+    else
+        disp('Input parameter "identifier" is missing.');
+    end
+
+    % get data_ma and timestamps_ma from nwb file
+    [data_ma, timestamps_ma] = readnwb_rawmadata(nwb);
 end
 
 if export_NwbFile

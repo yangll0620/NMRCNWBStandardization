@@ -19,7 +19,7 @@ function [data_ma, timestamps_ma] = readnwb_rawmadata(nwb)
 % 
 
 % read the time serial timeserial_ma in nwb.acquisition
-timeserial_ma = nwb.acquisition.get('ma_marker');
+timeserial_ma = nwb.acquisition.get('ma_marker_cleaned');
 
 % ma data
 data_ma = timeserial_ma.data;

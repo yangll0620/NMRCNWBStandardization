@@ -100,7 +100,7 @@ if(isempty(nwb.identifier))
         nwb.identifier = p.Results.identifier;
     else
         
-        error('Input parameter "identifier" is missing. convprocessed_dlc2nwb');
+        error('Input parameter "identifier" is missing.');
     end
 end
 
