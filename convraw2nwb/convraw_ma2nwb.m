@@ -73,7 +73,8 @@ if(isempty(nwb.identifier))
     end
 end
 
-nwb.session_description = rawtrcfile(1:end-(length(trc_filename)+1)); %link folder name to nwb.session_description
+nwb.session_description = nwb.identifier;
+
 
     
 % DO WE NEED A FILE CREATE DATE?
@@ -84,10 +85,12 @@ nwb.session_description = rawtrcfile(1:end-(length(trc_filename)+1)); %link fold
 
 % parse ma .trc file
 ma_trc = parse_matrcfile(rawtrcfile);
+ma_trc.description = rawtrcfile(1:end-(length(trc_filename)+1)); %link folder name to ma_trc.description;
 nwb.acquisition.set('ma_marker_cleaned', ma_trc);
 
 % parse ma .anc file
 ma_anc = parse_maancfile(rawancfile);
+ma_anc.description = rawancfile(1:end-(length(anc_filename)+1)); %link folder name to ma_trc.description;
 nwb.acquisition.set('ma_sync', ma_anc);
 
 %get year, month, date from the 6-digit yyyymmdd in file names
@@ -155,7 +158,12 @@ ma_trc = types.core.TimeSeries(... % tracking data
     'starting_time_rate', sr,...
     'timestamps',time,...
     'data',data,...
-    'data_unit', unit);  
+    'data_unit', unit);
+
+
+end
+
+
 
 
 function ma_anc = parse_maancfile(rawancfile)
@@ -199,3 +207,7 @@ ma_anc = types.core.TimeSeries(... % analog data
     'timestamps',time,...
     'data',data,...
     'data_unit', 'uV?');
+
+end
+end
+
