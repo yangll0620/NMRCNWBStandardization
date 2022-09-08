@@ -1,4 +1,4 @@
-not function [nwb] = convprocessed_dlc2nwb(filepath,varargin)
+function [nwb] = convprocessed_dlc2nwb(filepath,varargin)
 % converts processed xy dlc data to nwb
 %
 %
