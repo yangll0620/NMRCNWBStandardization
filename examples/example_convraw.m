@@ -25,7 +25,7 @@ if read_existNwbFile
     
     % the used test_Barb.nwb file can be download at https://drive.google.com/file/d/14IWrm_9LjOmuEehworaPmePUoKvBO7HB/view?usp=sharing
     % changed the existNwbfile to your own exist nwb file path
-    existNwbfile = fullfile(outcodepath, 'NMRCNWB_TestData', 'testData', 'testNWBData', 'test_tdt.nwb');
+    existNwbfile = fullfile(outcodepath, 'NMRCNWB_TestData', 'testData', 'testNWBData', 'test.nwb');
     
     disp('... Reading existing Nwb file .....')
     nwb = nwbRead(existNwbfile);
@@ -51,17 +51,19 @@ end
 
 if conv_rawma2Nwb
 
-    identifier = input("Enter the appropriate identifier(eg.'animal yyyymmdd '_block_' blockNumber',quotation marks required): ");
+    % change the rawancfile and rawtrcfile to your own anc file path
+    rawancfile = fullfile(outcodepath, 'NMRCNWB_TestData', 'testData','MAData','Bug_20210702_3.anc');
+    rawtrcfile = fullfile(outcodepath, 'NMRCNWB_TestData', 'testData','MAData','Bug_20210702_3_cleaned.trc');
     
-
-    if exist('nwb','var') && exist('identifier','var')
-        [nwb] = convraw_ma2nwb(rawancfile,rawtrcfile, 'nwb_in', nwb, 'identifier', identifier);
-    elseif exist('nwb','var')
+    defIdentifier = false;
+    if defIdentifier
+        identifier = 'Bug_20210702_Block_3';
+    end
+    
+    if exist('nwb','var')
         [nwb] = convraw_ma2nwb(rawancfile,rawtrcfile, 'nwb_in', nwb);
     elseif exist('identifier','var')
-        [nwb] = convraw_ma2nwb(rawancfile,rawtrcfile, 'identifier', identifier); % 'identifier' = ''; nwb.identifier = '';
-    else
-        disp('Input parameter "identifier" is missing.');
+        [nwb] = convraw_ma2nwb(rawancfile,rawtrcfile, 'identifier', identifier); % 
     end
 
     % get data_ma and timestamps_ma from nwb file
