@@ -45,7 +45,7 @@ if isempty(nwb)
     
     identifier = [animal '_' datestr(dateofexp,'yymmdd') '_block' num2str(bktdt)];
     session_description = [animal '-' datestr(dateofexp,'yymmdd') ', block' num2str(bktdt)];
-    session_start_time = datevec([tdt.info.date tdt.info.utcStartTime]);
+    session_start_time = datevec([tdt.info.date ' ' tdt.info.utcStartTime], 'yyyy-mmm-dd HH:MM:SS');
     
     nwb = NwbFile(...
         'identifier', identifier, ...
