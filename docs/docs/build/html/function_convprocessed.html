@@ -52,33 +52,8 @@
 <span id="convprocessed-dlc2nwb"></span><h2>Convert processed DeepLabCut(DLC) Data to NWb Structure<a class="headerlink" href="#convert-processed-deeplabcut-dlc-data-to-nwb-structure" title="Permalink to this headline">¶</a></h2>
 <dl class="mat function">
 <dt class="sig sig-object mat" id="convprocessed2nwb.convprocessed_dlc2nwb">
-<span class="sig-prename descclassname"><span class="pre">convprocessed2nwb.</span></span><span class="sig-name descname"><span class="pre">convprocessed_dlc2nwb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">filepath</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#convprocessed2nwb.convprocessed_dlc2nwb" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">convprocessed2nwb.</span></span><span class="sig-name descname"><span class="pre">convprocessed_dlc2nwb</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#convprocessed2nwb.convprocessed_dlc2nwb" title="Permalink to this definition">¶</a></dt>
 <dd><p>converts processed xy dlc data to nwb</p>
-<p>Variable names and the command to get them:</p>
-<blockquote>
-<div><p>filepath: path of the file, can be obtained in jointsXY.description, stored as character</p>
-<dl>
-<dt>jointsXY: SpatialSeries object containing information from the file</dt><dd><p>nwb.processing.get(‘DLC_2D_XYpos’).nwbdatainterface.get(‘DLCXYPosition’).spatialseries.get(camname);
-NOTE: 1.camname is in the format of ‘camera-index’, it is in character form</p>
-<blockquote>
-<div><p>2.each spatialseries object represents information from a single camera of the recording</p>
-</div></blockquote>
-</dd>
-<dt>DLCXYPosition: Position object that stores the SpatialSeries Objects named jointsXY</dt><dd><p>nwb.processing.get(‘DLC_2D_XYpos’).nwbdatainterface.get(‘DLCXYPosition’)
-NOTE: 1.This position object contains a set of all spatialseries objects, each one of which represents one camera</p>
-<blockquote>
-<div><dl class="simple">
-<dt>2.To get the set of all spatialseries objects, use</dt><dd><p>nwb.processing.get(‘DLC_2D_XYpos’).nwbdatainterface.get(‘DLCXYPosition’).spatialseries</p>
-</dd>
-<dt>3.To add another spatialseries to the spatialseries set inside the position object, use </dt><dd><p>nwb.processing.get(‘DLC_2D_XYpos’).nwbdatainterface.get(‘DLCXYPosition’).spatialseries.set(char(camname), jointsXY);</p>
-</dd>
-</dl>
-</div></blockquote>
-</dd>
-<dt>DLC_2D_mod: ProcessingModule object that contains a description and Position object named DLCXYPosition</dt><dd><p>nwb.processing.get(‘DLC_2D_XYpos’)</p>
-</dd>
-</dl>
-</div></blockquote>
 <p>Example usage:</p>
 <blockquote>
 <div><p>[nwb] = convprocessed_dlc2nwb(filepath, ‘identifier’, identifier)</p>
@@ -98,6 +73,35 @@ NOTE: 1.This position object contains a set of all spatialseries objects, each o
 <blockquote>
 <div><p>nwb       —- nwb structure containing processed xy position information</p>
 </div></blockquote>
+<p>Variable names and the command to get them:</p>
+<blockquote>
+<div><p>filepath: path of the file, can be obtained in jointsXY.description, stored as character</p>
+<dl class="simple">
+<dt>jointsXY: SpatialSeries object containing information from the file</dt><dd><dl class="simple">
+<dt>nwb.processing.get(‘DLC_2D_XYpos’).nwbdatainterface.get(‘DLCXYPosition’).spatialseries.get(camname);</dt><dd><dl class="simple">
+<dt>NOTE: 1.camname is in the format of ‘camera-index’, it is in character form</dt><dd><p>2.each spatialseries object represents information from a single camera of the recording</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+<dt>DLCXYPosition: Position object that stores the SpatialSeries Objects named jointsXY</dt><dd><dl class="simple">
+<dt>nwb.processing.get(‘DLC_2D_XYpos’).nwbdatainterface.get(‘DLCXYPosition’)</dt><dd><dl class="simple">
+<dt>NOTE: 1.This position object contains a set of all spatialseries objects, each one of which represents one camera</dt><dd><dl class="simple">
+<dt>2.To get the set of all spatialseries objects, use</dt><dd><p>nwb.processing.get(‘DLC_2D_XYpos’).nwbdatainterface.get(‘DLCXYPosition’).spatialseries</p>
+</dd>
+<dt>3.To add another spatialseries to the spatialseries set inside the position object, use </dt><dd><p>nwb.processing.get(‘DLC_2D_XYpos’).nwbdatainterface.get(‘DLCXYPosition’).spatialseries.set(char(camname), jointsXY);</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+<dt>DLC_2D_mod: ProcessingModule object that contains a description and Position object named DLCXYPosition</dt><dd><p>nwb.processing.get(‘DLC_2D_XYpos’)</p>
+</dd>
+</dl>
+</div></blockquote>
 </dd></dl>
 
 </section>
@@ -106,20 +110,7 @@ NOTE: 1.This position object contains a set of all spatialseries objects, each o
 <dl class="mat function">
 <dt class="sig sig-object mat" id="convprocessed2nwb.convprocessed_eye2nwb">
 <span class="sig-prename descclassname"><span class="pre">convprocessed2nwb.</span></span><span class="sig-name descname"><span class="pre">convprocessed_eye2nwb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">filepath</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#convprocessed2nwb.convprocessed_eye2nwb" title="Permalink to this definition">¶</a></dt>
-<dd><p>converts processed eyetracking data to nwb</p>
-<p>Variable names and the command to get them:</p>
-<blockquote>
-<div><dl class="simple">
-<dt>eyeTracking: SpatialSeries object containing processed eyetracking information from the txt file</dt><dd><p>nwb.processing.get(‘EyeTrackingInfo’).nwbdatainterface.get(‘EyeTrackingPos’).spatialseries.get(‘eyeTracking’);</p>
-</dd>
-<dt>EyeTrackingPos: Position object that stores the SpatialSeries Objects named eyeTracking</dt><dd><p>nwb.processing.get(‘EyeTrackingInfo’).nwbdatainterface.get(‘EyeTrackingPos’);</p>
-</dd>
-<dt>EyeTrackingInfo: ProcessingModule object that contains a description and Position object named EyeTrackingPos</dt><dd><p>nwb.processing.get(‘EyeTrackingInfo’);</p>
-</dd>
-</dl>
-<p>TrialDataEye: a structure containing useful information extracted from
-the txt file. Used extractTrialDataEye(filepath) function to get it.</p>
-</div></blockquote>
+<dd><p>converts raw eyetracking data to nwb.processing using a preprocessed module</p>
 <p>Example usage:</p>
 <blockquote>
 <div><p>[nwb] = convprocessed_eye2nwb(filepath, ‘identifier’, identifier)</p>
@@ -138,6 +129,17 @@ the txt file. Used extractTrialDataEye(filepath) function to get it.</p>
 <p>Output:</p>
 <blockquote>
 <div><p>nwb       —- nwb structure containing processed eyetracking data information</p>
+</div></blockquote>
+<p>Variable names and the command to get them:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>eyeTracking: SpatialSeries object containing processed eyetracking information from the txt file</dt><dd><p>nwb.processing.get(‘EyeTrackingInfo’).nwbdatainterface.get(‘EyeTrackingPos’).spatialseries.get(‘eyeTracking’);</p>
+</dd>
+<dt>EyeTrackingPos: Position object that stores the SpatialSeries Objects named eyeTracking</dt><dd><p>nwb.processing.get(‘EyeTrackingInfo’).nwbdatainterface.get(‘EyeTrackingPos’);</p>
+</dd>
+<dt>EyeTrackingInfo: ProcessingModule object that contains a description and Position object named EyeTrackingPos</dt><dd><p>nwb.processing.get(‘EyeTrackingInfo’);</p>
+</dd>
+</dl>
 </div></blockquote>
 </dd></dl>
 

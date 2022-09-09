@@ -1,94 +1,127 @@
-function nwb = convraw_ma2nwb(rawmapath, blocknum, exportnwbtag, nwb)
-%  convraw_ma2nwb convert raw ma data in rawmapath to NWB.acquisition
-%
-%    nwb = convraw_ma2nwb(rawmapath, blocknum, nwb, exportnwbtag) return nwb 
-%    structure containing ma information in both .anc and .trc files 
+function nwb = convraw_ma2nwb(rawancfile, rawtrcfile, varargin)
+%  convraw_ma2nwb convert raw ma data in rawancfile and rawtrcfile to NWB.acquisition
 % 
 % 
 % Example usage:
-%           rawmapath = 'Y:\\Animals2\\Bug\\Recording\\Raw\\rawTDT\\Bug-190111\\Block-1';;
 %
-%           blocknum = 1;
+%       rawancfile = 'Y:\Animals2\Bug\Recording\Raw\rawMA\MA20190111\Bug_20190111_1.anc';
 %
-%           nwb = convraw_ma2nwb(rawmapath, blocknum);
+%       rawtrcfile = 'Y:\Animals2\Bug\Recording\Raw\rawMA\MA20190111\Bug_20190111_1_cleaned.trc';
+%
+%       nwb = convraw_ma2nwb(rawancfile, rawtrcfile);
 % 
 % Inputs:
-%       rawmapath       ---- the folder containing all the tdt files
 %
-%       blocknum        ---- the block number (default 1)
+%       rawancfile(required)      ---- the ANC file containing MA data
 %
-%       exportnwbtag    ---- tag for exporting nwb file (1) or not (default 0)
+%       rawtrcfile(required)      ---- the trc file containing MA data
+%
 %       
-%       nwb             ---- exist nwb structure (if missing, will create a new nwb structure)
+%   Name-Value (optional parameters): 
 %
-% Outputs
+%       'nwb_in': input an exist nwb, default [] create a new nwb  
+%
+%       'identifier': input an identifier, default '' create an empty character string
+%
+% Outputs:
+%
 %       nwb             ---- nwb structure containing ma .anc and .trc information 
 
-if nargin < 4
-    newnwbtag = 1;
-else
-    newnwbtag = 0;
+
+
+% check if rawancfile and rawtrcfile matches by animal name and date
+parse_rawancfile = strsplit(rawancfile,'\');
+parse_rawtrcfile = strsplit(rawtrcfile,'\');
+
+anc_filename = parse_rawancfile{end};
+trc_filename = parse_rawtrcfile{end};
+
+parse_anc_filename = strsplit(anc_filename,'.');
+parse_trc_filename = strsplit(trc_filename,'.');
+
+anc_animal_date_block = parse_anc_filename{1};
+trc_animal_date_block = parse_trc_filename{1}(1:end-8);
+
+if ~strcmp(anc_animal_date_block,trc_animal_date_block)
+    error('Error. Two input files (anc and trc) are not for the same recording.')
 end
 
-if nargin < 3
-    exportnwbtag = 0;
+% parse params
+p = inputParser;
+addParameter(p, 'nwb_in', [], @(x) isa(x, 'NwbFile'));
+addParameter(p, 'identifier', '', @(x) ischar(x)&&(~isempty(x)));
+parse(p,varargin{:});
+nwb = p.Results.nwb_in; % [] or a NwbFile variable
+
+% create empty nwb file if doesn't exist
+if isempty(nwb)
+    nwb = NwbFile();
 end
 
-%% extract animal, dateofexp information
-[animal, dateofexp] = parsemapath(rawmapath);
-if isempty(animal) || isempty(dateofexp)
-    disp(['animal or dateofexp is not parsed!']);
+% system check
+if ~(isunix || ispc)
+    disp('Using neither windows or unix OS.');
     return;
 end
 
-%% new nwb 
-if newnwbtag == 1
-    % create new nwb structure
-    identifier = [animal '_' datestr(dateofexp,'yymmdd') '_block' num2str(blocknum)];
-    session_description = ['NWB file on ' animal ' performing on day ' datestr(dateofexp,'yymmdd')];
-    nwb = nwbfile(...
-        'identifier', identifier, ...
-        'session_description', session_description);
-else
-    if isa(nwb.file_create_date,'types.untyped.DataStub') % nwb.file_create_date is not a datetime format
-        file_create_date = nwb.file_create_date.load();
-        nwb.file_create_date = file_create_date;
+% assign value to nwb.identifier
+if(isempty(nwb.identifier))
+    if(~isempty(p.Results.identifier))
+        nwb.identifier = p.Results.identifier;
+    else
+        error('Input parameter "identifier" is missing.');
     end
 end
 
-%% parse ma .trc file
-filename_matrc = [[upper(animal(1)) animal(2:end)] '_' datestr(dateofexp, 'yyyymmdd') '_' num2str(blocknum) '_cleaned.trc']; % filename_matrc = 'Bug_20190111_1_cleaned.trc'
-file_matrc = fullfile(rawmapath,filename_matrc);
+nwb.session_description = nwb.identifier;
 
-ma_trc = parse_matrcfile(file_matrc);
-nwb.acquisition.set('ma_marker', ma_trc);
 
-%% parse ma .anc file
-filename_maanc = [[upper(animal(1)) animal(2:end)] '_' datestr(dateofexp, 'yyyymmdd') '_' num2str(blocknum) '.anc']; % filename_maanc = 'Bug_20190111_1.anc'
-file_maanc = fullfile(rawmapath,filename_maanc);
-ma_anc = parse_maancfile(file_maanc);
+    
+% DO WE NEED A FILE CREATE DATE?
+%if isa(nwb.file_create_date,'types.untyped.DataStub') % nwb.file_create_date is not a datetime format
+    %file_create_date = nwb.file_create_date.load();
+    %nwb.file_create_date = file_create_date;
+%end
+
+% parse ma .trc file
+ma_trc = parse_matrcfile(rawtrcfile);
+ma_trc.description = rawtrcfile(1:end-(length(trc_filename)+1)); %link folder name to ma_trc.description;
+nwb.acquisition.set('ma_marker_cleaned', ma_trc);
+
+% parse ma .anc file
+ma_anc = parse_maancfile(rawancfile);
+ma_anc.description = rawancfile(1:end-(length(anc_filename)+1)); %link folder name to ma_trc.description;
 nwb.acquisition.set('ma_sync', ma_anc);
 
-%% export
-if exportnwbtag == 1
-    outdest = fullfile(['test_convrawma' '.nwb']);
-    % fill the requied field of nwb for exporting
-    if isempty(nwb.session_start_time) % nwb.session_start_time
-        nwb.session_start_time = datestr(dateofexp);
-    end
-    nwbExport(nwb, outdest);
+%get year, month, date from the 6-digit yyyymmdd in file names
+parse_anc_animal_date_block = strsplit(anc_animal_date_block,'_');
+datestring = parse_anc_animal_date_block{2};
+
+year = str2double(extractBetween(datestring,1,4));
+month = str2double(extractBetween(datestring,5,6));
+date = str2double(extractBetween(datestring,7,8));
+
+% assign time in yyyymmdd format to nwb.session_start_time
+if(isempty(nwb.session_start_time))
+    nwb.session_start_time = datetime(year, month, date); 
 end
 
-function ma_trc = parse_matrcfile(file_matrc)
+if(isempty(nwb.timestamps_reference_time))
+    nwb.timestamps_reference_time = nwb.session_start_time; % not sure
+end
+
+
+
+function ma_trc = parse_matrcfile(rawtrcfile)
 % parse_matrcfile() parses the ma .trc tracking file into a types.core.TimeSeries structure
 %
 % Example usage:
-%       file_matrc = 'Y:\Animals2\Bug\Recording\Raw\rawMA\MA20190111\Bug_20190111_1_cleaned.trc;
+%       rawtrcfile = 'Y:\Animals2\Bug\Recording\Raw\rawMA\MA20190111\Bug_20190111_1_cleaned.trc';
 %
-%       ma_trc = parse_matrcfile(file_matrc);
+%       ma_trc = parse_matrcfile(rawtrcfile);
 %
 % Input:
-%       file_matrc: the full path of ma .trc file
+%       rawtrcfile: the full path of ma .trc file
 %
 %
 % Output: 
@@ -97,7 +130,7 @@ function ma_trc = parse_matrcfile(file_matrc)
 
 %read the numerical data in the ma .trc file 
 numlinestart = 7; 
-dataimport = importdata(file_matrc,'\t',numlinestart-1);% reading numeric data starting from line numlinestart 
+dataimport = importdata(rawtrcfile,'\t',numlinestart-1);% reading numeric data starting from line numlinestart 
 
 % dataimport.data (ntimes * ncolumns): 
 %   first column (frame #), second column (time stamps)
@@ -106,7 +139,7 @@ time = dataimport.data(:,2);
 data = dataimport.data(:,3:end);
 
 % deal with the head information in the ma .trc file
-fid = fopen(file_matrc);
+fid = fopen(rawtrcfile);
 headlinenumstart = 1; 
 C = textscan(fid,'%s',numlinestart-1,'delimiter','\n', 'headerlines',headlinenumstart-1); % read headlinenumstart_matrc-1 lines from the linenum 
 str2 = split(C{1}{2}); % 2nd line: text description of some basic recording properties(i.e 'DataRate	CameraRate	NumFrames	NumMarkers	Units	OrigDataRate	OrigDataStartFrame	OrigNumFrames')
@@ -125,18 +158,23 @@ ma_trc = types.core.TimeSeries(... % tracking data
     'starting_time_rate', sr,...
     'timestamps',time,...
     'data',data,...
-    'data_unit', unit);  
+    'data_unit', unit);
 
 
-function ma_anc = parse_maancfile(file_maanc)
+end
+
+
+
+
+function ma_anc = parse_maancfile(rawancfile)
 %% parse_maancfile() parses the ma .anc analog data file into a types.core.TimeSeries structure
 %
 % Example usage:
-%       file_maanc = 'Y:\Animals2\Bug\Recording\Raw\rawMA\MA20190111\Bug_20190111_1.anc';
-%       ma_trc = parse_matrcfile(file_matrc);
+%       rawancfile = 'Y:\Animals2\Bug\Recording\Raw\rawMA\MA20190111\Bug_20190111_1.anc';
+%       ma_anc = parse_matrcfile(rawancfile);
 %
 % input:
-%       file_maanc: the full path of ma .trc file
+%       rawancfile: the full path of ma .anc file
 %
 %
 % output: 
@@ -145,7 +183,7 @@ function ma_anc = parse_maancfile(file_maanc)
 
 %read the numerical data in the ma .anc file 
 numlinestart = 12; % read from line numlinestrart
-dataimport = importdata(file_maanc,'\t',numlinestart -1);% reading numeric data starting from line numlinestart
+dataimport = importdata(rawancfile,'\t',numlinestart -1);% reading numeric data starting from line numlinestart
 
 % dataimport.data (ntimes * ncolumns): 
 %   first column (time stamps)
@@ -154,7 +192,7 @@ time = dataimport.data(:,1);
 data = dataimport.data(:,2:end);
 
 % deal with the head information in the ma .anc file
-fid = fopen(file_maanc);
+fid = fopen(rawancfile);
 headlinenumstart = 1; % read from the linenum 
 C = textscan(fid,'%s',numlinestart-1,'delimiter','\n', 'headerlines',headlinenumstart-1); % read numlinestrart-1 lines from the linenum 
 str4 = split(C{1}{4});
@@ -169,3 +207,7 @@ ma_anc = types.core.TimeSeries(... % analog data
     'timestamps',time,...
     'data',data,...
     'data_unit', 'uV?');
+
+end
+end
+

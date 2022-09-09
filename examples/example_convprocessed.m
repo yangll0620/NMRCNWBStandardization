@@ -1,7 +1,7 @@
 %% This script demonstrate how to
 %
 %   1. read exist Nwb file
-%   2. convert processed deeplabcut xy trajectory data to nwb structure
+%   2. convert processed deeplabcut xy trajectory data and eyetracking data to nwb structure
 %   3. export nwb to Nwb file
 
 %% Add Path
@@ -54,15 +54,18 @@ end
 
 if conv_processedEyeT2Nwb
 
+    % change the filepath to your own filepath
+    filepath = fullfile(outcodepath, 'NMRCNWB_TestData', 'EyetrackingData', '2022-7-12;11-27-49.txt');
+
     identifier = input("Enter the appropriate identifier(eg.'animal yyyymmdd '_block_' blockNumber',quotation marks required): ");
     
 
     if exist('nwb','var') && exist('identifier','var')
-        [nwb] = conveyetracking2nwb(TrialDataEye,FileInfoBlock, 'nwb_in', nwb, 'identifier', identifier);
+        [nwb] = conveyetracking2nwb(filepath, 'nwb_in', nwb, 'identifier', identifier);
     elseif exist('nwb','var')
-        [nwb] = conveyetracking2nwb(TrialDataEye,FileInfoBlock, 'nwb_in', nwb);
+        [nwb] = conveyetracking2nwb(filepath, 'nwb_in', nwb);
     elseif exist('identifier','var')
-        [nwb] = conveyetracking2nwb(TrialDataEye,FileInfoBlock, 'identifier', identifier); % 'identifier' = ''; nwb.identifier = '';
+        [nwb] = conveyetracking2nwb(filepath, 'identifier', identifier); % 'identifier' = ''; nwb.identifier = '';
     else
         disp('Input parameter "identifier" is missing.');
     end
