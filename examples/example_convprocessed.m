@@ -23,7 +23,7 @@ if read_existNwbFile
     
     % the used test_Barb.nwb file can be download at https://drive.google.com/file/d/14IWrm_9LjOmuEehworaPmePUoKvBO7HB/view?usp=sharing
     % changed the existNwbfile to your own exist nwb file path
-    existNwbfile = fullfile(outcodepath, 'NMRCNWB_TestData', 'test.nwb');
+    existNwbfile = fullfile(outcodepath, 'NMRCNWB_TestData', 'testData', 'testNWBData', 'test.nwb');
     
     disp('... Reading existing Nwb file .....')
     nwb = nwbRead(existNwbfile);

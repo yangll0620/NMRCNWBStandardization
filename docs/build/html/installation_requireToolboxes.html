@@ -1,0 +1,179 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Installation &#8212; NMRC NWB Standardized Structure 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css" />
+    
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="mat-modindex.html" title="MATLAB Module Index"
+             >matlab index</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">NMRC NWB Standardized Structure 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Installation</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="installation">
+<h1><a class="toc-backref" href="#id3">Installation</a><a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<div class="contents topic" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#installation" id="id3">Installation</a></p>
+<ul>
+<li><p><a class="reference internal" href="#nwb-standardization-codes-installation" id="id4">NWB Standardization Codes Installation</a></p></li>
+<li><p><a class="reference internal" href="#used-toolboxes-installation" id="id5">Used Toolboxes Installation</a></p>
+<ul>
+<li><p><a class="reference internal" href="#matnwb" id="id6">MatNWB</a></p></li>
+<li><p><a class="reference internal" href="#tdtmatlabsdk" id="id7">TDTMatlabSDK</a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<section id="nwb-standardization-codes-installation">
+<h2><a class="toc-backref" href="#id4">NWB Standardization Codes Installation</a><a class="headerlink" href="#nwb-standardization-codes-installation" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p>Download the <a class="reference external" href="https://github.com/yangll0620/DataStorageAnalysisArchitecture">NWB Standardization Codes</a>.</p>
+<blockquote>
+<div></div></blockquote>
+</li>
+<li><p>Change the folder name ‘NMRCNWBStandardization-master’ to ‘NMRCNWBStandardization’</p></li>
+<li><p>add path and subpath of NWB Standardization Codes into matlab:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">addpath</span><span class="p">(</span><span class="n">genpath</span><span class="p">(</span><span class="s1">&#39;path/to/NWB Standardization Code&#39;</span><span class="p">))</span>
+
+<span class="n">savepath</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="used-toolboxes-installation">
+<h2><a class="toc-backref" href="#id5">Used Toolboxes Installation</a><a class="headerlink" href="#used-toolboxes-installation" title="Permalink to this headline">¶</a></h2>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Please installed the following toolboxes before using NWB standardized processing codes.</p>
+</div>
+<section id="matnwb">
+<span id="installmatnwb-label"></span><h3><a class="toc-backref" href="#id6">MatNWB</a><a class="headerlink" href="#matnwb" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>MatNWB is the Matlab interface for reading and writing NWB file. To generate and use NWB structure, MatNWB should be inside the folder /util/.</p>
+<ol class="arabic">
+<li><p>Download the <a class="reference external" href="https://github.com/NeurodataWithoutBorders/matnwb">MatNWB</a>.</p>
+<blockquote>
+<div></div></blockquote>
+</li>
+<li><p>Change the folder name ‘matnwb-master’ to ‘matnwb’</p></li>
+<li><p>From the Matlab command line, generate matlab m-files inside matnwb folder:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">generateCore</span><span class="p">(</span><span class="s1">&#39;schema/core/nwb.namespace.yaml&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p>Copy the folder matnwb into folder NMRCNWBStandardization/toolbox/</p></li>
+<li><p>add MatNWB path and its subpath to matlab</p></li>
+</ol>
+</div></blockquote>
+</section>
+<section id="tdtmatlabsdk">
+<span id="installtdtmatsdk-label"></span><h3><a class="toc-backref" href="#id7">TDTMatlabSDK</a><a class="headerlink" href="#tdtmatlabsdk" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>TDTMatlabSDK is the Matlab TDT data import tool. TDTMatlabSDK should be inside the folder /util/ when converting tdt data to NWB structure.</p>
+<ol class="arabic">
+<li><p>Download the zipped <a class="reference external" href="https://www.tdt.com/support/examples/TDTMatlabSDK.zip">TDTMatlabSDK</a> tool.</p>
+<blockquote>
+<div></div></blockquote>
+</li>
+<li><p>Extrac the zip files into folder toolbox/</p></li>
+<li><p>add TDTMatlabSDK path and its subpath to matlab</p></li>
+</ol>
+</div></blockquote>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Installation</a><ul>
+<li><a class="reference internal" href="#nwb-standardization-codes-installation">NWB Standardization Codes Installation</a></li>
+<li><a class="reference internal" href="#used-toolboxes-installation">Used Toolboxes Installation</a><ul>
+<li><a class="reference internal" href="#matnwb">MatNWB</a></li>
+<li><a class="reference internal" href="#tdtmatlabsdk">TDTMatlabSDK</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/installation_requireToolboxes.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="mat-modindex.html" title="MATLAB Module Index"
+             >matlab index</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">NMRC NWB Standardized Structure 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Installation</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Lingling Yang.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
+    </div>
+  </body>
+</html>

@@ -36,17 +36,38 @@ if ~all(mask) % stream_names contains name not in fieldnames(tdt.streams)
 end
 
 
-elec_table = nwb.general_extracellular_ephys_electrodes;
-if isempty(elec_table)
+
+if isempty(nwb.general_extracellular_ephys_electrodes)
     disp('nwb.general_extracellular_ephys_electrodes empty.')
     return
 end
 
+
+% align stream name sample length consistent
+tbl_streamName_nSample = extract_tbl_streamName_nSample(stream_names, tdt);
+if(length(unique(tbl_streamName_nSample.nSample)) >1)
+    disp('Temporal length not consistent for : ')
+    disp(tbl_streamName_nSample)
+
+    % remove the last few samples
+    minNSample = min(tbl_streamName_nSample.nSample);
+    mask_longer = (tbl_streamName_nSample.nSample > minNSample);
+    stream_names_longer = tbl_streamName_nSample.streamName(mask_longer);
+    disp('To have the same lengthm, remove the last few samples for : ');
+    disp(stream_names_longer);
+    for sli = 1 : length(stream_names_longer)
+        stream_longer = stream_names_longer{sli};
+        tdt.streams.(stream_longer).data(:, minNSample+1:end) = [];
+        clear tmp;
+    end
+
+end
+
+elec_table = nwb.general_extracellular_ephys_electrodes;
 elec_table_labels = elec_table.vectordata.get('label').data; % {'DBSS-elect1'}    {'DBSS-elect2'} ...
 data_all = [];
 electbl_region_rows = [];
 starting_time = [];
-ntemp = [];
 fs = [];
 for sni = 1 : length(stream_names)
     stream_name = stream_names{sni};
@@ -56,14 +77,7 @@ for sni = 1 : length(stream_names)
     electbl_region_rows = [electbl_region_rows; rows'];
     
     
-    % checking startTime, fs, ntemp
-    if isempty(ntemp)
-        ntemp = size(tdt.streams.(stream_name).data, 2);
-    elseif ntemp ~= size(tdt.streams.(stream_name).data, 2)
-        disp(['Temporal length not consistent for : '])
-        disp(stream_names)
-        return;
-    end
+    % checking starting_time and fs
     if isempty(starting_time)
         starting_time = tdt.streams.(stream_name).startTime;
     elseif starting_time ~= tdt.streams.(stream_name).startTime
@@ -103,4 +117,14 @@ electrical_series = types.core.ElectricalSeries( ...
     'data_unit', 'volts');
 
 % set
-nwb.acquisition.set(['raw-' strrep(suffix_name, ' ', '')], electrical_series);
+nwb.acquisition.set([strrep(suffix_name, ' ', '')], electrical_series);
+
+
+function tbl_streamName_nSample = extract_tbl_streamName_nSample(stream_names, tdt)
+c = {};
+for si = 1: length(stream_names)
+    stream_name = stream_names{si};
+    nSample = size(tdt.streams.(stream_name).data, 2);
+    c = [c; {stream_name, nSample}];
+end
+tbl_streamName_nSample =cell2table(c, "VariableNames",{'streamName', 'nSample'});
