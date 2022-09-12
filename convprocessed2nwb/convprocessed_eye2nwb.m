@@ -326,7 +326,7 @@ TrialDataEye.raw_data=raw_data; %Eyetracking raw data
 TrialDataEye.TTS_sec=TTS; % Interpolated timepoints corresponding to the estimated Fs we got
 TrialDataEye.Fs=Fs; % Estimated Fs that we are using
 TrialDataEye.hdr=hdr; % Containing all contents from the file, categorized by different line codes
-TrialDataEye.Fs_actual=Fs_actual; % Actual Fs
+TrialDataEye.Fs_actual=Fs_raw_est; % Actual Fs
 
 
 end

@@ -30,8 +30,8 @@ function nwb = convraw_ma2nwb(rawancfile, rawtrcfile, varargin)
 
 
 % check if rawancfile and rawtrcfile matches by animal name and date
-parse_rawancfile = strsplit(rawancfile,'\');
-parse_rawtrcfile = strsplit(rawtrcfile,'\');
+parse_rawancfile = strsplit(rawancfile,'/');
+parse_rawtrcfile = strsplit(rawtrcfile,'/');
 
 anc_filename = parse_rawancfile{end};
 trc_filename = parse_rawtrcfile{end};
@@ -45,6 +45,8 @@ trc_animal_date_block = parse_trc_filename{1}(1:end-8);
 if ~strcmp(anc_animal_date_block,trc_animal_date_block)
     error('Error. Two input files (anc and trc) are not for the same recording.')
 end
+
+animal_date_block = anc_animal_date_block;
 
 % parse params
 p = inputParser;
@@ -66,10 +68,10 @@ end
 
 % assign value to nwb.identifier
 if(isempty(nwb.identifier))
-    if(~isempty(p.Results.identifier))
+    if ~isempty(p.Results.identifier)
         nwb.identifier = p.Results.identifier;
     else
-        error('Input parameter "identifier" is missing.');
+        nwb.identifier = animal_date_block; % as default
     end
 end
 
