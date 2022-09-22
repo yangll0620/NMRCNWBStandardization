@@ -30,8 +30,17 @@ function nwb = convraw_ma2nwb(rawancfile, rawtrcfile, varargin)
 
 
 % check if rawancfile and rawtrcfile matches by animal name and date
-parse_rawancfile = strsplit(rawancfile,'/');
-parse_rawtrcfile = strsplit(rawtrcfile,'/');
+if(contains(rawancfile,'/')) %for macOS
+    parse_rawancfile = strsplit(rawancfile,'/');
+elseif(contains(rawancfile,'\')) %for Windows
+    parse_rawancfile = strsplit(rawancfile,'\');
+end
+
+if(contains(rawtrcfile,'/')) %for macOS
+    parse_rawtrcfile = strsplit(rawtrcfile,'/');
+elseif(contains(rawtrcfile,'\')) %for Windows
+    parse_rawtrcfile = strsplit(rawtrcfile,'\');
+end
 
 anc_filename = parse_rawancfile{end};
 trc_filename = parse_rawtrcfile{end};
