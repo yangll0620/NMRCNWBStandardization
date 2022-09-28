@@ -54,18 +54,21 @@ for i = 1 : nrow
             
             nwb = convraw_tdt2nwb(tdt, 'nwb_in', nwb, 'animal', animal); % change the animal name accordingly
             
-            if(strcmp(tbl.MACleanedFileName(i),'_cleaned') & strcmp(tbl.ANCExported_,'ANC exported'))
+            if(strcmp(tbl.MACleanedFileName(i),'_cleaned') & strcmp(tbl.ANCExported_(i),'ANC exported'))
                 
                 %full path for MA anc and trc_cleaned files on the server
-                MApath = strcat(tbl.rawMAfolder(i),'\',tbl.MASessionFolder(i),'\',tbl.MASessionName,'_',num2str(tbl.MAFile(i)));
+                MApath = strcat(tbl.rawMAfolder(i),'\',tbl.MASessionFolder(i),'\',tbl.MASessionName(i),num2str(tbl.MAFile(i)));
                 rawancfile = strcat(MApath, '.anc');
                 rawtrcfile = strcat(MApath,'_cleaned.trc');
                 
+                rawancfile = rawancfile{1};
+                rawtrcfile = rawtrcfile{1};   
+
                 if isunix
                     rawancfile = strrep(rawancfile, '\', '/');
                     rawtrcfile = strrep(rawtrcfile, '\', '/');
                 end
-        
+
                 %put MA info into nwb by file path
                 nwb = convraw_ma2nwb(rawancfile, rawtrcfile, 'nwb_in', nwb, 'identifier', identifier);
             end
