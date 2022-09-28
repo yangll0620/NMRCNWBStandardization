@@ -78,7 +78,7 @@ for i = 1 : nrow
                 
                 %full path for Eyetracking on the server
                 EyeTPath = strcat('root2\Animals2\Barb\Recording\Raw\','Barb Eyetracking\',tbl.EyeTracking(i),'.txt');
-
+                EyeTPath = EyeTPath{1};
                 if isunix
                     EyeTPath = strrep(EyeTPath, '\', '/');
                 end
