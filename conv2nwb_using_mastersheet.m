@@ -41,7 +41,8 @@ for i = 1 : nrow
             rawtdtpath = convertStringsToChars(fullfile(driver, rawtdtpath));
         
             %get identifer by extracting info
-            identifier = strcat(folderName,'_TDTbk',num2str(tbl.TDTBlock(i)),'_',string(tbl.BriefDescription(i))); %identifier for nwb file, formatted
+            %identifier for nwb file, formatted as Barb_mmddyy_TDTbk1_Resting
+            identifier = strcat(folderName,'_TDTbk',num2str(tbl.TDTBlock(i)),'_',string(tbl.BriefDescription(i)));
             identifier = convertStringsToChars(identifier);
         
             %get animal name from identifier
@@ -51,13 +52,12 @@ for i = 1 : nrow
         
             %put tdt info into nwb by tdt filepath
             tdt = TDTbin2mat(rawtdtpath);
-            
             nwb = convraw_tdt2nwb(tdt, 'nwb_in', nwb, 'animal', animal); % change the animal name accordingly
             
             if(strcmp(tbl.MACleanedFileName(i),'_cleaned') & strcmp(tbl.ANCExported_(i),'ANC exported'))
                 
                 %full path for MA anc and trc_cleaned files on the server
-                MApath = strcat(tbl.rawMAfolder(i),'\',tbl.MASessionFolder(i),'\',tbl.MASessionName(i),num2str(tbl.MAFile(i)));
+                MApath = strcat(driver, tbl.rawMAfolder(i),'\',tbl.MASessionFolder(i),'\',tbl.MASessionName(i),num2str(tbl.MAFile(i)));
                 rawancfile = strcat(MApath, '.anc');
                 rawtrcfile = strcat(MApath,'_cleaned.trc');
                 
@@ -77,7 +77,7 @@ for i = 1 : nrow
             if(~isempty(EyeTracking{1}))
                 
                 %full path for Eyetracking on the server
-                EyeTPath = strcat('root2\Animals2\Barb\Recording\Raw\','Barb Eyetracking\',tbl.EyeTracking(i),'.txt');
+                EyeTPath = strcat(driver, 'root2\Animals2\Barb\Recording\Raw\','Barb Eyetracking\',tbl.EyeTracking(i),'.txt');
                 EyeTPath = EyeTPath{1};
                 if isunix
                     EyeTPath = strrep(EyeTPath, '\', '/');
@@ -89,6 +89,7 @@ for i = 1 : nrow
             
             
             %export derived nwb
+            outcodepath = '/Volumes/GoogleDrive/.shortcut-targets-by-id/1rqT5kkedZTvqGoWwNhGrS4Wly_1OQxPZ/';
             out_filename = strcat(identifier,'.nwb');
             outNwbFile = fullfile(outcodepath,  'NMRCNWB_TestData', out_filename);
             disp(['...Exporting NWB file to ' outNwbFile ' ...'])

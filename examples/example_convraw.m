@@ -15,12 +15,22 @@ addpath(genpath(nwbpath));
 
 [outcodepath,~,~] = fileparts(nwbpath);
 
+convert_from_mastersheet = true;
 read_existNwbFile = true;
 conv_rawtdt2Nwb = false;
 conv_rawma2Nwb = false;
 export_NwbFile = false;
 
+if convert_from_mastersheet
+    googleSheetID = '1ITkEPoIkQDr1RebfI4BtUdNK8UNbl8Bvpx-XbvH-v68';
+    sheet_name = 'MasterList';
+    driver = '/Volumes/GoogleDrive/.shortcut-targets-by-id/1rqT5kkedZTvqGoWwNhGrS4Wly_1OQxPZ/NMRCNWB_TestData/testData/';
+    dateofexp = '031722';
+    block = 1;
+    conv2nwb_using_mastersheet(googleSheetID, sheet_name, driver, dateofexp, block);
 
+   
+end
 if read_existNwbFile
     
     % the used test_Barb.nwb file can be download at https://drive.google.com/file/d/14IWrm_9LjOmuEehworaPmePUoKvBO7HB/view?usp=sharing
